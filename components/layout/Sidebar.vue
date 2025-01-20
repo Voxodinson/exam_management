@@ -30,8 +30,14 @@
                 label="Main menu"/>
             <Menu
                 icon="mage:dashboard-check"
-                title="All Exam"
+                title="Home"
                 path="/"
+                class-name=""
+                :class-title="!expand ? '' : 'hidden'"/>
+            <Menu
+                icon="mage:dashboard-check"
+                title="All Exam"
+                path="/all_exam"
                 class-name=""
                 :class-title="!expand ? '' : 'hidden'"/>
             <Menu
