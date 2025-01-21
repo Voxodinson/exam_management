@@ -29,7 +29,7 @@
                 :class-title="!expand ? 'border-b-[1px] border-gray-300' : 'hidden'"
                 label="Main menu"/>
             <Menu
-                icon="mage:dashboard-check"
+                icon="ant-design:home-outlined"
                 title="Home"
                 path="/"
                 class-name=""

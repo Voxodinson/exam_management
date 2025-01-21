@@ -1,108 +1,127 @@
 <template>
-    <div class="flex items-center justify-between h-[45px] px-4 bg-white border-b-[1px] border-gray-200">
-        <UBreadcrumb 
-            :links="linksItem"
-            divider="/"
-                :ui="{
-                    base: 'font-semibold text-[.8rem]',
-                    inactive: 'hover:text-blue-200',
-                    active: 'text-blue-400',}"/>
-        <div class=" flex gap-2 items-center justify-center h-full">
-            <UTooltip 
-                text="Create New Exam"
-                :popper="{ offsetDistance: 12 }">
-                <UButton
-                    icon="material-symbols:add-circle-outline-rounded"
-                    size="sm"
-                    color="black"
-                    label="New Exam"
-                    variant="soft" 
-                    :padded="false"
-                    class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
-            </UTooltip>
-            <UTooltip 
-                :text="isOpenFilter ? 'Close Filters' : 'Open Filters'"
-                :popper="{ offsetDistance: 12 }">
-                <UButton
-                    :icon="isOpenFilter ? 'material-symbols:close-rounded' : 'material-symbols:filter-alt-outline'"
-                    size="sm"
-                    color="black"
-                    variant="soft" 
-                    :padded="false"
-                    @click="()=>{
-                        toggle();
-                    }"
-                    class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
-            </UTooltip>
+    <template 
+        v-if="openCreate">
+        <NewExam
+            :exam-id="examId"
+            @update:data="fetchData"
+            @toggle="toggleCreate"/>
+    </template>
+    <template 
+        v-else>
+        <div class="flex items-center justify-between h-[45px] px-4 bg-white border-b-[1px] border-gray-200">
+            <UBreadcrumb 
+                :links="linksItem"
+                divider="/"
+                    :ui="{
+                        base: 'font-semibold text-[.8rem]',
+                        inactive: 'hover:text-blue-200',
+                        active: 'text-blue-400',}"/>
+            <div class=" flex gap-2 items-center justify-center h-full">
+                <UTooltip 
+                    text="Create New Exam"
+                    :popper="{ offsetDistance: 12 }">
+                    <UButton
+                        icon="material-symbols:add-circle-outline-rounded"
+                        size="sm"
+                        color="black"
+                        label="New Exam"
+                        variant="soft" 
+                        :padded="false"
+                        @click="()=>{
+                            toggleCreate(true);
+                        }"
+                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
+                </UTooltip>
+                <UTooltip 
+                    :text="isOpenFilter ? 'Close Filters' : 'Open Filters'"
+                    :popper="{ offsetDistance: 12 }">
+                    <UButton
+                        :icon="isOpenFilter ? 'material-symbols:close-rounded' : 'material-symbols:filter-alt-outline'"
+                        size="sm"
+                        color="black"
+                        variant="soft" 
+                        :padded="false"
+                        @click="()=>{
+                            toggle();
+                        }"
+                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
+                </UTooltip>
+            </div>
         </div>
-    </div>
-    
-    <div class="w-full p-2">
-        <div 
-            v-if="isOpenFilter"
-            class="flex gap-2 justify-between p-2 rounded-md bg-[#3A6D8C]">
+        <div class="w-full p-2">
             <div 
-                class="flex gap-2">
-                <SelectMenu
-                    name=""
-                    :options="[]"
-                    value-attribute="id"
-                    option-attribute="name"
-                    id-attribute="id"
-                    placeholder="Select a subject"
-                    class="w-[250px]"/>
-                <InputDate
+                v-if="isOpenFilter"
+                class="flex gap-2 justify-between p-2 rounded-md bg-[#3A6D8C]">
+                <div 
+                    class="flex gap-2">
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        value-attribute="id"
+                        option-attribute="name"
+                        id-attribute="id"
+                        placeholder="Select a subject"
+                        class="w-[250px]"/>
+                    <InputDate
+                        class="w-[250px]"/>
+                </div>
+                <UInput
+                    icon="material-symbols:search"
+                    type="text"
+                    color="white"
+                    variant="outline"
+                    size="md"
+                    name="district"
+                    role="input"
+                    placeholder="Search here..."
                     class="w-[250px]"/>
             </div>
-            <UInput
-                icon="material-symbols:search"
-                type="text"
-                color="white"
-                variant="outline"
-                size="md"
-                name="district"
-                role="input"
-                placeholder="Search here..."
-                class="w-[250px]"/>
+            <div class="w-full mt-2 bg-white rounded-md overflow-hidden">
+                <Table
+                    :columns="columns"
+                    :data="datas"
+                    is-custom
+                    v-slot="{ data }"
+                    class="mt-3"
+                    @update:data="async (current_page: number): Promise<void> => {
+                        
+                    }">
+                    <tr 
+                        class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
+                        <td
+                            class="w-[150px]">
+                            <span>
+                                {{ data.id }}
+                            </span>
+                        </td>
+                        <td>
+                            <span>{{ data.exam }}</span>
+                        </td>
+                        <td>
+                            <span>{{ data.due_date }}</span>
+                        </td>
+                        <td>
+                            <span>{{ data.created_at }}</span>
+                        </td>
+                        <td>
+                            <span>{{ data.status }}</span>
+                        </td>
+                        <td>
+                            <UDropdown 
+                                :items="items" 
+                                :popper="{ 
+                                    placement: 'bottom-start' 
+                                }">
+                                <UButton 
+                                    color="white"
+                                    trailing-icon="mdi:dots-vertical" />
+                            </UDropdown>
+                        </td>
+                    </tr>
+                </Table>
+            </div>
         </div>
-        <div class="w-full mt-2 bg-white rounded-md overflow-hidden">
-            <Table
-                :columns="columns"
-                :data="datas"
-                is-custom
-                v-slot="{ data }"
-                class="mt-3"
-                @update:data="async (current_page: number): Promise<void> => {
-                    
-                }">
-                <tr class="*:px-2.5 *:py-1.5">
-                    <td>
-                        <span>{{ data.exam }}</span>
-                    </td>
-                    <td>
-                        <span>{{ data.due_date }}</span>
-                    </td>
-                    <td>
-                        <span>{{ data.created_at }}</span>
-                    </td>
-                    <td>
-                        <span>{{ data.status }}</span>
-                    </td>
-                    <td>
-                        <UDropdown 
-                            :items="items" 
-                            :popper="{ 
-                                placement: 'bottom-start' 
-                            }">
-                            <UButton 
-                                color="white"
-                                trailing-icon="mdi:dots-vertical" />
-                        </UDropdown>
-                    </td>
-                </tr>
-            </Table>
-        </div>
-    </div>
+    </template>
 </template>
 
 <script setup lang="ts">
@@ -121,6 +140,9 @@ import type {
     Options,
     ResponseStatus,
 } from "@/models/type";
+import { 
+    NewExam 
+} from '@/collector/pages';
 definePageMeta({
     colorMode: 'light'
 });
@@ -144,6 +166,8 @@ const filters: Ref<Items> = ref<Items>({
     warehouse_id: ''
 });
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
+const openCreate: Ref<boolean> = ref<boolean>(false);
+const examId: Ref<number | null> = ref<number | null>(null);
 const linksItem = [
   {
       label: 'Main Menu'
@@ -153,6 +177,9 @@ const linksItem = [
   }
 ];
 const columns: Ref<Column[]> = ref<Column[]>([
+    {
+        title:'ID',
+    },
     {
         title:'Exam',
     },
@@ -168,53 +195,61 @@ const columns: Ref<Column[]> = ref<Column[]>([
     {
         title: 'Action'
     }
- ])
+ ]);
  const datas = {
     status: 'ok',
     data: [
-        {
+        {   
+            "id":"EXAM-100503",
             "exam": "Web Final Exam",
             "due_date": "10-05-2003",
             "status": "Active",
             "created_at": "2024-10-20"
         },
         {
+            "id":"EXAM-100503",
             "exam": "Web Final Exam",
             "due_date": "10-05-2003",
             "status": "Active",
             "created_at": "2024-10-20"
         },
         {
+            "id":"EXAM-100503",
             "exam": "Web Final Exam",
             "due_date": "10-05-2003",
             "status": "Active",
             "created_at": "2024-10-20"
         },
         {
+            "id":"EXAM-100503",
             "exam": "Web Final Exam",
             "due_date": "10-05-2003",
             "status": "Active",
             "created_at": "2024-10-20"
         },
         {
+            "id":"EXAM-100503",
             "exam": "Web Final Exam",
             "due_date": "10-05-2003",
             "status": "Active",
             "created_at": "2024-10-20"
         },
         {
+            "id":"EXAM-100503",
             "exam": "Web Final Exam",
             "due_date": "10-05-2003",
             "status": "Active",
             "created_at": "2024-10-20"
         },
         {
+            "id":"EXAM-100503",
             "exam": "Web Final Exam",
             "due_date": "10-05-2003",
             "status": "Active",
             "created_at": "2024-10-20"
         },
         {
+            "id":"EXAM-100503",
             "exam": "Web Final Exam",
             "due_date": "10-05-2003",
             "status": "Active",
@@ -263,8 +298,11 @@ const columns: Ref<Column[]> = ref<Column[]>([
 /**
  * Begin::Some logical in this component
  */
- const toggle = (): void => {
+const toggle = (): void => {
     isOpenFilter.value = !isOpenFilter.value as boolean;
+}
+const toggleCreate = (value: boolean): void => {
+    openCreate.value = value as boolean;
 }
 /**
  * End::Some logical in this component
@@ -319,6 +357,5 @@ const filterData = async (current_page: number = 1): Promise<void> => {
  */
 
 onMounted(async (): Promise<void> => {
-    await fetchData();
 });
 </script>
