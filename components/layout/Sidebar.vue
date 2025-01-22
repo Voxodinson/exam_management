@@ -46,6 +46,12 @@
                 path="/result_list"
                 class-name=""
                 :class-title="!expand ? '' : 'hidden'"/>
+            <Menu
+                icon="material-symbols:checklist"
+                title="Publish Exam"
+                path="/publish_exam"
+                class-name=""
+                :class-title="!expand ? '' : 'hidden'"/>
             <Section
                 :class-title="!expand ? 'border-b-[1px] border-gray-300' : 'hidden'"
                 label="Students Management"/>

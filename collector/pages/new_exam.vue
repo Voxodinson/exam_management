@@ -125,61 +125,76 @@
                 class="mt-2 flex flex-col gap-3 bg-gray-100 rounded-md overflow-hidden p-2">
                 <UFormGroup
                     class="w-full"
-                    :label="`Question ${ index +1 }`"
+                    :label="`${item.type} (Question ${ index +1 })`"
                     name="">
                     <UTextarea 
                         color="white" 
-                        placeholder="Enter quest here..."
+                        placeholder="Enter question here..."
                         name="" 
                         role="input"
                         v-model="item.question"/>
                 </UFormGroup>
 
-                <div class="w-full flex items-center justify-end gap-3">
-                    <UTooltip 
-                        text="Delete Question"
-                        :popper="{ offsetDistance: 12 }">
-                        <UButton
-                            icon="material-symbols:delete-outline"
-                            size="sm"
-                            color="black"
-                            label="Delete Question"
-                            variant="soft" 
-                            :padded="false"
-                            @click="()=>{
-                                deleteQuestion(index)
-                            }"
-                            class="text-red-500 hover:text-white hover:bg-red-300 p-1 transition"/>
-                    </UTooltip>
-                    <UTooltip 
-                        text="Add New Answer"
-                        :popper="{ offsetDistance: 12 }">
-                        <UButton
-                            icon="material-symbols:add-circle-outline-rounded"
-                            size="sm"
-                            color="black"
-                            label="New Answer"
-                            variant="soft" 
-                            :padded="false"
-                            @click="()=>{
-                                addNewAnswer(index);
-                            }"
-                            class="text-blue-400 hover:text-white hover:bg-blue-300 p-1 transition"/>
-                    </UTooltip>
+                <div
+                    class="w-full flex items-center  gap-3"
+                    :class="item.type === 'Answer Question' ? 'justify-end' : 'justify-between'">
+                    <h3
+                        v-if="item.type != 'Answer Question'"
+                        class="text-[.9rem] font-normal">
+                        Chose Correct Answer
+                    </h3>
+                    <div 
+                        class="flex gap-3">
+                        <UTooltip 
+                            text="Delete Question"
+                            :popper="{ offsetDistance: 12 }">
+                            <UButton
+                                icon="material-symbols:delete-outline"
+                                size="sm"
+                                color="black"
+                                label="Delete Question"
+                                variant="soft" 
+                                :padded="false"
+                                @click="()=>{
+                                    deleteQuestion(index)
+                                }"
+                                class="text-red-500 hover:text-white hover:bg-red-300 p-1 transition"/>
+                        </UTooltip>
+                        <UTooltip 
+                            text="Add New Answer"
+                            :popper="{ offsetDistance: 12 }">
+                            <UButton
+                                icon="material-symbols:add-circle-outline-rounded"
+                                size="sm"
+                                color="black"
+                                label="New Answer"
+                                variant="soft" 
+                                :padded="false"
+                                @click="()=>{
+                                    addNewAnswer(index);
+                                }"
+                                class="text-blue-400 hover:text-white hover:bg-blue-300 p-1 transition"/>
+                        </UTooltip>
+                    </div>
                 </div>
                 <div 
                     v-for="(ans, idx) in item.answer"
                     :key="idx"
                     class="flex items-center gap-2 ">
                     <UCheckbox
+                        v-if="item.type === 'Multiple Choice'"
                         :ui="{
                             base: 'w-5 h-5'
                         }"
                         @update:model-value="()=>{
                             ans.checked = true as boolean;
-                            console.log(ans.checked);
                         }"/>
+                    <URadio
+                        v-if="item.type === 'Cloed Question'"
+                        v-model="ans.checked"
+                        :name="item.type" />
                     <UInput
+                        v-if="item.type != 'Answer Question'"
                         type="text"
                         color="white"
                         variant="outline"
@@ -189,6 +204,14 @@
                         class="w-full"
                         placeholder=""
                         v-model="ans.answer"/>
+                    <UTextarea 
+                        v-else
+                        color="white" 
+                        placeholder="Enter question here..."
+                        name="" 
+                        role="input"
+                        class="w-full"
+                        v-model="item.question"/>
                     <UButton
                         icon="material-symbols:delete-outline"
                         size="sm"
@@ -201,7 +224,37 @@
                         class="text-red-500 hover:text-white hover:bg-red-300 p-1 transition"/>
                 </div>
             </div>
-            <div class="w-full flex items-center justify-end border-t-[1px] border-gray-200 mt-3 py-2">
+            <div class="w-full flex items-center gap-3 justify-end border-t-[1px] border-gray-200 mt-3 py-2">
+                <UTooltip 
+                    text="Add New Mutiple Question"
+                    :popper="{ offsetDistance: 12 }">
+                    <UButton
+                        icon="material-symbols:add-circle-outline-rounded"
+                        size="sm"
+                        color="black"
+                        label="New Mutiple Question"
+                        variant="soft" 
+                        :padded="false"
+                        @click="()=>{
+                            addNewQuestion('multiple_choice');
+                        }"
+                        class="text-blue-400 hover:text-white hover:bg-blue-300 p-1 transition"/>
+                </UTooltip>
+                <UTooltip 
+                    text="Add New Closed Question"
+                    :popper="{ offsetDistance: 12 }">
+                    <UButton
+                        icon="material-symbols:add-circle-outline-rounded"
+                        size="sm"
+                        color="black"
+                        label="New Closed Question"
+                        variant="soft" 
+                        :padded="false"
+                        @click="()=>{
+                            addNewQuestion('cloed_question')
+                        }"
+                        class="text-blue-400 hover:text-white hover:bg-blue-300 p-1 transition"/>
+                </UTooltip>
                 <UTooltip 
                     text="Add New Question"
                     :popper="{ offsetDistance: 12 }">
@@ -213,7 +266,7 @@
                         variant="soft" 
                         :padded="false"
                         @click="()=>{
-                            addNewQuestion();
+                            addNewQuestion('answer_question');
                         }"
                         class="text-blue-400 hover:text-white hover:bg-blue-300 p-1 transition"/>
                 </UTooltip>
@@ -269,6 +322,7 @@ interface IAnswer {
 }
 interface IQuestion {
     question: string;
+    type: string
     answer: IAnswer[];
 }
 
@@ -312,8 +366,8 @@ const questions: Ref<IQuestion[]> = ref<IQuestion[]>([]);
  * Begin::Fetch data section
  */
  const getData = async (event: Event): Promise<void> => {
-    const formData: Items[] = context.getDataForm(event as SubmitEvent) as Items[];
-    formData.question = questions.value
+    const formData: any = context.getDataForm(event as SubmitEvent) as any;
+    formData.questions = questions.value
     console.log(formData)
     // if(props.examId != null)
     // {
@@ -328,7 +382,7 @@ const questions: Ref<IQuestion[]> = ref<IQuestion[]>([]);
     //         (event.target as HTMLFormElement).reset();
     //     }
     // }
-    emits('update:data');
+    // emits('update:data');
 }
 
 const setData = async (): Promise<void> => {
@@ -349,29 +403,66 @@ const setData = async (): Promise<void> => {
 /**
  * Begin::Some logical section
  */
-const addNewQuestion = (): void => {
-    questions.value.push({
-        question: '',
-        answer: [
-            {
-                checked: false,
-                answer: ''
-            },
-            {
-                checked: false,
-                answer: ''
-            },
-            {
-                checked: false,
-                answer: ''
-            },
-            {
-                checked: false,
-                answer: ''
-            }
-        ]
-    })
-}
+ const addNewQuestion = (type: string): void => {
+    switch (type) {
+        case 'multiple_choice':
+            questions.value.push({
+                type: 'Multiple Choice',
+                question: '',
+                answer: [
+                    { 
+                        checked: false, 
+                        answer: '' 
+                    },
+                    { 
+                        checked: false, 
+                        answer: '' 
+                    },
+                    { 
+                        checked: false, 
+                        answer: '' 
+                    },
+                    { 
+                        checked: false, 
+                        answer: '' 
+                    }
+                ]
+            });
+            break;
+        case 'cloed_question':
+            questions.value.push({
+                type: 'Cloed Question',
+                question: '',
+                answer: [
+                    { 
+                        checked: false, 
+                        answer: '' 
+                    },
+                    { 
+                        checked: false, 
+                        answer: '' 
+                    }
+                ]
+            });
+            break;
+        case 'answer_question':
+            questions.value.push({
+                type: 'Answer Question',
+                question: '',
+                answer: [
+                    {
+                        checked: false,
+                        answer: ''
+                    }
+                ]
+            });
+            break;
+        default:
+            console.error('Unsupported question type');
+    }
+    console.log(questions.value)
+};
+
 const deleteQuestion = (idx: number): void => {
     if (idx >= 0 && idx < questions.value.length) {
         const question = questions.value[idx];
