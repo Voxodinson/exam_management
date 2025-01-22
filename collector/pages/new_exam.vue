@@ -22,7 +22,7 @@
         </span>
     </div>
     <form
-        name="company"
+        name=""
         method="POST"
         enctype="multipart/form-data"
         @submit.prevent="getData"
@@ -66,7 +66,7 @@
                 </UFormGroup>
             </div>
             <div 
-                class="w-full flex gap-2  rounded-md">
+                class="w-full flex gap-2  mt-2 rounded-md">
                 <UFormGroup
                     class="w-[calc(99%/2)]"
                     label="Exam"
@@ -134,36 +134,7 @@
                         role="input"
                         v-model="item.question"/>
                 </UFormGroup>
-                <div 
-                    v-for="(ans, idx) in item.answer"
-                    :key="idx"
-                    class="flex items-center gap-2 ">
-                    <UCheckbox
-                        :ui="{
-                            base: 'w-5 h-5'
-                        }"
-                        v-model="ans.checked"/>
-                    <UInput
-                        type="text"
-                        color="white"
-                        variant="outline"
-                        size="sm"
-                        name=""
-                        role="input"
-                        class="w-full"
-                        placeholder=""
-                        v-model="ans.answer"/>
-                    <UButton
-                        icon="material-symbols:delete-outline"
-                        size="sm"
-                        color="black"
-                        variant="soft" 
-                        :padded="false"
-                        @click="()=>{
-                            deleteAnswer(index ,idx);
-                        }"
-                        class="text-red-500 hover:text-white hover:bg-red-300 p-1 transition"/>
-                </div>
+
                 <div class="w-full flex items-center justify-end gap-3">
                     <UTooltip 
                         text="Delete Question"
@@ -191,10 +162,43 @@
                             variant="soft" 
                             :padded="false"
                             @click="()=>{
-                                addNewAnswer(idx);
+                                addNewAnswer(index);
                             }"
                             class="text-blue-400 hover:text-white hover:bg-blue-300 p-1 transition"/>
                     </UTooltip>
+                </div>
+                <div 
+                    v-for="(ans, idx) in item.answer"
+                    :key="idx"
+                    class="flex items-center gap-2 ">
+                    <UCheckbox
+                        :ui="{
+                            base: 'w-5 h-5'
+                        }"
+                        @update:model-value="()=>{
+                            ans.checked = true as boolean;
+                            console.log(ans.checked);
+                        }"/>
+                    <UInput
+                        type="text"
+                        color="white"
+                        variant="outline"
+                        size="sm"
+                        name=""
+                        role="input"
+                        class="w-full"
+                        placeholder=""
+                        v-model="ans.answer"/>
+                    <UButton
+                        icon="material-symbols:delete-outline"
+                        size="sm"
+                        color="black"
+                        variant="soft" 
+                        :padded="false"
+                        @click="()=>{
+                            deleteAnswer(index ,idx);
+                        }"
+                        class="text-red-500 hover:text-white hover:bg-red-300 p-1 transition"/>
                 </div>
             </div>
             <div class="w-full flex items-center justify-end border-t-[1px] border-gray-200 mt-3 py-2">
@@ -213,6 +217,27 @@
                         }"
                         class="text-blue-400 hover:text-white hover:bg-blue-300 p-1 transition"/>
                 </UTooltip>
+            </div>
+            <div class="w-full flex items-center justify-end gap-2 border-t-[1px] border-gray-200 py-2">
+                <UButton
+                    type="button"
+                    size="sm"
+                    color="black"
+                    label="Cancel"
+                    variant="soft" 
+                    :padded="false"
+                    @click="() => {
+                        emits('toggle', false);
+                    }"
+                    class="bg-red-500 text-white hover:bg-red-300 p-1 transition"/>
+                <UButton
+                    type="submit"
+                    size="sm"
+                    color="black"
+                    label="Create Exam"
+                    variant="soft" 
+                    :padded="false"
+                    class="bg-blue-400 text-white hover:bg-blue-300 p-1 transition"/>
             </div>
         </div>
     </form>
@@ -287,22 +312,22 @@ const questions: Ref<IQuestion[]> = ref<IQuestion[]>([]);
  * Begin::Fetch data section
  */
  const getData = async (event: Event): Promise<void> => {
-    const formData: object = context.getDataFormFileBase64(event as SubmitEvent) as object;
+    const formData: Items[] = context.getDataForm(event as SubmitEvent) as Items[];
+    formData.question = questions.value
     console.log(formData)
-    if(props.examId != null)
-    {
-        await api.post(`company`, true, formData) as ResponseStatus;
-    }
-    else
-    {
-        const result: ResponseStatus = await api.post('company', true, formData) as ResponseStatus;
-
-        if(!result.error)
-        {
-            emits('toggle', false);
-            (event.target as HTMLFormElement).reset();
-        }
-    }            
+    // if(props.examId != null)
+    // {
+    //     await api.post(``, true, formData) as ResponseStatus;
+    // }
+    // else
+    // {
+    //     const result: ResponseStatus = await api.post('', true, formData) as ResponseStatus;
+    //     if(!result.error)
+    //     {
+    //         emits('toggle', false);
+    //         (event.target as HTMLFormElement).reset();
+    //     }
+    // }
     emits('update:data');
 }
 
@@ -371,7 +396,7 @@ const addNewAnswer = (idx: number): void => {
 const deleteAnswer = (questionIdx: number, idx: number): void => {
     const question = questions.value[questionIdx];
     if (question && question.answer) {
-        if (question.answer.length > 0 && question.answer[idx].answer != '') {
+        if (question.answer.length > 0 && question.answer[idx].answer != '' || question.answer[idx].checked != false) {
             Confirm('Are you sure to delete this answer?', () => {
                 question.answer.splice(idx, 1);
             });
