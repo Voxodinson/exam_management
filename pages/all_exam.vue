@@ -82,7 +82,6 @@
                     :data="datas"
                     is-custom
                     v-slot="{ data }"
-                    class="mt-3"
                     @update:data="async (current_page: number): Promise<void> => {
                         
                     }">
