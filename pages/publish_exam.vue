@@ -1,6 +1,6 @@
 <template>
     <div>
-
+        Publish Exam
     </div>
 </template>
 
