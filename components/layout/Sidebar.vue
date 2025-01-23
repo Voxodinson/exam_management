@@ -27,13 +27,16 @@
         <div class="h-[calc(100vh-95px)] p-2 overflow-auto">
             <Section
                 :class-title="!expand ? 'border-b-[1px] border-gray-300' : 'hidden'"
-                label="Main menu"/>
+                label="Main Menu"/>
             <Menu
                 icon="ant-design:home-outlined"
                 title="Home"
                 path="/"
                 class-name=""
                 :class-title="!expand ? '' : 'hidden'"/>
+            <Section
+                :class-title="!expand ? 'border-b-[1px] border-gray-300' : 'hidden'"
+                label="Exam Mangement"/>
             <Menu
                 icon="mage:dashboard-check"
                 title="All Exam"
@@ -50,6 +53,15 @@
                 icon="material-symbols:checklist"
                 title="Publish Exam"
                 path="/publish_exam"
+                class-name=""
+                :class-title="!expand ? '' : 'hidden'"/>
+            <Section
+                :class-title="!expand ? 'border-b-[1px] border-gray-300' : 'hidden'"
+                label="User Management"/>
+            <Menu
+                icon="hugeicons:add-team"
+                title="User Lists"
+                path="/user_management"
                 class-name=""
                 :class-title="!expand ? '' : 'hidden'"/>
             <Section
