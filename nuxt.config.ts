@@ -25,5 +25,9 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@pinia/nuxt'
   ],
-  compatibilityDate: '2024-08-23'
+  compatibilityDate: '2024-08-23',
+  // devServer: {
+  //   host: '192.168.18.87',
+  //   port: 3002,
+  // },
 });
