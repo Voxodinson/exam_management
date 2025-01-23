@@ -51,7 +51,7 @@
         <div class="w-full p-2">
             <div 
                 v-if="isOpenFilter"
-                class="flex gap-2 justify-between p-2 rounded-md bg-[#3A6D8C]">
+                class="flex gap-2 mb-2 justify-between p-2 rounded-md bg-[#3A6D8C]">
                 <div 
                     class="flex gap-2">
                     <SelectMenu
@@ -76,7 +76,7 @@
                     placeholder="Search here..."
                     class="w-[250px]"/>
             </div>
-            <div class="w-full mt-2 bg-white rounded-md overflow-hidden">
+            <div class="w-full bg-white rounded-md overflow-hidden">
                 <Table
                     :columns="columns"
                     :data="datas"
