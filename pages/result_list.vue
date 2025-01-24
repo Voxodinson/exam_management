@@ -32,7 +32,7 @@
                     @click="()=>{
                         toggle();
                     }"
-                    class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
+                    class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
             </UTooltip>
         </div>
     </div>
@@ -40,65 +40,69 @@
         class="w-full p-2 ">
         <div 
             v-if="isOpenFilter"
-            class="w-full flex flex-col gap-2 bg-white rounded-md p-2 mb-2" >
-            <div 
-                class="w-full flex justify-between flex-wrap gap-3">
+            class="w-full flex gap-2 justify-between bg-[#3A6D8C] rounded-md p-2 mb-2" >
                 <div 
-                    class="flex w-full flex-wrap gap-2">
-                    <UFormGroup
-                        class="w-[calc(98%/4)]"
-                        label="Departments"
-                        name="">
-                        <SelectMenu
-                            name=""
-                            :options="[]"
-                            value-attribute="id"
-                            option-attribute="name"
-                            id-attribute="id"
-                            placeholder="Select a department"
-                            class="w-full"/>
-                    </UFormGroup>
-                    <UFormGroup
-                        class="w-[calc(98%/4)]"
-                        label="Class"
-                        name="">
-                        <SelectMenu
-                            name=""
-                            :options="[]"
-                            value-attribute="id"
-                            option-attribute="name"
-                            id-attribute="id"
-                            placeholder="Select a class"
-                            class="w-full"/>
-                    </UFormGroup>  
-                    <UFormGroup
-                        class="w-[calc(98%/4)]"
-                        label="Shift Time"
-                        name="">
-                        <SelectMenu
-                            name=""
-                            :options="[]"
-                            value-attribute="id"
-                            option-attribute="name"
-                            id-attribute="id"
-                            placeholder="Select a shift"
-                            class="w-full"/>
-                    </UFormGroup>  
-                    <UFormGroup
-                        class="w-[calc(97.5%/4)]"
-                        label="Nationality"
-                        name="">
-                        <SelectMenu
-                            name=""
-                            :options="[]"
-                            value-attribute="id"
-                            option-attribute="name"
-                            id-attribute="id"
-                            placeholder="Select a nationality"
-                            class="w-full"/>
-                    </UFormGroup>  
+                    class="flex w-fit flex-wrap gap-2">
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        value-attribute="id"
+                        option-attribute="name"
+                        id-attribute="id"
+                        placeholder="Select a department"
+                        class="w-[250px]"/>
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        value-attribute="id"
+                        option-attribute="name"
+                        id-attribute="id"
+                        placeholder="Select a class"
+                        class="w-[250px]"/>
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        value-attribute="id"
+                        option-attribute="name"
+                        id-attribute="id"
+                        placeholder="Select a shift"
+                        class="w-[250px]"/>
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        value-attribute="id"
+                        option-attribute="name"
+                        id-attribute="id"
+                        placeholder="Select a nationality"
+                        class="w-[250px]"/>
+                    <UTooltip 
+                        text="Sort by Letter"
+                        :popper="{ offsetDistance: 12 }">
+                        <UButton
+                            icon="solar:round-sort-vertical-broken"
+                            size="sm"
+                            color="black"
+                            variant="soft" 
+                            :padded="false"
+                            @click="()=>{
+                            }"
+                            class="bg-white hover:bg-gray-200 text-black p-2 transition"/>
+                    </UTooltip>
                 </div>
-            </div>
+               
+                <UTooltip 
+                    text="Cleare Filter"
+                    :popper="{ offsetDistance: 12 }">
+                    <UButton
+                        icon="pajamas:clear-all"
+                        size="sm"
+                        color="black"
+                        variant="soft" 
+                        :padded="false"
+                        @click="()=>{
+                        }"
+                        class="bg-white hover:bg-gray-200 text-red-500 px-2 transition"/>
+                </UTooltip>
         </div>
         <div 
             class="w-full bg-white rounded-md overflow-hidden">
