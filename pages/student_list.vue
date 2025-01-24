@@ -32,7 +32,7 @@
                     @click="()=>{
                         toggle();
                     }"
-                    class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
+                    class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
             </UTooltip>
         </div>
     </div>

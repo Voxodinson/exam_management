@@ -40,7 +40,7 @@
                         @click="()=>{
                             toggleCreate(true);
                         }"
-                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
+                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
                 </UTooltip>
                 <UTooltip 
                     :text="isOpenFilter ? 'Close Filters' : 'Open Filters'"
@@ -54,7 +54,7 @@
                         @click="()=>{
                             toggle();
                         }"
-                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
+                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
                 </UTooltip>
 
             </div>
@@ -217,7 +217,7 @@
             </div>
             <div
                 v-if="datas" 
-                class="w-full flex items-center justify-end p-2 bg-white rounded-md">
+                class="w-full flex items-center mt-2 justify-end p-2 bg-white rounded-md">
                 <UPagination
                     size="sm"
                     :total="datas.total || 0" 

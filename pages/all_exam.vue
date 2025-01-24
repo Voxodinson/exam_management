@@ -17,6 +17,16 @@
                         inactive: 'hover:text-blue-200',
                         active: 'text-blue-400',}"/>
             <div class=" flex gap-2 items-center justify-center h-full">
+                <UInput
+                    icon="material-symbols:search"
+                    type="text"
+                    color="white"
+                    variant="outline"
+                    size="md"
+                    name="district"
+                    role="input"
+                    placeholder="Search here..."
+                    class="w-[250px]"/>
                 <UTooltip 
                     text="Create New Exam"
                     :popper="{ offsetDistance: 12 }">
@@ -30,7 +40,7 @@
                         @click="()=>{
                             toggleCreate(true);
                         }"
-                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
+                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
                 </UTooltip>
                 <UTooltip 
                     :text="isOpenFilter ? 'Close Filters' : 'Open Filters'"
@@ -44,7 +54,7 @@
                         @click="()=>{
                             toggle();
                         }"
-                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
+                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
                 </UTooltip>
             </div>
         </div>
@@ -65,16 +75,6 @@
                     <InputDate
                         class="w-[250px]"/>
                 </div>
-                <UInput
-                    icon="material-symbols:search"
-                    type="text"
-                    color="white"
-                    variant="outline"
-                    size="md"
-                    name="district"
-                    role="input"
-                    placeholder="Search here..."
-                    class="w-[250px]"/>
             </div>
             <div class="w-full bg-white rounded-md overflow-hidden">
                 <Table
