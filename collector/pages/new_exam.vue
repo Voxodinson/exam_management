@@ -27,22 +27,8 @@
             <div 
                 class="w-full flex gap-2 rounded-md">
                 <UFormGroup
-                    class="w-[calc(99%/2)]"
-                    label="Subject"
-                    name="">
-                    <UInput
-                        type="text"
-                        color="white"
-                        variant="outline"
-                        size="md"
-                        name=""
-                        role="input"
-                        class="w-full"
-                        placeholder=""/>
-                </UFormGroup>
-                <UFormGroup
                     class="w-[calc(99%/3)]"
-                    label="Difficulty level"
+                    label="Department"
                     name="">
                     <SelectMenu
                         name=""
@@ -50,21 +36,59 @@
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
-                        placeholder=""
+                        placeholder="Please select department"
                         class="w-full"/>
                 </UFormGroup>
                 <UFormGroup
                     class="w-[calc(99%/3)]"
-                    label="Due Date"
+                    label="Major"
                     name="">
-                    <InputDate
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        value-attribute="id"
+                        option-attribute="name"
+                        id-attribute="id"
+                        placeholder="Please select major"
                         class="w-full"/>
+                </UFormGroup>
+                <UFormGroup
+                    class="w-[calc(99%/3)]"
+                    label="Marks ( Total - Pass Mark)"
+                    name="">
+                    <div 
+                        class="w-full grid grid-cols-2 gap-2">
+                        <UInput
+                            type="text"
+                            color="white"
+                            variant="outline"
+                            size="md"
+                            name=""
+                            role="input"
+                            class="w-full"
+                            placeholder="Enter total mark..."
+                            v-model="calculateMark.total"
+                            disabled/>
+                        <UInput
+                            type="text"
+                            color="white"
+                            variant="outline"
+                            size="md"
+                            name=""
+                            role="input"
+                            class="w-full"
+                            placeholder="Enter passing mark..."
+                            @update:model-value="(value: number): void => {
+                                calculateMark.passing = Number(value);
+                            }"
+                            :model-value="calculateMark.passing"/>
+                    </div>
                 </UFormGroup>
             </div>
             <div 
                 class="w-full flex gap-2  mt-2 rounded-md">
                 <UFormGroup
-                    class="w-[calc(99%/2)]"
+                    class="w-[calc(99%/3)]"
                     label="Exam"
                     name="">
                     <UInput
@@ -75,7 +99,7 @@
                         name=""
                         role="input"
                         class="w-full"
-                        placeholder=""/>
+                        placeholder="Enter exam here..."/>
                 </UFormGroup>
                 <UFormGroup
                     class="w-[calc(99%/3)]"
@@ -87,12 +111,12 @@
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
-                        placeholder=""
+                        placeholder="Please select status"
                         class="w-full"/>
                 </UFormGroup>
                 <UFormGroup
                     class="w-[calc(99%/3)]"
-                    label="Exam Time"
+                    label="Exam Time (Mins)"
                     name="">
                     <UInput
                         type="text"
@@ -102,7 +126,7 @@
                         name=""
                         role="input"
                         class="w-full"
-                        placeholder=""/>
+                        placeholder="Enter exam duration in (minutes)..."/>
                 </UFormGroup>
             </div>
             <div class="mt-3 border-b-[1px] border-gray-200">
@@ -134,11 +158,36 @@
                 <div
                     class="w-full flex items-center  gap-3"
                     :class="item.type === 'Answer Question' ? 'justify-end' : 'justify-between'">
-                    <h3
-                        v-if="item.type != 'Answer Question'"
-                        class="text-[.9rem] font-normal">
-                        Chose Correct Answer
-                    </h3>
+                    <div 
+                        class="flex items-center gap-3">
+                        <h3
+                            v-if="item.type != 'Answer Question'"
+                            class="text-[.9rem] font-normal">
+                            Chose Correct Answer
+                        </h3>
+                        -
+                        <div 
+                            class="flex items-center gap-2">
+                            <span
+                                class="text-[.9rem]">
+                                Score
+                            </span>
+                            <UInput
+                                type="number"
+                                color="white"
+                                variant="outline"
+                                size="sm"
+                                name=""
+                                role="input"
+                                class="w-[100px]"
+                                @update:model-value="(value: number) => {
+                                    item.mark = Number(value);
+                                    calculateMark.total = questions.reduce((sum: any, q: any) => sum + (q.mark || 0), 0);
+                                    calculateMark.passing = Number(calculateMark.total) / Number(2);
+                                }"  
+                                :model-value="item.mark"/>
+                        </div>
+                    </div>
                     <div 
                         class="flex gap-3">
                         <UTooltip 
@@ -315,11 +364,13 @@ import {
 
 interface IAnswer {
     checked: boolean; 
-    answer: string; 
+    answer: string;
+    
 }
 interface IQuestion {
     question: string;
-    type: string
+    type: string,
+    mark: number; 
     answer: IAnswer[];
 }
 
@@ -354,7 +405,10 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
  *Begin::Declare variable in this section 
  */ 
 const questions: Ref<IQuestion[]> = ref<IQuestion[]>([]);
-
+const calculateMark: Ref<Items> = ref<Items>({
+    total: 0,
+    passing: 0
+})
 /**
  *End::Declare variable in this section 
  */ 
@@ -406,6 +460,7 @@ const setData = async (): Promise<void> => {
             questions.value.push({
                 type: 'Multiple Choice',
                 question: '',
+                mark: 0,
                 answer: [
                     { 
                         checked: false, 
@@ -430,6 +485,7 @@ const setData = async (): Promise<void> => {
             questions.value.push({
                 type: 'Cloed Question',
                 question: '',
+                mark: 0,
                 answer: [
                     { 
                         checked: false, 
@@ -446,6 +502,7 @@ const setData = async (): Promise<void> => {
             questions.value.push({
                 type: 'Answer Question',
                 question: '',
+                mark: 0,
                 answer: [
                     {
                         checked: false,
