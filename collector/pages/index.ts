@@ -1,6 +1,12 @@
 import NewExam from './new_exam.vue';
-import User from './user.vue'
+import User from './user.vue';
+import Department from './department.vue';
+import Class from './class.vue';
+import Major from './major.vue';
 export {
     NewExam,
-    User
+    User,
+    Major,
+    Class,
+    Department
 }
