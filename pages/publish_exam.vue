@@ -1,62 +1,21 @@
 <template>
-    <div 
-        class="flex items-center justify-between h-[45px] px-4 bg-white border-b-[1px] border-gray-200">
-        <UBreadcrumb 
-            :links="linksItem"
-            divider="/"
-                :ui="{
-                    base: 'font-semibold text-[.8rem]',
-                    inactive: 'hover:text-blue-200',
-                    active: 'text-blue-400',}"/>
-        <div class=" flex gap-2 items-center justify-center h-full">
-            <UInput
-                icon="material-symbols:search"
-                type="text"
-                color="white"
-                variant="outline"
-                size="md"
-                name="district"
-                role="input"
-                placeholder="Search here..."
-                class="w-[250px]"/>
-            <UTooltip 
-                text="Create New Exam"
-                :popper="{ offsetDistance: 12 }">
-                <UButton
-                    icon="material-symbols:add-circle-outline-rounded"
-                    size="sm"
-                    color="black"
-                    label="New Exam"
-                    variant="soft" 
-                    :padded="false"
-                    @click="()=>{
-                        toggleCreate(true);
-                    }"
-                    class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
-            </UTooltip>
-            <UTooltip 
-                :text="isOpenFilter ? 'Close Filters' : 'Open Filters'"
-                :popper="{ offsetDistance: 12 }">
-                <UButton
-                    :icon="isOpenFilter ? 'material-symbols:close-rounded' : 'material-symbols:filter-alt-outline'"
-                    size="sm"
-                    color="black"
-                    variant="soft" 
-                    :padded="false"
-                    @click="()=>{
-                        toggle();
-                    }"
-                    class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
-            </UTooltip>
-        </div>
-    </div>
-    <div 
-        class="w-full p-2 ">
+    <template v-if="openCreate">
+        <PublishExam
+            :publish-id="publishId"
+            @toggle="toggleCreate"
+            @update:data="fetchData"/>
+    </template>
+    <template v-else>
         <div 
-            v-if="isOpenFilter"
-            class="w-full flex gap-2 justify-between bg-[#3A6D8C] rounded-md p-2 mb-2" >
-            <div 
-                class="flex w-fit flex-wrap gap-2">
+            class="flex items-center justify-between h-[45px] px-4 bg-white border-b-[1px] border-gray-200">
+            <UBreadcrumb 
+                :links="linksItem"
+                divider="/"
+                    :ui="{
+                        base: 'font-semibold text-[.8rem]',
+                        inactive: 'hover:text-blue-200',
+                        active: 'text-blue-400',}"/>
+            <div class=" flex gap-2 items-center justify-center h-full">
                 <UInput
                     icon="material-symbols:search"
                     type="text"
@@ -65,228 +24,296 @@
                     size="md"
                     name="district"
                     role="input"
-                    placeholder="Search name here..."
-                    class="w-[400px]"/>
-                <SelectMenu
-                    name=""
-                    :options="[]"
-                    value-attribute="id"
-                    option-attribute="name"
-                    id-attribute="id"
-                    placeholder="Select a department"
+                    placeholder="Search here..."
                     class="w-[250px]"/>
                 <UTooltip 
-                    text="Sort by Letter"
+                    text="Create New Exam"
                     :popper="{ offsetDistance: 12 }">
                     <UButton
-                        icon="solar:round-sort-vertical-broken"
+                        icon="material-symbols:add-circle-outline-rounded"
+                        size="sm"
+                        color="black"
+                        label="New Exam"
+                        variant="soft" 
+                        :padded="false"
+                        @click="()=>{
+                            toggleCreate(true);
+                        }"
+                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
+                </UTooltip>
+                <UTooltip 
+                    :text="isOpenFilter ? 'Close Filters' : 'Open Filters'"
+                    :popper="{ offsetDistance: 12 }">
+                    <UButton
+                        :icon="isOpenFilter ? 'material-symbols:close-rounded' : 'material-symbols:filter-alt-outline'"
+                        size="sm"
+                        color="black"
+                        variant="soft" 
+                        :padded="false"
+                        @click="()=>{
+                            toggle();
+                        }"
+                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
+                </UTooltip>
+            </div>
+        </div>
+        <div 
+            class="w-full p-2 ">
+            <div 
+                v-if="isOpenFilter"
+                class="w-full flex gap-2 justify-between bg-[#3A6D8C] rounded-md p-2 mb-2" >
+                <div 
+                    class="flex w-fit flex-wrap gap-2">
+                    <UInput
+                        icon="material-symbols:search"
+                        type="text"
+                        color="white"
+                        variant="outline"
+                        size="md"
+                        name="district"
+                        role="input"
+                        placeholder="Search name here..."
+                        class="w-[400px]"/>
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        value-attribute="id"
+                        option-attribute="name"
+                        id-attribute="id"
+                        placeholder="Select a department"
+                        class="w-[250px]"/>
+                    <UTooltip 
+                        text="Sort by Letter"
+                        :popper="{ offsetDistance: 12 }">
+                        <UButton
+                            icon="solar:round-sort-vertical-broken"
+                            size="sm"
+                            color="black"
+                            variant="soft" 
+                            :padded="false"
+                            @click="()=>{
+                            }"
+                            class="bg-white hover:bg-gray-200 text-black p-2 transition"/>
+                    </UTooltip>
+                </div>
+                <UTooltip 
+                    text="Cleare Filter"
+                    :popper="{ offsetDistance: 12 }">
+                    <UButton
+                        icon="pajamas:clear-all"
                         size="sm"
                         color="black"
                         variant="soft" 
                         :padded="false"
                         @click="()=>{
                         }"
-                        class="bg-white hover:bg-gray-200 text-black p-2 transition"/>
+                        class="bg-white hover:bg-gray-200 text-red-500 px-2 transition"/>
                 </UTooltip>
             </div>
-            <UTooltip 
-                text="Cleare Filter"
-                :popper="{ offsetDistance: 12 }">
-                <UButton
-                    icon="pajamas:clear-all"
-                    size="sm"
-                    color="black"
-                    variant="soft" 
-                    :padded="false"
-                    @click="()=>{
-                    }"
-                    class="bg-white hover:bg-gray-200 text-red-500 px-2 transition"/>
-            </UTooltip>
-        </div>
-        <div 
-            class="w-full flex flex-col gap-3 rounded-md overflow-hidden">
-            <div
-                v-for="(exam, idx) in datas.data"
-                :key="idx"
-                class="w-full rounded-md h-fit p-2 border-[1px] bg-white border-gray-200">
-                <div 
-                    class="w-full bg-blue-100 p-2 rounded-md flex items-center justify-between  border-b-[1px] border-gray-200">
-                    <div 
-                        class="w-fit">
-                        <h3
-                            class="text-[1rem] font-semibold">
-                            {{ exam.exam }} Exam
-                        </h3>
-                        <span
-                            class="text-[.8rem] text-gray-400">
-                            {{ exam.subject }} - {{ exam.grade }}
-                        </span>
-                    </div>
-                    <div 
-                        class="flex items-center gap-3 py-1 px-4 border-[1px] border-gray-200 bg-white shadow-sm *:text-[.9rem] rounded-full">
-                        <span>
-                            ( 
-                            <span class="text-blue-400">{{ exam.duration_minutes}}</span> 
-                            ) from {{ exam.start_time }}&ensp; - &ensp;{{ exam.end_time }}
-                        </span>
-                    </div>
-                    <div 
-                        class="flex items-center py-1 pl-2 pr-1 shadow-md rounded-full capitalize bg-blue-400 gap-3">
-                        <span
-                            class="text-white text-[.9rem] pt-0.5">
-                            {{ exam.status }}
-                            
-                        </span>
-                        <UToggle 
-                            size="lg"
-                            v-model="activeStatus" />
-                    </div>
-                    <UDropdown 
-                        :items="[
-                            [{
-                                label: 'Edit',
-                                icon: 'i-heroicons-pencil-square-20-solid',
-                                click: () => {}
-                            }], 
-                            [{
-                                label: 'Delete',
-                                icon: 'i-heroicons-trash-20-solid',
-                                click: () => {}
-                            }]
-                        ]" 
-                        :popper="{ placement: 'bottom-start' }">
-                        <UButton 
-                            color="white"
-                            trailing-icon="mdi:dots-vertical" />
-                    </UDropdown>
-                </div>
-                <div 
-                    class="w-full grid grid-cols-4 pt-2">
-                    <div 
-                        class="*:text-[.9rem] border-r-[1px] flex justify-center flex-col border-gray-200">
-                        <span>
-                            Total marks: &ensp; {{ exam.total_marks }} pts
-                        </span>
-                        <span
-                            class="block">
-                            Passing marks: &ensp;
-                            <span
-                                class="text-blue-400">
-                                {{ exam.passing_marks }} pts
-                            </span>
-                        </span>
-                    </div>
-                    <div 
-                        class="*:text-[.9rem] border-r-[1px] border-gray-200 flex items-center justify-center">
-                        <span class="text-center">
-                            Created by:
-                            <span
-                                class="text-blue-400">
-                                {{ exam.created_by }}
-                            </span>
-                        </span>
-                    </div>
-                    <div 
-                        class="*:text-[.9rem] border-r-[1px] border-gray-200 flex items-center flex-col gap-2 justify-center">
-                        <span class="text-center">
-                            Total question:
-                            <span
-                                class="text-blue-400">
-                                {{ exam.questions.length }}
-                            </span>
-                        </span>
-                        <UButton
-                            :label="isShowQuestion[idx] ? 'Close question' : 'Show question'"
-                            color="white"
-                            size="xs"
-                            @click="(): void => {
-                                toggleShowQuestion(idx);
-                            }"
-                            class="border-none border-[1px] text-[.8rem] hover:bg-gray-200 hover:border-gray-200"/>
-                    </div>
-                    <div 
-                        class="*:text-[.9rem] flex items-center flex-col justify-center">
-                        <span
-                            class="">
-                            Department / Class / Room
-                        </span>
-                        <span
-                            class="text-blue-400 capitalize">
-                            {{ exam.department }}
-                            -
-                            <span
-                                class="text-blue-400">
-                                {{ exam.class }}
-                            </span>
-                            -
-                            <span
-                                class="text-blue-400">
-                                {{ exam.room }}
-                            </span>
-                        </span>
-                    </div>
-                </div>
+            <div 
+                class="w-full flex flex-col gap-3 rounded-md overflow-hidden">
                 <div
-                    v-if="isShowQuestion[idx]" 
-                    class="w-full bg-gray-100 mt-3 flex flex-col gap-3 rounded-md p-3">
-                    <div class="w-full flex items-center justify-between">
-                        <h3
-                            class="text-[1rem] font-semibold">
-                            {{ exam.subject }} - {{ exam.exam }} (All Questions)
-                        </h3>
-                        <UIcon
-                            name="material-symbols-light:close"
-                            class="w-6 h-6 hover:scale-110 transition cursor-pointer"
-                            @click="(): void => {
-                                toggleShowQuestion(idx);
-                            }"/>
+                    v-for="(exam, idx) in datas.data"
+                    :key="idx"
+                    class="w-full rounded-md h-fit p-2 border-[1px] bg-white border-gray-200">
+                    <div 
+                        class="w-full bg-blue-100 p-2 rounded-md flex items-center justify-between  border-b-[1px] border-gray-200">
+                        <div 
+                            class="w-fit">
+                            <h3
+                                class="text-[1rem] font-semibold">
+                                {{ exam.exam }} Exam
+                            </h3>
+                            <span
+                                class="text-[.8rem] text-gray-400">
+                                {{ exam.subject }} - {{ exam.grade }}
+                            </span>
+                        </div>
+                        <div 
+                            class="flex items-center gap-3 py-1 px-4 border-[1px] border-gray-200 bg-white shadow-sm *:text-[.9rem] rounded-full">
+                            <span>
+                                (
+                                <span class="text-blue-400">
+                                    {{ exam.duration_minutes}}
+                                </span> 
+                                ) from {{ exam.start_time }}&ensp; - &ensp;{{ exam.end_time }}
+                            </span>
+                        </div>
+                        <div 
+                            class="flex items-center py-1 pl-2 pr-1 shadow-md rounded-full capitalize bg-blue-400 gap-3">
+                            <span
+                                class="text-white text-[.9rem] pt-0.5">
+                                {{ exam.status }}
+                                
+                            </span>
+                            <UToggle 
+                                size="lg"
+                                v-model="exam.isActive"
+                                @click="async (): Promise<void> => {
+                                    Confirm('Are you sure to unpublish exam..?', async (): Promise<void> => {
+                                        const result = await api.update(``, true, {}) as ResponseStatus;
+                                        if(result){
+                                            await fetchData();
+                                        }
+                                    });
+                                }"/>
+                        </div>
+                        <UDropdown 
+                            :items="[
+                                [{
+                                    label: 'Edit',
+                                    icon: 'i-heroicons-pencil-square-20-solid',
+                                    click: () => {
+                                        
+                                    }
+                                }], 
+                                [{
+                                    label: 'Delete',
+                                    icon: 'i-heroicons-trash-20-solid',
+                                    click: () => {
+                                        Confirm('Are you sure to delete exam..?', async (): Promise<void> => {
+                                            const result = await api.update(``, true, {}) as ResponseStatus;
+                                            if(result){
+                                                await fetchData();
+                                            }
+                                        });
+                                    }
+                                }]
+                            ]" 
+                            :popper="{ placement: 'bottom-start' }">
+                            <UButton 
+                                color="white"
+                                trailing-icon="mdi:dots-vertical" />
+                        </UDropdown>
                     </div>
                     <div 
-                        v-for="(question, idx) in exam.questions"
-                        class="w-full flex-col gap-2 bg-white p-3 rounded-md">
+                        class="w-full grid grid-cols-4 pt-2">
                         <div 
-                            class="w-full">
-                            <p
-                                class="w-full flex justify-between items-center">
-                                {{ idx+1 }}. {{ question.question }} 
-                                <span class=" capitalize text-[.9rem] text-blue-400">
-                                    {{ question.question_type }}
+                            class="*:text-[.9rem] border-r-[1px] flex justify-center flex-col border-gray-200">
+                            <span>
+                                Total marks: &ensp; {{ exam.total_marks }} pts
+                            </span>
+                            <span
+                                class="block">
+                                Passing marks: &ensp;
+                                <span
+                                    class="text-blue-400">
+                                    {{ exam.passing_marks }} pts
                                 </span>
-                            </p>
+                            </span>
+                        </div>
+                        <div 
+                            class="*:text-[.9rem] border-r-[1px] border-gray-200 flex items-center justify-center">
+                            <span class="text-center">
+                                Created by:
+                                <span
+                                    class="text-blue-400">
+                                    {{ exam.created_by }}
+                                </span>
+                            </span>
+                        </div>
+                        <div 
+                            class="*:text-[.9rem] border-r-[1px] border-gray-200 flex items-center flex-col gap-2 justify-center">
+                            <span class="text-center">
+                                Total question:
+                                <span
+                                    class="text-blue-400">
+                                    {{ exam.questions.length }}
+                                </span>
+                            </span>
+                            <UButton
+                                :label="isShowQuestion[idx] ? 'Close question' : 'Show question'"
+                                color="white"
+                                size="xs"
+                                @click="(): void => {
+                                    toggleShowQuestion(idx);
+                                }"
+                                class="border-none border-[1px] text-[.8rem] hover:bg-gray-200 hover:border-gray-200"/>
+                        </div>
+                        <div 
+                            class="*:text-[.9rem] flex items-center flex-col justify-center">
+                            <span
+                                class="">
+                                Department / Class / Room
+                            </span>
+                            <span
+                                class="text-blue-400 capitalize">
+                                {{ exam.department }}
+                                -
+                                <span
+                                    class="text-blue-400">
+                                    {{ exam.class }}
+                                </span>
+                                -
+                                <span
+                                    class="text-blue-400">
+                                    {{ exam.room }}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div
+                        v-if="isShowQuestion[idx]" 
+                        class="w-full bg-gray-100 mt-3 flex flex-col gap-3 rounded-md p-3">
+                        <div class="w-full flex items-center justify-between">
+                            <h3
+                                class="text-[1rem] font-semibold">
+                                {{ exam.subject }} - {{ exam.exam }} (All Questions)
+                            </h3>
+                            <UIcon
+                                name="material-symbols-light:close"
+                                class="w-6 h-6 hover:scale-110 transition cursor-pointer"
+                                @click="(): void => {
+                                    toggleShowQuestion(idx);
+                                }"/>
+                        </div>
+                        <div 
+                            v-for="(question, idx) in exam.questions"
+                            class="w-full flex-col gap-2 bg-white p-3 rounded-md">
                             <div 
-                                class="px-4 flex flex-col gap-3">
+                                class="w-full">
                                 <p
-                                    v-for="(answer, idx) in question.answers">
-                                    {{ idx+1 }}. {{ answer.option_id }} = {{ answer.text }}
-                                </p>
-                            </div>
-                            <div 
-                                class="border-t-[1px] border-gray-200 pt-2 mt-2">
-                                <p
-                                    v-if="question.question_type != 'Q&A' && question.question_type != 'multiple choice'">
-                                    Correct Answer is: 
-                                    <span 
-                                        class="text-blue-400">
-                                        {{ question.correct }}
+                                    class="w-full flex justify-between items-center">
+                                    {{ idx+1 }}. {{ question.question }} 
+                                    <span class=" capitalize text-[.9rem] text-blue-400">
+                                        {{ question.question_type }}
                                     </span>
                                 </p>
-                                <p
-                                    v-if="Array.isArray(question.correct)"
-                                    class="flex gap-3">
-                                    Correct Answer is: 
-                                    <span
-                                        class="text-blue-400"
-                                        v-for="ans in question.correct">
-                                        {{ ans }}
-                                    </span>
-                                </p>
+                                <div 
+                                    class="px-4 flex flex-col gap-3">
+                                    <p
+                                        v-for="(answer, idx) in question.answers">
+                                        {{ idx+1 }}. {{ answer.option_id }} = {{ answer.text }}
+                                    </p>
+                                </div>
+                                <div 
+                                    class="border-t-[1px] border-gray-200 pt-2 mt-2">
+                                    <p
+                                        v-if="question.question_type != 'Q&A' && question.question_type != 'multiple choice'">
+                                        Correct Answer is: 
+                                        <span 
+                                            class="text-blue-400">
+                                            {{ question.correct }}
+                                        </span>
+                                    </p>
+                                    <p
+                                        v-if="Array.isArray(question.correct)"
+                                        class="flex gap-3">
+                                        Correct Answer is: 
+                                        <span
+                                            class="text-blue-400"
+                                            v-for="ans in question.correct">
+                                            {{ ans }}
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </template>
 </template>
 <script setup lang="ts">
 import {
@@ -301,8 +328,12 @@ import type {
 import { 
     SelectMenu 
 } from "@/components/ui";
-import { isArray } from "chart.js/dist/helpers/helpers.core";
-
+import { 
+    Confirm 
+} from "@/utils/dialog";
+import { 
+    PublishExam
+} from "@/collector/pages";
 definePageMeta({
     colorMode: 'light'
 });
@@ -321,13 +352,13 @@ definePageMeta({
 const dataOptions: Ref<Options> = ref<Options>({});
 const data: Ref<any> = ref<any>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
+const publishId: Ref<number | null> = ref<number | null>(null);
 const filters: Ref<Items> = ref<Items>({
     status_id: '',
     warehouse_id: ''
 });
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const openCreate: Ref<boolean> = ref<boolean>(false);
-const activeStatus: Ref<boolean> = ref<boolean>(false);
 const isShowQuestion = ref<{ [key: number]: boolean }>({});
 const linksItem = [
   {
@@ -347,6 +378,7 @@ const datas = {
             "subject":"Web Development",
             "grade":"Year 4",
             "status":"publish",
+            "isActive": true,
             "duration_minutes":"120 Minutes",
             "total_marks": 100,
             "passing_marks": 50,
@@ -400,7 +432,7 @@ const datas = {
             "duration_minutes":"120 Minutes",
             "total_marks": 100,
             "passing_marks": 50,
-            "show": false,
+            "isActive": false,
             "class":"M3",
             "department":"Information Technology",
             "room":"406",
@@ -450,7 +482,7 @@ const datas = {
             "duration_minutes":"120 Minutes",
             "total_marks": 100,
             "passing_marks": 50,
-            "show": false,
+            "isActive": true,
             "class":"M3",
             "department":"Information Technology",
             "room":"406",
