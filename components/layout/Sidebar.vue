@@ -64,15 +64,37 @@
                 path="/user_management"
                 class-name=""
                 :class-title="!expand ? '' : 'hidden'"/>
-            <Section
-                :class-title="!expand ? 'border-b-[1px] border-gray-300' : 'hidden'"
-                label="Students Management"/>
-            <Menu
-                icon="fluent:people-team-32-regular"
-                title="Students Lists"
-                path="/student_list"
-                class-name=""
-                :class-title="!expand ? '' : 'hidden'"/>
+             <AccordionMenu
+                title="School Management"
+                :index="0"
+                :active-index="activeIndex"
+                :class-title="!expand ? '' : 'hidden'"
+                @toggle-accordion="toggleAccordion">
+                <Menu
+                    icon="mingcute:department-line"
+                    title="Department"
+                    path="/department"
+                    class-name=""
+                    :class-title="!expand ? '' : 'hidden'"/>
+                <Menu
+                    icon="mingcute:classify-2-line"
+                    title="Class"
+                    path="/class"
+                    class-name=""
+                    :class-title="!expand ? '' : 'hidden'"/>
+                <Menu
+                    icon="carbon:education"
+                    title="Major"
+                    path="/major"
+                    class-name=""
+                    :class-title="!expand ? '' : 'hidden'"/>
+                <Menu
+                    icon="fluent:people-team-32-regular"
+                    title="Students"
+                    path="/student_list"
+                    class-name=""
+                    :class-title="!expand ? '' : 'hidden'"/>
+            </AccordionMenu>
         </div>
     </div>
 </template>
