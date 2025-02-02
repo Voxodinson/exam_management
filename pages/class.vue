@@ -1,133 +1,191 @@
 <template>
     <template v-if="openCreate">
-        
+        <Class
+            :class-id="classId"
+            @toggle="toggleCreate"
+            @update:data="fetchData"/>
     </template>
     <template
         v-else>
-        <div class="w-full bg-white rounded-md p-3">
-            <div class="flex gap-3">
-                <UButton
-                    icon="material-symbols:add-2-rounded"
-                    size="md"
-                    color="primary"
-                    variant="solid"
-                    label="Create Purchase"
-                    :trailing="false"
-                    class="h-fit"
-                    @click="(): void => {
-                        toggleCreate(true)
-                    }"/>
-            </div>
-            <div class="flex gap-3 w-full items-end p-3 border-[1px] border-gray-300 rounded-md mt-3 bg-gray-100">
-                <UFormGroup
-                    class="w-[calc(97%/5)]"
-                    label="Filter By Date"
-                    name="">
-                    <InputDateRange
-                        name="date"
-                        class="w-full"/>
-                </UFormGroup>
-                <UFormGroup
-                    class="w-[calc(97%/5)]"
-                    label="PO Number"
-                    name="name">
-                    <UInput
-                        type="text"
-                        color="white"
-                        variant="outline"
-                        size="md"
-                        name="name"
-                        role="input"
-                        placeholder="enter PO number here..."
-                        class="w-full"
-                        @input="async (event: Event): Promise<void> => {
-                            const value: string = (event.target as HTMLInputElement).value as string;
-                            await searchData(value);
-                        }"/>
-                </UFormGroup>
-                <UFormGroup
-                    class="w-[calc(97%/5)]"
-                    label="Supplier"
-                    name="">
-                    <SelectMenu
-                        name="role"
-                        :options="[]"
-                        option-attribute="user_name"
-                        value-attribute="id"
-                        id-attribute="id"
-                        placeholder="select supplier"
-                        class="w-full"/>
-                </UFormGroup>
-                <UFormGroup
-                    class="w-[calc(97%/5)]"
-                    label="Payment Type"
-                    name="">
-                    <SelectMenu
-                        name="approved_status"
-                        :options="[]"
-                        option-attribute="x"
-                        value-attribute="id"
-                        id-attribute="id"
-                        placeholder="select payment type"
-                        class="w-full"/>
-                </UFormGroup>
-                <UFormGroup
-                    class="w-[calc(97%/5)]"
-                    label="Status"
-                    name="">
-                    <SelectMenu
-                        name="status"
-                        :options="[]"
-                        option-attribute="user_name"
-                        value-attribute="id"
-                        id-attribute="id"
-                        placeholder="select status"
-                        class="w-full"/>
-                </UFormGroup>
-                <UButton
-                    label="Clear"
-                    variant="solid"
-                    color="red"
-                    size="md"
-                    class="h-fit"/>
+        <div 
+        class="flex items-center justify-between h-[45px] px-4 bg-white border-b-[1px] border-gray-200">
+            <UBreadcrumb 
+                :links="linksItem"
+                divider="/"
+                :ui="{
+                    base: 'font-semibold text-[.8rem]',
+                    inactive: 'hover:text-blue-200',
+                    active: 'text-blue-400',}"/>
+            <div 
+                class=" flex gap-2 items-center justify-center h-full">
+                <UTooltip 
+                    text="Create New Exam"
+                    :popper="{ offsetDistance: 12 }">
+                    <UButton
+                        icon="material-symbols:add-circle-outline-rounded"
+                        size="sm"
+                        color="black"
+                        label="New Class"
+                        variant="soft" 
+                        :padded="false"
+                        @click="()=>{
+                            toggleCreate(true);
+                        }"
+                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
+                </UTooltip>
+                <UTooltip 
+                    :text="isOpenFilter ? 'Close Filters' : 'Open Filters'"
+                    :popper="{ offsetDistance: 12 }">
+                    <UButton
+                        :icon="isOpenFilter ? 'material-symbols:close-rounded' : 'material-symbols:filter-alt-outline'"
+                        size="sm"
+                        color="black"
+                        variant="soft" 
+                        :padded="false"
+                        @click="()=>{
+                            toggleFilter();
+                        }"
+                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
+                </UTooltip>
             </div>
         </div>
-        <div class="w-full p-3 rounded-md bg-white mt-3">
-            <Table
-                :columns="columns"
-                :data="data"
-                is-custom
-                v-slot="{ data }"
-                @update:data="async (current_page: number): Promise<void> => {
-                    await fetchData(current_page);
-                }">
-                <tr class="*:px-2.5 *:py-1.5">
-                    <td>
-                        <span>{{ data.po_code }}</span>
-                    </td>
-                    <td>
-                        <span>{{ data.purechase_date }}</span>
-                    </td>
-                    <td>
-                        <span>{{ data.supplier_name }}</span>
-                    </td>
-                    <td>
-                        <span>{{ data.total_amount }}</span>
-                    </td>
-                    <td>
-                        <span>{{ data.due_amount }}</span>
-                    </td>
-                    <td>
-                        <span>{{ data.tax_amount }}</span>
-                    </td>
-                    <td>
-                        <span>{{ data.tax }}</span>
-                    </td>
-                    <td>
-                        <span>{{ data.status_code }}</span>
-                    </td>
-                </tr>
-            </Table>
+        <div 
+            class="w-full p-2 ">
+            <div 
+                v-if="isOpenFilter"
+                class="w-full flex gap-2 justify-between bg-[#3A6D8C] rounded-md p-2 mb-2" >
+                    <div 
+                        class="flex w-fit flex-wrap gap-2">
+                        <UInput
+                            icon="material-symbols:search"
+                            type="text"
+                            color="white"
+                            variant="outline"
+                            size="md"
+                            name="district"
+                            role="input"
+                            placeholder="Search name here..."
+                            class="w-[400px]"/>
+                        <SelectMenu
+                            name=""
+                            :options="[]"
+                            value-attribute="id"
+                            option-attribute="name"
+                            id-attribute="id"
+                            placeholder="Select a department"
+                            class="w-[250px]"/>
+                        <SelectMenu
+                            name=""
+                            :options="[]"
+                            value-attribute="id"
+                            option-attribute="name"
+                            id-attribute="id"
+                            placeholder="Select a class"
+                            class="w-[250px]"/>
+                        <UTooltip 
+                            text="Sort by Letter"
+                            :popper="{ offsetDistance: 12 }">
+                            <UButton
+                                icon="solar:round-sort-vertical-broken"
+                                size="sm"
+                                color="black"
+                                variant="soft" 
+                                :padded="false"
+                                @click="()=>{
+                                }"
+                                class="bg-white hover:bg-gray-200 text-black p-2 transition"/>
+                        </UTooltip>
+                    </div>
+                
+                    <UTooltip 
+                        text="Cleare Filter"
+                        :popper="{ offsetDistance: 12 }">
+                        <UButton
+                            icon="pajamas:clear-all"
+                            size="sm"
+                            color="black"
+                            variant="soft" 
+                            :padded="false"
+                            @click="()=>{
+                            }"
+                            class="bg-white hover:bg-gray-200 text-red-500 px-2 transition"/>
+                    </UTooltip>
+            </div>
+            <div 
+                class="w-full bg-white rounded-md overflow-hidden">
+                <Table
+                    :columns="columns"
+                    :data="[]"
+                    is-custom
+                    v-slot="{ data }"
+                    @update:data="async (current_page: number): Promise<void> => {
+                        
+                    }">
+                    <tr 
+                        class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
+                        <td
+                            class="w-[150px]">
+                            <span>
+                                {{ data.stu_id }}
+                            </span>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <span>{{ data.fullname }}</span>
+                        </td>
+                        <td>
+                            <span>{{ data.dob }}</span>
+                        </td>
+                        <td>
+                            <span>{{ data.gender }}</span>
+                        </td>
+                        <td>
+                            <span>{{ data.nationality }}</span>
+                        </td>
+                        <td>
+                            <span
+                                class="text-[.9rem]">
+                                {{ data.class }} 
+                                - <span v-if="data.year">Y{{ data.year }}</span>
+                                <span v-else>-</span>
+                                - {{ data.shift }}
+                            </span>
+                        </td>
+                        <td class="w-[230px]">
+                            <div class="*:text-[.9rem]">
+                                <span>
+                                    {{ data.phone }}
+                                </span>
+                                <span 
+                                    class="block">
+                                    {{ data.gmail }}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <UDropdown 
+                                :items="[
+                                    [{
+                                        label: 'Edit',
+                                        icon: 'i-heroicons-pencil-square-20-solid',
+                                        click: () => {}
+                                    }], 
+                                    [{
+                                        label: 'Delete',
+                                        icon: 'i-heroicons-trash-20-solid',
+                                        click: () => {}
+                                    }]
+                                ]" 
+                                :popper="{ placement: 'bottom-start' }">
+                                <UButton 
+                                    color="white"
+                                    trailing-icon="i-heroicons-chevron-down-20-solid" />
+                            </UDropdown>
+                        </td>
+                    </tr>
+                </Table>
+            </div>
         </div>
     </template>
 </template>
@@ -149,6 +207,9 @@ import type {
     ResponseStatus
 } from "@/models/type";
 import { 
+    Class 
+} from '@/collector/pages';
+import { 
     Delete 
 } from '@/utils/dialog';
 definePageMeta({
@@ -169,39 +230,46 @@ definePageMeta({
 const dataOptions: Ref<Options> = ref<Options>({});
 const data: Ref<object> = ref<object>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
+const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const filters: Ref<Items> = ref<Items>({
     status_id: '',
     warehouse_id: ''
 });
 const openCreate: Ref<boolean> = ref<boolean>(false);
-const majorId: Ref<number | null> = ref<number | null>(null);
+const classId: Ref<number | null> = ref<number | null>(null);
+const linksItem = [
+    {
+        label: 'School Mangements'
+    },
+    {
+        label: 'Department',
+        to: 'department'
+    }
+];
 const columns: Ref<Column[]> = ref<Column[]>([
     {
-        title:'Action',
+        title: 'Department'
     },
     {
-        title: 'PO Number'
+        title:'Name (KH)',
     },
     {
-        title: "Purchase Date"
+        title: 'Name (EN)'
     },
     {
-        title: "Supplier"
+        title: 'Room'
     },
     {
-        title: 'Total Amount($)'
+        title: "Code"
     },
     {
-        title: 'Total Amount Due($)'
+        title: 'Create By'
     },
     {
-        title:'Tax Amount($)'
+        title: 'Create At'
     },
     {
-        title:'Tax($)'
-    },
-    {
-        title:'Status'
+        title: 'Action'
     }
  ])
 
@@ -215,7 +283,9 @@ const columns: Ref<Column[]> = ref<Column[]>([
 const toggleCreate = (value: boolean) => {
     openCreate.value = value as boolean;
 }
-
+const toggleFilter = (): void => {
+    isOpenFilter.value = !isOpenFilter.value as boolean;
+}
 /**
  * End::Some logical in this component
  */
@@ -270,7 +340,7 @@ const filterData = async (current_page: number = 1): Promise<void> => {
  watch((): boolean => openCreate.value, async (value: boolean): Promise<void> => {
     if(!value)
     {
-        majorId.value = null;
+        classId.value = null;
     }
 });
 

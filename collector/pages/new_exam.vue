@@ -1,6 +1,6 @@
 <template>
     <div 
-        class="bg-white p-2 flex items-center justify-between h-[45px] px-4 border-b-[1px] border-gray-200">
+        class="bg-white p-2 flex items-center h-[45px] px-4 border-b-[1px] border-gray-200">
         <UTooltip 
             text="Back To All Exam"
             :popper="{ offsetDistance: 12 }">
@@ -14,12 +14,8 @@
                 @click="()=>{
                     emits('toggle', false);
                 }"
-                class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
+                class="bg-[#3A6D8C] w-[70px] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
         </UTooltip>
-        <span
-            class="text-gray-500 text-[1rem]">
-            Add New Exam
-        </span>
     </div>
     <form
         name=""

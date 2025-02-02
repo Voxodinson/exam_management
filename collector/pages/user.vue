@@ -122,20 +122,24 @@
             <div
                 class="flex items-center gap-x-2">
                 <UButton
-                    type="reset"
-                    color="red"
-                    variant="solid"
+                    type="button"
                     size="sm"
+                    color="black"
                     label="Cancel"
-                    @click="emits('toggle', false)"
-                    square/>
+                    variant="soft" 
+                    :padded="false"
+                    @click="() => {
+                        emits('toggle', false);
+                    }"
+                    class="bg-red-500 text-white hover:bg-red-300 p-1 transition"/>
                 <UButton
                     type="submit"
-                    color="sky"
-                    variant="solid"
                     size="sm"
-                    label="Save"
-                    square/>
+                    color="black"
+                    label="Create User"
+                    variant="soft" 
+                    :padded="false"
+                    class="bg-blue-400 text-white hover:bg-blue-300 p-1 transition"/>
             </div>
         </div>
     </form>

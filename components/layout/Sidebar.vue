@@ -77,15 +77,15 @@
                     class-name=""
                     :class-title="!expand ? '' : 'hidden'"/>
                 <Menu
-                    icon="mingcute:classify-2-line"
-                    title="Class"
-                    path="/class"
-                    class-name=""
-                    :class-title="!expand ? '' : 'hidden'"/>
-                <Menu
                     icon="carbon:education"
                     title="Major"
                     path="/major"
+                    class-name=""
+                    :class-title="!expand ? '' : 'hidden'"/>
+                <Menu
+                    icon="mingcute:classify-2-line"
+                    title="Class"
+                    path="/class"
                     class-name=""
                     :class-title="!expand ? '' : 'hidden'"/>
                 <Menu
