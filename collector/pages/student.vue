@@ -57,14 +57,14 @@
                     </UFormGroup>
                     <UFormGroup
                         class="w-[calc(97%/3)]"
-                        label="Major"
+                        label="Nationality"
                         name="">
                         <SelectMenu
                             name=""
                             :options="[]"
                             option-attribute="name"
                             value-attribute="id"
-                            placeholder="PleaseSelect major"
+                            placeholder="Please select nationality"
                             required/>
                     </UFormGroup>
                     <UFormGroup
@@ -120,7 +120,7 @@
                             placeholder="enter email here..."/>
                     </UFormGroup>
                     <UFormGroup
-                        class="w-[calc(99%/2)]"
+                        class="w-[calc(99%-33%)]"
                         label="Study Infomation (Class / Years / Shift)"
                         name="">
                         <div 
@@ -132,14 +132,14 @@
                                 size="md"
                                 name=""
                                 role="input"
-                                placeholder="enter password here..."
+                                placeholder="Class"
                                 class="w-[calc(97%/3)]"/>
                             <SelectMenu
                                 name=""
                                 :options="[]"
                                 option-attribute="name"
                                 value-attribute="id"
-                                placeholder="PleaseSelect major"
+                                placeholder="Major"
                                 required
                                 class="w-[calc(97%/3)]"/>
                             <SelectMenu
@@ -147,7 +147,7 @@
                                 :options="[]"
                                 option-attribute="name"
                                 value-attribute="id"
-                                placeholder="PleaseSelect major"
+                                placeholder="Shift"
                                 required
                                 class="w-[calc(97%/3)]"/>
                         </div>
@@ -155,7 +155,7 @@
                 </div>        
             </div>
             <UFormGroup
-                class="w-[99.5%]"
+                class="w-[99.5%] mt-3"
                 label="Address"
                 name="address">
                 <UTextarea 
