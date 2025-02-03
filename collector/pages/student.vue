@@ -1,145 +1,192 @@
 <template>
+    <div
+        class="bg-white p-2 flex items-center h-[45px] px-4 border-b-[1px] border-gray-200">
+        <UTooltip 
+            text="Back to major list"
+            :popper="{ offsetDistance: 12 }">
+            <UButton
+                icon="material-symbols-light:chevron-left-rounded"
+                size="sm"
+                color="black"
+                label="Back"
+                variant="soft" 
+                :padded="false"
+                @click="()=>{
+                    emits('toggle', false);
+                }"
+                class="bg-[#3A6D8C] w-[70px] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
+        </UTooltip>
+    </div>
     <form
         name="user"
         method="POST"
         enctype="multipart/form-data"
         @submit.prevent="getData"
-        class="bg-white rounded-md p-3 space-y-4">
-        <div
-            class="flex items-center gap-x-3">
-            <UButton
-                type="reset"
-                color="green"
-                variant="solid"
-                size="md"
-                @click="emits('toggle', false)"
-                class="gap-x-0"
-                square>
-                <UIcon
-                    name="material-symbols:arrow-back-ios-rounded"
-                    class="text-xl"/>
-                <span
-                    class="font-medium text-base">Back</span>
-            </UButton>
-            <span
-                class="font-semibold text-lg">Category</span>
-        </div>
-        <div class="w-full flex gap-3 flex-wrap">
-            <div class="w-[200px] h-[210px] border-[1px] border-gray-200 rounded-md overflow-hidden">
-                <ChoosePhoto
-                    name="photo"/>
+        class="rounded-md p-2 space-y-4">
+        <div 
+            class="w-full p-2 rounded-md bg-white">
+            <div class="w-full flex gap-3 flex-wrap">
+                <div class="w-[200px] h-[210px] border-[1px] border-gray-200 rounded-md overflow-hidden">
+                    <ChoosePhoto
+                        name="photo"/>
+                </div>
+                <div class="w-[calc(98%-200px)] flex gap-3 flex-wrap">
+                    <UFormGroup
+                        class="w-[calc(97%/3)]"
+                        label="Department"
+                        name="role_id">
+                        <SelectMenu
+                            name="role_id"
+                            :options="dataOptions.roles"
+                            option-attribute="name"
+                            value-attribute="id"
+                            placeholder="Please select department"
+                            required/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(97%/3)]"
+                        label="Major"
+                        name="">
+                        <SelectMenu
+                            name=""
+                            :options="[]"
+                            option-attribute="name"
+                            value-attribute="id"
+                            placeholder="Please select major"
+                            required/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(97%/3)]"
+                        label="Major"
+                        name="">
+                        <SelectMenu
+                            name=""
+                            :options="[]"
+                            option-attribute="name"
+                            value-attribute="id"
+                            placeholder="PleaseSelect major"
+                            required/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(97%/3)]"
+                        label="Student Name (EN)"
+                        name="user_name">
+                        <UInput
+                            type="text"
+                            color="white"
+                            variant="outline"
+                            size="md"
+                            name="user_name"
+                            role="input"
+                            placeholder="enter student name here..."/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(97%/3)]"
+                        label="Student Name (KH)"
+                        name="user_name">
+                        <UInput
+                            type="text"
+                            color="white"
+                            variant="outline"
+                            size="md"
+                            name="user_name"
+                            role="input"
+                            placeholder="enter student name here..."/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(97%/3)]"
+                        label="Phone"
+                        name="phone">
+                        <UInput
+                            type="text"
+                            color="white"
+                            variant="outline"
+                            size="md"
+                            name="phone"
+                            role="input"
+                            placeholder="enter phone here..."/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(97%/3)]"
+                        label="Email"
+                        name="email">
+                        <UInput
+                            type="text"
+                            color="white"
+                            variant="outline"
+                            size="md"
+                            name="email"
+                            role="input"
+                            placeholder="enter email here..."/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(99%/2)]"
+                        label="Study Infomation (Class / Years / Shift)"
+                        name="">
+                        <div 
+                            class="w-full flex gap-3">
+                            <UInput
+                                type="text"
+                                color="white"
+                                variant="outline"
+                                size="md"
+                                name=""
+                                role="input"
+                                placeholder="enter password here..."
+                                class="w-[calc(97%/3)]"/>
+                            <SelectMenu
+                                name=""
+                                :options="[]"
+                                option-attribute="name"
+                                value-attribute="id"
+                                placeholder="PleaseSelect major"
+                                required
+                                class="w-[calc(97%/3)]"/>
+                            <SelectMenu
+                                name=""
+                                :options="[]"
+                                option-attribute="name"
+                                value-attribute="id"
+                                placeholder="PleaseSelect major"
+                                required
+                                class="w-[calc(97%/3)]"/>
+                        </div>
+                    </UFormGroup>
+                </div>        
             </div>
-            <div class="w-[calc(98%-200px)] flex gap-3 flex-wrap">
-                <UFormGroup
-                    class="w-[calc(98%/2)]"
-                    label="Choose Role"
-                    name="role_id">
-                    <SelectMenu
-                        name="role_id"
-                        :options="dataOptions.roles"
-                        option-attribute="name"
-                        value-attribute="id"
-                        placeholder="Select role"
-                        required/>
-                </UFormGroup>
-                <UFormGroup
-                    class="w-[calc(99%/2)]"
-                    label="Choose Branch"
-                    name="branch_id">
-                    <SelectMenu
-                        name="branch_id"
-                        :options="dataOptions.branches"
-                        option-attribute="name"
-                        value-attribute="id"
-                        placeholder="Select branch"
-                        required/>
-                </UFormGroup>
-                <UFormGroup
-                    class="w-[calc(98%/2)]"
-                    label="Username"
-                    name="user_name">
-                    <UInput
-                        type="text"
-                        color="white"
-                        variant="outline"
-                        size="md"
-                        name="user_name"
-                        role="input"
-                        placeholder="enter username here..."/>
-                </UFormGroup>
-                <UFormGroup
-                    class="w-[calc(99%/2)]"
-                    label="Phone"
-                    name="phone">
-                    <UInput
-                        type="text"
-                        color="white"
-                        variant="outline"
-                        size="md"
-                        name="phone"
-                        role="input"
-                        placeholder="enter phone here..."/>
-                </UFormGroup>
-                <UFormGroup
-                    class="w-[calc(98%/2)]"
-                    label="Email"
-                    name="email">
-                    <UInput
-                        type="text"
-                        color="white"
-                        variant="outline"
-                        size="md"
-                        name="email"
-                        role="input"
-                        placeholder="enter email here..."/>
-                </UFormGroup>
-                <UFormGroup
-                    class="w-[calc(99%/2)]"
-                    label="Password"
-                    name="">
-                    <UInput
-                        type="text"
-                        color="white"
-                        variant="outline"
-                        size="md"
-                        name=""
-                        role="input"
-                        placeholder="enter password here..."/>
-                </UFormGroup>
-            </div>        
-        </div>
-        <UFormGroup
-            class="w-[99.5%]"
-            label="Address"
-            name="address">
-            <UTextarea 
-                color="white" 
-                placeholder="Enter address..."
-                name="address" />
-        </UFormGroup>
-        <div
-            class="flex items-center justify-end">
+            <UFormGroup
+                class="w-[99.5%]"
+                label="Address"
+                name="address">
+                <UTextarea 
+                    color="white" 
+                    placeholder="Enter address..."
+                    name="address" />
+            </UFormGroup>
             <div
-                class="flex items-center gap-x-2">
-                <UButton
-                    type="button"
-                    size="sm"
-                    color="black"
-                    label="Cancel"
-                    variant="soft" 
-                    :padded="false"
-                    @click="() => {
-                        emits('toggle', false);
-                    }"
-                    class="bg-red-500 text-white hover:bg-red-300 p-1 transition"/>
-                <UButton
-                    type="submit"
-                    size="sm"
-                    color="black"
-                    label="Create User"
-                    variant="soft" 
-                    :padded="false"
-                    class="bg-blue-400 text-white hover:bg-blue-300 p-1 transition"/>
+                class="flex items-center justify-end mt-3">
+                <div
+                    class="flex items-center gap-x-2">
+                    <UButton
+                        type="button"
+                        size="sm"
+                        color="black"
+                        label="Cancel"
+                        variant="soft" 
+                        :padded="false"
+                        @click="() => {
+                            emits('toggle', false);
+                        }"
+                        class="bg-red-500 text-white hover:bg-red-300 p-1 transition"/>
+                    <UButton
+                        type="submit"
+                        size="sm"
+                        color="black"
+                        label="Create User"
+                        variant="soft" 
+                        :padded="false"
+                        class="bg-blue-400 text-white hover:bg-blue-300 p-1 transition"/>
+                </div>
             </div>
         </div>
     </form>

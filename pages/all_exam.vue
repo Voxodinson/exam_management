@@ -61,7 +61,7 @@
         <div class="w-full p-2">
             <div 
                 v-if="isOpenFilter"
-                class="flex gap-2 mb-2 justify-between p-2 rounded-md bg-[#3A6D8C]">
+                class="flex gap-2 mb-2 justify-between p-2 rounded-md bg-white">
                 <div 
                     class="flex gap-2">
                     <SelectMenu
