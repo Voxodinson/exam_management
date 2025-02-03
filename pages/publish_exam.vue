@@ -117,7 +117,7 @@
                     :key="idx"
                     class="w-full rounded-md h-fit p-2 border-[1px] bg-white border-gray-200">
                     <div 
-                        class="w-full bg-blue-100 p-2 rounded-md flex items-center justify-between  border-b-[1px] border-gray-200">
+                        class="w-full bg-[#3A6D8C] bg-opacity-10 p-2 rounded-md flex items-center justify-between  border-b-[1px] border-gray-200">
                         <div 
                             class="w-fit">
                             <h3
@@ -139,18 +139,18 @@
                                 ) from {{ exam.start_time }}&ensp; - &ensp;{{ exam.end_time }}
                             </span>
                         </div>
-                        <div 
-                            class="flex items-center py-1 pl-2 pr-1 shadow-md rounded-full capitalize bg-blue-400 gap-3">
+                        <div
+                            :class="exam.isActive ? 'bg-blue-400' : 'bg-red-400'"
+                            class="flex items-center py-1 pl-2 pr-1 shadow-md rounded-full capitalize gap-3">
                             <span
                                 class="text-white text-[.9rem] pt-0.5">
-                                {{ exam.status }}
-                                
+                                {{ exam.isActive ? 'Publish' : 'Private'}}
                             </span>
                             <UToggle 
                                 size="lg"
                                 v-model="exam.isActive"
                                 @click="async (): Promise<void> => {
-                                    Confirm('Are you sure to unpublish exam..?', async (): Promise<void> => {
+                                    Confirm(`${exam.isActive ? 'Are you sure to unpublish exam..?' : 'Are you sure to publish exam..?'}`, async (): Promise<void> => {
                                         const result = await api.update(``, true, {}) as ResponseStatus;
                                         if(result){
                                             await fetchData();

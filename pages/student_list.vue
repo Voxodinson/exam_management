@@ -246,14 +246,11 @@ const openCreate: Ref<boolean> = ref<boolean>(false);
 const studentId: Ref<number | null> = ref<number | null>(null);
 const linksItem = [
     {
-        label: 'Main Menu'
+        label: 'School Management'
     },
     {
-        label: 'Results'
-    },
-    {
-        label: 'All Results',
-        to: '/result_list'
+        label: 'Student List',
+        to: '/student_list'
     }
 ];
 const columns: Ref<Column[]> = ref<Column[]>([
