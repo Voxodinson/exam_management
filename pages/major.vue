@@ -54,7 +54,7 @@
             class="w-full p-2 ">
             <div 
                 v-if="isOpenFilter"
-                class="w-full flex gap-2 justify-between bg-[#3A6D8C] rounded-md p-2 mb-2" >
+                class="w-full flex gap-2 justify-between bg-white rounded-md p-2 mb-2" >
                     <div 
                         class="flex w-fit flex-wrap gap-2">
                         <UInput
