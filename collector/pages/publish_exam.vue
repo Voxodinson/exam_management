@@ -25,8 +25,8 @@
         class="p-2 rounded-md">
         <div class="p-2 bg-white flex gap-3 flex-wrap rounded-md">
             <UFormGroup
-                class="w-full"
-                label="Department"
+                class="w-[calc(98%/2)]"
+                label="Exam"
                 name="">
                 <SelectMenu
                     name=""
@@ -34,37 +34,66 @@
                     value-attribute="id"
                     option-attribute="name"
                     id-attribute="id"
-                    placeholder="please select department"
+                    placeholder="please select exam"
                     class="w-full"/>
             </UFormGroup>
             <UFormGroup
-                class="w-[calc(99%/2)]"
-                label="Major Name (EN)"
-                name="name_en">
-                <UInput
-                    type="text"
-                    color="white"
-                    variant="outline"
-                    size="md"
-                    name="name"
-                    role="input"
-                    pattern="^[A-Za-z\s]{2,50}$"
-                    minlength="3"
-                    maxlength="50"
-                    placeholder="enter major name as English language here..."/>
+                class="w-[calc(99.5%/2)]"
+                label="Study Infomation (Class / Years / Shift)"
+                name="">
+                <div 
+                    class="w-full flex gap-3">
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        option-attribute="name"
+                        value-attribute="id"
+                        placeholder="Department"
+                        required
+                        class="w-[calc(97%/3)]"/>
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        option-attribute="name"
+                        value-attribute="id"
+                        placeholder="Class"
+                        required
+                        class="w-[calc(97%/3)]"/>
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        option-attribute="name"
+                        value-attribute="id"
+                        placeholder="Room"
+                        required
+                        class="w-[calc(97%/3)]"/>
+                </div>
             </UFormGroup>
             <UFormGroup
-                class="w-[calc(98.7%/2)]"
-                label="Major Name (KH)"
-                name="name_kh">
+                class="w-[calc(99.5%/2)]"
+                label="Exam Durations"
+                name="email">
                 <UInput
                     type="text"
                     color="white"
                     variant="outline"
                     size="md"
-                    name="name_kh"
+                    name="email"
                     role="input"
-                    placeholder="enter major name as Khmer language here..."/>
+                    placeholder="enter exam duration here..."/>
+            </UFormGroup>
+            <UFormGroup
+                class="w-[calc(98%/2)]"
+                label="Status"
+                name="">
+                <SelectMenu
+                    name=""
+                    :options="[]"
+                    value-attribute="id"
+                    option-attribute="name"
+                    id-attribute="id"
+                    placeholder="please select status"
+                    class="w-full"/>
             </UFormGroup>
             <UFormGroup
                 class="w-full"
@@ -94,7 +123,7 @@
                     type="submit"
                     size="sm"
                     color="black"
-                    label="Create Major"
+                    label="Publish Now"
                     variant="soft" 
                     :padded="false"
                     class="bg-blue-400 text-white hover:bg-blue-300 p-1 transition"/>
