@@ -2,7 +2,7 @@
     <div
         class="bg-white p-2 flex items-center h-[45px] px-4 border-b-[1px] border-gray-200">
         <UTooltip 
-            text="Back to major list"
+            text="Back to department list"
             :popper="{ offsetDistance: 12 }">
             <UButton
                 icon="material-symbols-light:chevron-left-rounded"

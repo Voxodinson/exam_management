@@ -2,7 +2,7 @@
     <div
         class="bg-white p-2 flex items-center h-[45px] px-4 border-b-[1px] border-gray-200">
         <UTooltip 
-            text="Back to class list"
+            text="Back to shift list"
             :popper="{ offsetDistance: 12 }">
             <UButton
                 icon="material-symbols-light:chevron-left-rounded"
@@ -18,28 +18,15 @@
         </UTooltip>
     </div>
     <form 
-        name="class"
+        name="shift_time"
         method="POST"
         enctype="multipart/form-data"
         @submit.prevent="getData"
         class="p-2 rounded-md">
         <div class="p-2 bg-white flex gap-3 flex-wrap rounded-md">
             <UFormGroup
-                class="w-full"
-                label="Department"
-                name="">
-                <SelectMenu
-                    name=""
-                    :options="[]"
-                    value-attribute="id"
-                    option-attribute="name"
-                    id-attribute="id"
-                    placeholder="please select department"
-                    class="w-full"/>
-            </UFormGroup>
-            <UFormGroup
-                class="w-[calc(98%/2)]"
-                label="Class Name (EN)"
+                class="w-[calc(97%/3)]"
+                label="Shift Name"
                 name="name">
                 <UInput
                     type="text"
@@ -49,53 +36,34 @@
                     name="name"
                     role="input"
                     minlength="3"
-                    maxlength="50"
-                    placeholder="enter class name as English language here..."/>
+                    maxlength="100"
+                    placeholder="enter shift name here..."/>
             </UFormGroup>
             <UFormGroup
-                class="w-[calc(99.5%/2)]"
-                label="Class Name (EN)"
-                name="name_kh">
+                class="w-[calc(97%/3)]"
+                label="Start Time"
+                name="start_time">
                 <UInput
                     type="text"
                     color="white"
                     variant="outline"
                     size="md"
-                    name="name_kh"
+                    name="start_time"
                     role="input"
-                    pattern="^[A-Za-z\s]{2,50}$"
-                    minlength="3"
-                    maxlength="50"
-                    placeholder="enter class name as Khmer language here..."/>
+                    placeholder="enter start time here..."/>
             </UFormGroup>
             <UFormGroup
-                class="w-[calc(98%/2)]"
-                label="Room"
-                name="room_number">
+                class="w-[calc(99%/3)]"
+                label="End Time"
+                name="end_time">
                 <UInput
                     type="text"
                     color="white"
                     variant="outline"
                     size="md"
-                    name="room_number"
+                    name="end_time"
                     role="input"
-                    placeholder="enter major name as Khmer language here..."/>
-            </UFormGroup>
-            <UFormGroup
-                class="w-[calc(99.5%/2)]"
-                label="Class Code"
-                name="class_code">
-                <UInput
-                    type="text"
-                    color="white"
-                    variant="outline"
-                    size="md"
-                    name="class_code"
-                    role="input"
-                    pattern="^[A-Za-z\s]{2,50}$"
-                    minlength="3"
-                    maxlength="50"
-                    placeholder="enter class code here..."/>
+                    placeholder="enter end time here..."/>
             </UFormGroup>
             <UFormGroup
                 class="w-full"
@@ -125,7 +93,7 @@
                     type="submit"
                     size="sm"
                     color="black"
-                    label="Create Class"
+                    label="Create Major"
                     variant="soft" 
                     :padded="false"
                     class="bg-blue-400 text-white hover:bg-blue-300 p-1 transition"/>
@@ -159,9 +127,9 @@ import {
 }>();
 
 const props = withDefaults(defineProps<{
-    classId: number | null
+    shiftId: number | null
 }>(),{
-    classId: null
+    shiftId: null
 });
 /**
  * End::Set event trigger to parent component
@@ -181,13 +149,13 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
  */
 const getData = async (event: Event): Promise<void> => {
     const formData: object = context.getDataForm(event as SubmitEvent) as object;
-    if(props.classId != null)
+    if(props.shiftId != null)
     {
-        await api.update(`class/${props.classId}`, true, formData) as ResponseStatus;
+        await api.update(`shift/time/${props.shiftId}`, true, formData) as ResponseStatus;
     }
     else
     {
-        const result: ResponseStatus = await api.post('class', true, formData) as ResponseStatus;
+        const result: ResponseStatus = await api.post('shift/time', true, formData) as ResponseStatus;
 
         if(!result.error)
         {
@@ -199,11 +167,11 @@ const getData = async (event: Event): Promise<void> => {
 }
 
 const setData = async (): Promise<void> => {
-    const result: ResponseStatus = await api.get(`class/${props.classId}`, false) as ResponseStatus;
+    const result: ResponseStatus = await api.get(`shift/time/${props.shiftId}`, false) as ResponseStatus;
     if(!result.error)
     {
         let timeout: NodeJS.Timeout = setTimeout((): void => {
-            const form: HTMLFormElement = document.forms.namedItem('class') as HTMLFormElement;
+            const form: HTMLFormElement = document.forms.namedItem('shift_time') as HTMLFormElement;
             context.setData(form, result.data as Items);
             clearTimeout(timeout);
         },0);
@@ -215,7 +183,7 @@ const setData = async (): Promise<void> => {
  */
 
 onMounted(async (): Promise<void> => {
-    if(props.classId){
+    if(props.shiftId){
         await setData();
     }
 })

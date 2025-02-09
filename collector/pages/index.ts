@@ -5,6 +5,7 @@ import Class from './class.vue';
 import Major from './major.vue';
 import PublishExam from './publish_exam.vue';
 import Student from './student.vue';
+import ShiftTime from './shift.vue';
 export {
     NewExam,
     User,
@@ -12,5 +13,6 @@ export {
     Class,
     Department,
     PublishExam,
-    Student
+    Student,
+    ShiftTime
 }
