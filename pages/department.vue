@@ -18,6 +18,16 @@
                     active: 'text-blue-400',}"/>
             <div 
                 class=" flex gap-2 items-center justify-center h-full">
+                <UInput
+                    icon="material-symbols:search"
+                    type="text"
+                    color="white"
+                    variant="outline"
+                    size="sm"
+                    name="district"
+                    role="input"
+                    placeholder="Search name here..."
+                    class="w-[300px]"/>
                 <UTooltip 
                     text="Create New Exam"
                     :popper="{ offsetDistance: 12 }">
@@ -107,7 +117,7 @@
                 class="w-full bg-white rounded-md overflow-hidden">
                 <Table
                     :columns="columns"
-                    :data="[]"
+                    :data="data"
                     is-custom
                     v-slot="{ data }"
                     @update:data="async (current_page: number): Promise<void> => {
@@ -116,57 +126,54 @@
                     <tr 
                         class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
                         <td
-                            class="w-[150px]">
+                            class="w-[200px]">
                             <span>
-                                {{ data.stu_id }}
+                                {{ data.name }}
                             </span>
                         </td>
                         <td>
+                            <span>{{ data.name_kh }}</span>
                         </td>
-                        <td>
-                            <span>{{ data.fullname }}</span>
-                        </td>
-                        <td>
-                            <span>{{ data.dob }}</span>
-                        </td>
-                        <td>
-                            <span>{{ data.gender }}</span>
-                        </td>
-                        <td>
-                            <span>{{ data.nationality }}</span>
-                        </td>
-                        <td>
+                        <td
+                            class="w-[250px]">
                             <span
-                                class="text-[.9rem]">
-                                {{ data.class }} 
-                                - <span v-if="data.year">Y{{ data.year }}</span>
-                                <span v-else>-</span>
-                                - {{ data.shift }}
+                                class="text-[.8rem]">
+                                {{ data.description }}
                             </span>
                         </td>
-                        <td class="w-[230px]">
-                            <div class="*:text-[.9rem]">
-                                <span>
-                                    {{ data.phone }}
-                                </span>
-                                <span 
-                                    class="block">
-                                    {{ data.gmail }}
-                                </span>
-                            </div>
+                        <td>
+                            <span>{{ data.created_by }}</span>
+                        </td>
+                        <td>
+                            <span>{{ data.created_at }}</span>
                         </td>
                         <td>
                             <UDropdown 
                                 :items="[
                                     [{
                                         label: 'Edit',
+                                        iconClass: 'text-green-500',
+                                        class: 'text-green-500',
                                         icon: 'i-heroicons-pencil-square-20-solid',
-                                        click: () => {}
+                                        click: () => {
+                                            departmentId = data.id as number;
+                                            toggleCreate(true);
+                                        }
                                     }], 
                                     [{
-                                        label: 'Delete',
+                                        label: `Delete ${data.name}`,
                                         icon: 'i-heroicons-trash-20-solid',
-                                        click: () => {}
+                                        iconClass: 'text-red-500',
+                                        class: 'text-red-500',
+                                        click: async (): Promise<void> => {
+                                            Confirm(`Do you want to delete ${data.name} department?`, async (): Promise<void> => {
+                                                const result = await api.update(`department/${data.id}`, true, {}) as ResponseStatus;
+                                                if (!result.error) {
+                                                    await fetchData();
+                                                }
+                                            });
+
+                                        }
                                     }]
                                 ]" 
                                 :popper="{ placement: 'bottom-start' }">
@@ -200,8 +207,8 @@ import type {
 import { 
     Department 
 } from '@/collector/pages';
-import { 
-    Delete 
+import {
+    Confirm
 } from '@/utils/dialog';
 definePageMeta({
     colorMode: 'light'
@@ -223,8 +230,7 @@ const data: Ref<object> = ref<object>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const filters: Ref<Items> = ref<Items>({
-    status_id: '',
-    warehouse_id: ''
+    department_id: '',
 });
 const openCreate: Ref<boolean> = ref<boolean>(false);
 const departmentId: Ref<number | null> = ref<number | null>(null);
@@ -245,7 +251,7 @@ const columns: Ref<Column[]> = ref<Column[]>([
         title: 'department name (kh)'
     },
     {
-        title: "department code"
+        title: "description"
     },
     {
         title: "create by"
@@ -278,14 +284,13 @@ const toggleFilter = (): void => {
 /**
  * Begin::Fetch data section
  */
- const fetchData = async (current_page: number = 1, search: string = ''): Promise<void> => {
-    const per_page: number = 10;
-    let url: string = `purchase?per_page=${per_page}&page_no=${current_page}`;
+ const fetchData = async (current_page: number = 1, per_page: number = 10, search: string = ''): Promise<void> => {
+    let url: string = `department?per_page=${per_page}&page_no=${current_page}&department_id=${filters.value.department_id}`;
     if(search)
     {
         url += `&search=${search}`;
     }
-    const result: ResponseStatus = await api.get(url) as ResponseStatus;
+    const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
     if(!result.error)
     {
         data.value = result as object;
@@ -306,18 +311,8 @@ const searchData = async (value: string): Promise<void> => {
         clearTimeout(timeout.value);
     }
     timeout.value = setTimeout(async (): Promise<void> => {
-        await fetchData(1, value);
+        await fetchData(1, 10, value);
     }, 250);
-}
-
-const filterData = async (current_page: number = 1): Promise<void> => {
-    const per_page: number = 10;
-    const url: string = `package?per_page=${per_page}&page_no=${current_page}&status_id=${filters.value.status_id}&warehouse_id=${filters.value.warehouse_id}`;
-    const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
-    if(!result.error)
-    {
-        data.value = result as object;
-    }
 }
 /**
  * End::Fetch data section
@@ -330,6 +325,6 @@ const filterData = async (current_page: number = 1): Promise<void> => {
 });
 
 onMounted(async (): Promise<void> => {
-    // await fetchData();
+    await fetchData();
 });
 </script>

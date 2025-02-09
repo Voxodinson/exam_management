@@ -18,7 +18,7 @@
         </UTooltip>
     </div>
     <form 
-        name="brand"
+        name="department"
         method="POST"
         enctype="multipart/form-data"
         @submit.prevent="getData"
@@ -27,7 +27,7 @@
             <UFormGroup
                 class="w-[calc(99%/2)]"
                 label="Department Name"
-                name="name_en">
+                name="name">
                 <UInput
                     type="text"
                     color="white"
@@ -35,9 +35,8 @@
                     size="md"
                     name="name"
                     role="input"
-                    pattern="^[A-Za-z\s]{2,50}$"
                     minlength="3"
-                    maxlength="50"
+                    maxlength="100"
                     placeholder="enter department name as English language here..."/>
             </UFormGroup>
             <UFormGroup
@@ -56,11 +55,11 @@
             <UFormGroup
                 class="w-full"
                 label="Description"
-                name="">
+                name="description">
                 <UTextarea 
                     color="white" 
                     placeholder="Enter description here..."
-                    name="" 
+                    name="description" 
                     role="input"
                     class="w-full"/>
             </UFormGroup>
@@ -139,12 +138,12 @@ const getData = async (event: Event): Promise<void> => {
     const formData: object = context.getDataForm(event as SubmitEvent) as object;
     if(props.departmentId != null)
     {
-        await api.update(`brand/${props.departmentId}`, true, formData) as ResponseStatus;
+        await api.update(`department/${props.departmentId}`, true, formData) as ResponseStatus;
+        emits('toggle', false);
     }
     else
     {
-        const result: ResponseStatus = await api.post('brand', true, formData) as ResponseStatus;
-
+        const result: ResponseStatus = await api.post('department', true, formData) as ResponseStatus;
         if(!result.error)
         {
             emits('toggle', false);
@@ -155,11 +154,11 @@ const getData = async (event: Event): Promise<void> => {
 }
 
 const setData = async (): Promise<void> => {
-    const result: ResponseStatus = await api.get(`brand/${props.departmentId}`, false) as ResponseStatus;
+    const result: ResponseStatus = await api.get(`department/${props.departmentId}`, false) as ResponseStatus;
     if(!result.error)
     {
         let timeout: NodeJS.Timeout = setTimeout((): void => {
-            const form: HTMLFormElement = document.forms.namedItem('brand') as HTMLFormElement;
+            const form: HTMLFormElement = document.forms.namedItem('department') as HTMLFormElement;
             context.setData(form, result.data as Items);
             clearTimeout(timeout);
         },0);
@@ -172,7 +171,7 @@ const setData = async (): Promise<void> => {
 
 onMounted(async (): Promise<void> => {
     if(props.departmentId){
-        // await setData();
+        await setData();
     }
 })
 </script>

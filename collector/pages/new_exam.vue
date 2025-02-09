@@ -514,7 +514,6 @@ const setData = async (): Promise<void> => {
         default:
             console.error('Unsupported question type');
     }
-    console.log(questions.value)
 };
 
 const deleteQuestion = (idx: number): void => {
