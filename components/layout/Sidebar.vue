@@ -89,6 +89,12 @@
                     class-name=""
                     :class-title="!expand ? '' : 'hidden'"/>
                 <Menu
+                    icon="material-symbols:alarm-outline"
+                    title="Shift Time"
+                    path="/shift"
+                    class-name=""
+                    :class-title="!expand ? '' : 'hidden'"/>
+                <Menu
                     icon="fluent:people-team-32-regular"
                     title="Students"
                     path="/student_list"
