@@ -18,7 +18,7 @@
         </UTooltip>
     </div>
     <form 
-        name="brand"
+        name="class"
         method="POST"
         enctype="multipart/form-data"
         @submit.prevent="getData"
@@ -40,7 +40,7 @@
             <UFormGroup
                 class="w-[calc(98%/2)]"
                 label="Class Name (EN)"
-                name="name_en">
+                name="name">
                 <UInput
                     type="text"
                     color="white"
@@ -48,21 +48,20 @@
                     size="md"
                     name="name"
                     role="input"
-                    pattern="^[A-Za-z\s]{2,50}$"
                     minlength="3"
                     maxlength="50"
                     placeholder="enter class name as English language here..."/>
             </UFormGroup>
             <UFormGroup
                 class="w-[calc(99.5%/2)]"
-                label="Class Name (KH)"
-                name="">
+                label="Class Name (EN)"
+                name="name_kh">
                 <UInput
                     type="text"
                     color="white"
                     variant="outline"
                     size="md"
-                    name="name"
+                    name="name_kh"
                     role="input"
                     pattern="^[A-Za-z\s]{2,50}$"
                     minlength="3"
@@ -72,26 +71,26 @@
             <UFormGroup
                 class="w-[calc(98%/2)]"
                 label="Room"
-                name="name_kh">
+                name="room_number">
                 <UInput
                     type="text"
                     color="white"
                     variant="outline"
                     size="md"
-                    name="name_kh"
+                    name="room_number"
                     role="input"
                     placeholder="enter major name as Khmer language here..."/>
             </UFormGroup>
             <UFormGroup
                 class="w-[calc(99.5%/2)]"
                 label="Class Code"
-                name="">
+                name="class_code">
                 <UInput
                     type="text"
                     color="white"
                     variant="outline"
                     size="md"
-                    name="name"
+                    name="class_code"
                     role="input"
                     pattern="^[A-Za-z\s]{2,50}$"
                     minlength="3"
@@ -101,11 +100,11 @@
             <UFormGroup
                 class="w-full"
                 label="Description"
-                name="">
+                name="description">
                 <UTextarea 
                     color="white" 
                     placeholder="Enter description here..."
-                    name="" 
+                    name="description" 
                     role="input"
                     class="w-full"/>
             </UFormGroup>
@@ -184,11 +183,11 @@ const getData = async (event: Event): Promise<void> => {
     const formData: object = context.getDataForm(event as SubmitEvent) as object;
     if(props.classId != null)
     {
-        await api.update(`brand/${props.classId}`, true, formData) as ResponseStatus;
+        await api.update(`class/${props.classId}`, true, formData) as ResponseStatus;
     }
     else
     {
-        const result: ResponseStatus = await api.post('brand', true, formData) as ResponseStatus;
+        const result: ResponseStatus = await api.post('class', true, formData) as ResponseStatus;
 
         if(!result.error)
         {
@@ -200,11 +199,11 @@ const getData = async (event: Event): Promise<void> => {
 }
 
 const setData = async (): Promise<void> => {
-    const result: ResponseStatus = await api.get(`brand/${props.classId}`, false) as ResponseStatus;
+    const result: ResponseStatus = await api.get(`class/${props.classId}`, false) as ResponseStatus;
     if(!result.error)
     {
         let timeout: NodeJS.Timeout = setTimeout((): void => {
-            const form: HTMLFormElement = document.forms.namedItem('brand') as HTMLFormElement;
+            const form: HTMLFormElement = document.forms.namedItem('class') as HTMLFormElement;
             context.setData(form, result.data as Items);
             clearTimeout(timeout);
         },0);
@@ -217,7 +216,7 @@ const setData = async (): Promise<void> => {
 
 onMounted(async (): Promise<void> => {
     if(props.classId){
-        // await setData();
+        await setData();
     }
 })
 </script>

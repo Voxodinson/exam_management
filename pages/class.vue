@@ -18,6 +18,16 @@
                     active: 'text-blue-400',}"/>
             <div 
                 class=" flex gap-2 items-center justify-center h-full">
+                <UInput
+                    icon="material-symbols:search"
+                    type="text"
+                    color="white"
+                    variant="outline"
+                    size="sm"
+                    name="district"
+                    role="input"
+                    placeholder="Search name here..."
+                    class="w-[300px]"/>
                 <UTooltip 
                     text="Create New Exam"
                     :popper="{ offsetDistance: 12 }">
@@ -56,16 +66,6 @@
                 class="w-full flex gap-2 justify-between bg-white rounded-md p-2 mb-2" >
                     <div 
                         class="flex w-fit flex-wrap gap-2">
-                        <UInput
-                            icon="material-symbols:search"
-                            type="text"
-                            color="white"
-                            variant="outline"
-                            size="md"
-                            name="district"
-                            role="input"
-                            placeholder="Search name here..."
-                            class="w-[400px]"/>
                         <SelectMenu
                             name=""
                             :options="[]"
@@ -73,7 +73,15 @@
                             option-attribute="name"
                             id-attribute="id"
                             placeholder="Select a department"
-                            class="w-[250px]"/>
+                            class="w-[230px]"/>
+                        <SelectMenu
+                            name=""
+                            :options="[]"
+                            value-attribute="id"
+                            option-attribute="name"
+                            id-attribute="id"
+                            placeholder="Select a department"
+                            class="w-[230px]"/>
                         <SelectMenu
                             name=""
                             :options="[]"
@@ -81,7 +89,7 @@
                             option-attribute="name"
                             id-attribute="id"
                             placeholder="Select a class"
-                            class="w-[250px]"/>
+                            class="w-[230px]"/>
                         <UTooltip 
                             text="Sort by Letter"
                             :popper="{ offsetDistance: 12 }">
@@ -115,7 +123,7 @@
                 class="w-full bg-white rounded-md overflow-hidden">
                 <Table
                     :columns="columns"
-                    :data="[]"
+                    :data="data"
                     is-custom
                     v-slot="{ data }"
                     @update:data="async (current_page: number): Promise<void> => {
@@ -123,58 +131,52 @@
                     }">
                     <tr 
                         class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
+                        <td>
+                            <span>{{ data.name }}</span>
+                        </td>
+                        <td>
+                            <span>{{ data.name_kh }}</span>
+                        </td>
                         <td
-                            class="w-[150px]">
-                            <span>
-                                {{ data.stu_id }}
-                            </span>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                            <span>{{ data.fullname }}</span>
-                        </td>
-                        <td>
-                            <span>{{ data.dob }}</span>
-                        </td>
-                        <td>
-                            <span>{{ data.gender }}</span>
-                        </td>
-                        <td>
-                            <span>{{ data.nationality }}</span>
-                        </td>
-                        <td>
+                            class="w-[200px]">
                             <span
-                                class="text-[.9rem]">
-                                {{ data.class }} 
-                                - <span v-if="data.year">Y{{ data.year }}</span>
-                                <span v-else>-</span>
-                                - {{ data.shift }}
+                                class="text-[.8rem]">
+                                {{ data.description }}
                             </span>
                         </td>
-                        <td class="w-[230px]">
-                            <div class="*:text-[.9rem]">
-                                <span>
-                                    {{ data.phone }}
-                                </span>
-                                <span 
-                                    class="block">
-                                    {{ data.gmail }}
-                                </span>
-                            </div>
+                        <td>
+                            <span>{{ data.created_at }}</span>
+                        </td>
+                        <td>
+                            <span>{{ data.created_by }}</span>
                         </td>
                         <td>
                             <UDropdown 
                                 :items="[
                                     [{
                                         label: 'Edit',
+                                        iconClass: 'text-green-500',
+                                        class: 'text-green-500',
                                         icon: 'i-heroicons-pencil-square-20-solid',
-                                        click: () => {}
+                                        click: () => {
+                                            classId = data.id as number;
+                                            toggleCreate(true);
+                                        }
                                     }], 
                                     [{
-                                        label: 'Delete',
+                                        label: `Delete ${data.name}`,
                                         icon: 'i-heroicons-trash-20-solid',
-                                        click: () => {}
+                                        iconClass: 'text-red-500',
+                                        class: 'text-red-500',
+                                        click: async (): Promise<void> => {
+                                            Confirm(`Do you want to delete ${data.name} class?`, async (): Promise<void> => {
+                                                const result = await api.delete(`class/${data.id}`, true, {}) as ResponseStatus;
+                                                if (!result.error) {
+                                                    await fetchData();
+                                                }
+                                            });
+
+                                        }
                                     }]
                                 ]" 
                                 :popper="{ placement: 'bottom-start' }">
@@ -209,8 +211,8 @@ import type {
 import { 
     Class 
 } from '@/collector/pages';
-import { 
-    Delete 
+import {
+    Confirm
 } from '@/utils/dialog';
 definePageMeta({
     colorMode: 'light'
@@ -242,25 +244,19 @@ const linksItem = [
         label: 'School Mangements'
     },
     {
-        label: 'Department',
-        to: 'department'
+        label: 'Class List',
+        to: '/class'
     }
 ];
 const columns: Ref<Column[]> = ref<Column[]>([
     {
-        title: 'Department'
+        title:'Name (EN)',
     },
     {
-        title:'Name (KH)',
+        title: 'Name (KH)'
     },
     {
-        title: 'Name (EN)'
-    },
-    {
-        title: 'Room'
-    },
-    {
-        title: "Code"
+        title: "description"
     },
     {
         title: 'Create By'
@@ -293,14 +289,13 @@ const toggleFilter = (): void => {
 /**
  * Begin::Fetch data section
  */
- const fetchData = async (current_page: number = 1, search: string = ''): Promise<void> => {
-    const per_page: number = 10;
-    let url: string = `purchase?per_page=${per_page}&page_no=${current_page}`;
+ const fetchData = async (current_page: number = 1,per_page: number = 10, search: string = ''): Promise<void> => {
+    let url: string = `class?per_page=${per_page}&page_no=${current_page}&department_id=${filters.value.department_id}&major_id=${filters.value.major_id}`;
     if(search)
     {
         url += `&search=${search}`;
     }
-    const result: ResponseStatus = await api.get(url) as ResponseStatus;
+    const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
     if(!result.error)
     {
         data.value = result as object;
@@ -321,18 +316,8 @@ const searchData = async (value: string): Promise<void> => {
         clearTimeout(timeout.value);
     }
     timeout.value = setTimeout(async (): Promise<void> => {
-        await fetchData(1, value);
+        await fetchData(1, 10, value);
     }, 250);
-}
-
-const filterData = async (current_page: number = 1): Promise<void> => {
-    const per_page: number = 10;
-    const url: string = `package?per_page=${per_page}&page_no=${current_page}&status_id=${filters.value.status_id}&warehouse_id=${filters.value.warehouse_id}`;
-    const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
-    if(!result.error)
-    {
-        data.value = result as object;
-    }
 }
 /**
  * End::Fetch data section
@@ -345,6 +330,6 @@ const filterData = async (current_page: number = 1): Promise<void> => {
 });
 
 onMounted(async (): Promise<void> => {
-    // await fetchData();
+    await fetchData();
 });
 </script>
