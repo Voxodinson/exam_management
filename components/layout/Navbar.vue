@@ -35,6 +35,9 @@
                     label="New"
                     variant="soft" 
                     :padded="false"
+                    @click="(): void => {
+                        toggleModal(true)
+                    }"
                     class=" hover:bg-gray-100 text-white hover:text-black p-1 transition"/>
             </UTooltip>
             <div class="h-full border-[1px] border-white"></div>
@@ -89,10 +92,32 @@
             <User/>
         </div>
     </div>
+    <NewExamModal
+        :open="isOpenModal"
+        @toggle="toggleModal"/>
 </template>
 
 <script setup lang="ts">
+import { NewExamModal } from '@/collector/modal';
 import { 
     User 
 } from '.';
+
+/**
+ * Begin::Declare variable section
+ */
+const isOpenModal: Ref<boolean> = ref<boolean>(false);
+/**
+ * Begin::Declare variable section
+ */
+
+/**
+ * Begin::Some logical section
+ */
+const toggleModal = (value: boolean): void => {
+    isOpenModal.value = value as boolean;
+}
+/**
+ * Begin::Some logical section
+ */
 </script>

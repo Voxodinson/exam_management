@@ -8,7 +8,7 @@
     <template
         v-else>
         <div 
-        class="flex items-center justify-between h-[45px] px-4 bg-white border-b-[1px] border-gray-200">
+            class="flex items-center justify-between h-[45px] px-4 bg-white border-b-[1px] border-gray-200">
             <UBreadcrumb 
                 :links="linksItem"
                 divider="/"
@@ -92,7 +92,6 @@
                                                     await fetchData();
                                                 }
                                             });
-
                                         }
                                     }]
                                 ]" 
