@@ -24,10 +24,7 @@
                 }"
                 @click="toggleSidebar(!expand)"/>
         </div>
-        <div class="h-[calc(100vh-95px)] p-2 overflow-auto">
-            <Section
-                :class-title="!expand ? 'border-b-[1px] border-gray-300' : 'hidden'"
-                label="Main Menu"/>
+        <div class="h-[calc(100vh-95px)] px-2 overflow-auto">
             <Menu
                 icon="ant-design:home-outlined"
                 title="Home"
