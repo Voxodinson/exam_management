@@ -22,7 +22,7 @@
             name=""
             method="POST"
             enctype="multipart/form-data"
-            @submit.prevent="getData"
+            @submit.prevent=""
             class="p-2 w-full">
             <div class="p-2 rounded-md bg-white">
                 <div 
@@ -417,25 +417,7 @@ const calculateMark: Ref<Items> = ref<Items>({
 /**
  * Begin::Fetch data section
  */
- const getData = async (event: Event): Promise<void> => {
-    const formData: any = context.getDataForm(event as SubmitEvent) as any;
-    formData.questions = questions.value
-    console.log(formData)
-    // if(props.examId != null)
-    // {
-    //     await api.post(``, true, formData) as ResponseStatus;
-    // }
-    // else
-    // {
-    //     const result: ResponseStatus = await api.post('', true, formData) as ResponseStatus;
-    //     if(!result.error)
-    //     {
-    //         emits('toggle', false);
-    //         (event.target as HTMLFormElement).reset();
-    //     }
-    // }
-    // emits('update:data');
-}
+
 
 /**
  * End::Fetch data section
