@@ -9,7 +9,7 @@
                         v-for="(column, idx) in columns"
                         :key="idx"
                         class="px-2.5 py-1.5 text-start text-sm">
-                        <span class="uppercase font-semibold">
+                        <span class="uppercase  text-[.9rem] font-semibold">
                             {{column.title}}
                         </span>
                     </th>
@@ -58,7 +58,7 @@
                     <th
                         v-for="(column, idx) in columns"
                         :key="idx"
-                        class="px-2.5 py-1.5 bg-[#3A6D8C] text-white text-start text-sm uppercase font-normal">{{ column.title || '' }}
+                        class="px-2.5 py-1.5 bg-[#3A6D8C] text-white text-start text-[.8rem] uppercase font-normal">{{ column.title || '' }}
                     </th>
                 </tr>
             </thead>

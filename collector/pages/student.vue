@@ -218,7 +218,6 @@
                             value-attribute="id"
                             placeholder="Shift"
                             id-attribute="id"
-                            required
                             class="w-[calc(97%/3)]"/>
                     </div>
                 </UFormGroup>  

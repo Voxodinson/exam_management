@@ -8,32 +8,6 @@
                     inactive: 'hover:text-blue-200',
                     active: 'text-blue-400',}"/>
         <div class=" flex gap-2 items-center justify-center h-full">
-            <UTooltip 
-                text="Create New Exam"
-                :popper="{ offsetDistance: 12 }">
-                <UButton
-                    icon="material-symbols:add-circle-outline-rounded"
-                    size="sm"
-                    color="black"
-                    label="New Exam"
-                    variant="soft" 
-                    :padded="false"
-                    class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
-            </UTooltip>
-            <UTooltip 
-                text="Open Filters"
-                :popper="{ offsetDistance: 12 }">
-                <UButton
-                    :icon="isOpenFilter ? 'material-symbols:close-rounded' : 'material-symbols:filter-alt-outline'"
-                    size="sm"
-                    color="black"
-                    variant="soft" 
-                    :padded="false"
-                    @click="()=>{
-                        toggle();
-                    }"
-                    class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
-            </UTooltip>
         </div>
     </div>
     <div class="w-full p-2">
@@ -41,6 +15,9 @@
             class="w-full h-[130px]  overflow-auto flex gap-2 p-2 rounded-md bg-white">
             <div class="w-fit flex gap-3">
                 <div 
+                    @click="() => {
+                        toggleCreateModal(Boolean(true));
+                    }"
                     class="w-[250px] rounded-md border-gray-200 border-[1px] cursor-pointer bg-[#3A6D8C] flex items-center justify-center gap-2 group">
                     <UIcon
                         name="material-symbols:add-circle-outline-rounded"
@@ -51,7 +28,6 @@
                     </span>
                 </div>
                 <div 
-                    v-for="i in 10"
                     class="h-full w-fit flex gap-2">
                     <div 
                         class="h-full bg-white border-[1px] border-gray-200 w-[250px] rounded-md flex items-center justify-center p-2 text-wrap text-center hover:bg-gray-200 transition cursor-pointer">
@@ -60,7 +36,61 @@
                 </div>
             </div>
         </div>
+        <div class="w-full flex gap-3 bg-white rounded-md p-3 mt-3">
+            <div class="w-full h-fit rounded-md">
+                <div 
+                    class="flex pb-2 items-center justify-start">
+                    <UIcon 
+                        name="material-symbols:arrow-right-rounded"
+                        class="w-6 h-6 text-[1rem] text-gray-600"/>
+                    <h3 
+                        class="text-gray-600 text-[.8rem]">Exam - Web Developer</h3>
+                </div>
+                <Table
+                    :columns="columns"
+                    :data="data"
+                    is-custom
+                    v-slot="{ data, index }"
+                    @update:data="async (current_page: number): Promise<void> => {
+                        
+                    }">
+                    <tr 
+                        class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
+                        <td>
+                            <span>{{ index +1 }}</span>
+                        </td>
+                        <td>
+                            <div 
+                                class="w-[60px] h-[60px] overflow-hidden rounded-full border-[1px] border-gray-200">
+                                <img 
+                                    :src="data.img_link_url || UserImage" 
+                                    alt=""
+                                    class="w-full h-full object-cover hover:scale-110 transition">
+                            </div>
+                        </td>
+                        <td>
+                            <span class="text-blue-500">{{ data.code }}</span>
+                        </td>
+                        <td>
+                            <span>{{ data.first_name }} {{ data.last_name }}</span>
+                        </td>
+                        <td>
+                            <span
+                                class="text-[.9rem]">
+                                {{ data.department_name }} - {{ data.class_name }} - {{ data.major_name }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-blue-500">{{ data.point || 100}} pt</span>
+                        </td>
+                    </tr>
+                </Table>
+            </div>
+        </div>
     </div>
+    <NewExamModal
+        :open="isOpenCreateModal"
+        @toggle="toggleCreateModal"/>
 </template>
 
 <script setup lang="ts">
@@ -72,7 +102,17 @@ import type {
     Items,
     Options,
     ResponseStatus,
+    Column
 } from "@/models/type";
+import { 
+    Table 
+} from "@/components/ui";
+import { 
+    NewExamModal 
+} from "@/collector/modal";
+import { 
+    UserImage 
+} from "@/assets/images";
 definePageMeta({
     colorMode: 'light'
 });
@@ -90,6 +130,7 @@ definePageMeta({
  */
 const dataOptions: Ref<Options> = ref<Options>({});
 const data: Ref<object> = ref<object>({});
+const isOpenCreateModal: Ref<boolean> = ref<boolean>(false);
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
 const filters: Ref<Items> = ref<Items>({
     status_id: '',
@@ -97,14 +138,33 @@ const filters: Ref<Items> = ref<Items>({
 });
 const isOpenFilter: Ref<boolean> = ref<boolean>(false);
 const linksItem = [
-  {
-      label: 'Main Menu'
-  },
-  {
-      label: 'Home',
-  }
+    {
+        label: 'Main Menu'
+    },
+    {
+        label: 'Home',
+    }
 ];
-
+const columns: Ref<Column[]> = ref<Column[]>([
+    {
+        title: 'no'        
+    },
+    {
+        title: 'Profile'
+    },
+    {
+        title: 'Code'
+    },
+    {
+        title:'Name',
+    },
+    {
+        title:'Department / Class / Major',
+    },
+    {
+        title:'Total Point',
+    }
+ ])
 /**
  * End::Declare variable section
  */ 
@@ -115,6 +175,10 @@ const linksItem = [
  const toggle = (): void => {
     isOpenFilter.value = !isOpenFilter.value as boolean;
 }
+const toggleCreateModal = (value: boolean) => {
+    isOpenCreateModal.value = value as boolean;
+}
+
 /**
  * End::Some logical in this component
  */
@@ -122,14 +186,13 @@ const linksItem = [
 /**
  * Begin::Fetch data section
  */
- const fetchData = async (current_page: number = 1, search: string = ''): Promise<void> => {
-    const per_page: number = 10;
-    let url: string = `purchase?per_page=${per_page}&page_no=${current_page}`;
+ const fetchData = async (current_page: number = 1,per_page: number = 10, search: string = ''): Promise<void> => {
+    let url: string = `student?per_page=${per_page}&page_no=${current_page}&department_id=${filters.value.department_id}&major_id=${filters.value.major_id}&class_id=${filters.value.class_id}&nationality_id=${filters.value.nationality_id}&shift_id=${filters.value.shift_id}`;
     if(search)
     {
         url += `&search=${search}`;
     }
-    const result: ResponseStatus = await api.get(url) as ResponseStatus;
+    const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
     if(!result.error)
     {
         data.value = result as object;
@@ -150,7 +213,7 @@ const searchData = async (value: string): Promise<void> => {
         clearTimeout(timeout.value);
     }
     timeout.value = setTimeout(async (): Promise<void> => {
-        await fetchData(1, value);
+        await fetchData(1,10, value);
     }, 250);
 }
 
@@ -168,5 +231,6 @@ const filterData = async (current_page: number = 1): Promise<void> => {
  */
 
 onMounted(async (): Promise<void> => {
+    await fetchData();
 });
 </script>
