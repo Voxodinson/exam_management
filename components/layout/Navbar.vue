@@ -36,7 +36,7 @@
                     variant="soft" 
                     :padded="false"
                     @click="(): void => {
-                        toggleModal(Boolean(true));
+                        toggleCreateExamModal(Boolean(true));
                     }"
                     class=" hover:bg-gray-100 text-white hover:text-black p-1 transition"/>
             </UTooltip>
@@ -64,6 +64,9 @@
                     color="white"
                     variant="soft" 
                     :padded="false"
+                    @click="(): void => {
+                        toggleOpenNoteModal(Boolean(true));
+                    }"
                     class="text-white hover:bg-gray-100 hover:text-black p-1 transition"/>
             </UTooltip>
             <UTooltip 
@@ -107,12 +110,20 @@
         </div>
     </div>
     <NewExamModal
-        :open="isOpenModal"
-        @toggle="toggleModal"/>
+        :open="isOpenCreateModal"
+        @toggle="toggleCreateExamModal"/>
+    <NotedModal
+        :open="isOpenNoteModal"
+        @toggle="toggleOpenNoteModal"/>
 </template>
 
 <script setup lang="ts">
-import { NewExamModal } from '@/collector/modal';
+import { 
+    NewExamModal 
+} from '@/collector/modal';
+import { 
+    NotedModal 
+} from '@/modal';
 import { 
     User 
 } from '.';
@@ -120,7 +131,8 @@ import {
 /**
  * Begin::Declare variable section
  */
-const isOpenModal: Ref<boolean> = ref<boolean>(false);
+const isOpenCreateModal: Ref<boolean> = ref<boolean>(false);
+const isOpenNoteModal: Ref<boolean> = ref<boolean>(true);
 const isFullscreen: Ref<boolean> = ref<boolean>(false);
 /**
  * Begin::Declare variable section
@@ -129,8 +141,12 @@ const isFullscreen: Ref<boolean> = ref<boolean>(false);
 /**
  * Begin::Some logical section
  */
-const toggleModal = (value: boolean): void => {
-    isOpenModal.value = value as boolean;
+const toggleCreateExamModal = (value: boolean): void => {
+    isOpenCreateModal.value = value as boolean;
+}
+
+const toggleOpenNoteModal = (value: boolean) => {
+    isOpenNoteModal.value = value as boolean;
 }
 
 const toggleFullscreen = async (): Promise<void> => {

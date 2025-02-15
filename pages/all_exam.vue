@@ -130,7 +130,9 @@
                                             iconClass: 'text-blue-500',
                                             label: 'View Exam Information',
                                             icon: 'material-symbols:folder-eye-outline',
-                                            click: () => {}
+                                            click: () => {
+                                                toggleInfoModal(Boolean(true));
+                                            }
                                         }
                                     ],
                                     [
