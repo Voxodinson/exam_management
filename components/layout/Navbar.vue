@@ -36,11 +36,25 @@
                     variant="soft" 
                     :padded="false"
                     @click="(): void => {
-                        toggleModal(true)
+                        toggleModal(Boolean(true));
                     }"
                     class=" hover:bg-gray-100 text-white hover:text-black p-1 transition"/>
             </UTooltip>
             <div class="h-full border-[1px] border-white"></div>
+            <UTooltip 
+                :text="isFullscreen ? 'Exit fullscreen' : 'Fullscreen'"
+                :popper="{ offsetDistance: 12 }">
+                <UButton
+                    :icon="isFullscreen ? 'ant-design:fullscreen-exit-outlined' : 'gridicons:fullscreen'"
+                    size="sm"
+                    color="white"
+                    variant="soft" 
+                    :padded="false"
+                    @click="async (): Promise<void> => {
+                        await toggleFullscreen();
+                    }"
+                    class="text-white hover:bg-gray-100 hover:text-black p-1 transition"/>
+            </UTooltip>
             <UTooltip 
                 text="Open Noted"
                 :popper="{ offsetDistance: 12 }">
@@ -107,6 +121,7 @@ import {
  * Begin::Declare variable section
  */
 const isOpenModal: Ref<boolean> = ref<boolean>(false);
+const isFullscreen: Ref<boolean> = ref<boolean>(false);
 /**
  * Begin::Declare variable section
  */
@@ -117,7 +132,89 @@ const isOpenModal: Ref<boolean> = ref<boolean>(false);
 const toggleModal = (value: boolean): void => {
     isOpenModal.value = value as boolean;
 }
+
+const toggleFullscreen = async (): Promise<void> => {
+    // @ts-ignore
+    if(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement)
+    {
+        handleExitFullscreen();
+        isFullscreen.value = false;
+    }
+    else
+    {
+        await handleRequestFullscreen();
+        isFullscreen.value = true;
+    }
+}
+
+const handleRequestFullscreen = async (): Promise<void> => {
+    const body: HTMLBodyElement = document.body as HTMLBodyElement;
+    if(await body.requestFullscreen)
+    {
+        body.requestFullscreen();
+    }
+    // @ts-ignore
+    else if(await body.mozRequestFullScreen)
+    {
+        // @ts-ignore
+        body.mozRequestFullScreen();
+    }
+    // @ts-ignore
+    else if(await body.webkitRequestFullscreen)
+    {
+        // @ts-ignore
+        body.webkitRequestFullscreen();
+    }
+    // @ts-ignore
+    else if(body.msRequestFullscreen)
+    {
+        // @ts-ignore
+        body.msRequestFullscreen();
+    }
+}
+
+const handleExitFullscreen = (): void => {
+    if(document.exitFullscreen)
+    {
+        document.exitFullscreen();
+    }
+    // @ts-ignore
+    else if(document.mozCancelFullScreen)
+    {
+        // @ts-ignore
+        document.mozCancelFullScreen();
+    }
+    // @ts-ignore
+    else if(document.webkitExitFullscreen)
+    {
+        // @ts-ignore
+        document.webkitExitFullscreen();
+    }
+    // @ts-ignore
+    else if(document.msExitFullscreen)
+    {
+        // @ts-ignore
+        document.msExitFullscreen();
+    }
+}
+
+const checkFullscreen = async (): Promise<void> => {
+    // @ts-ignore
+    if(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement)
+    {
+        handleRequestFullscreen();
+        isFullscreen.value = true;
+    }
+    else
+    {
+        isFullscreen.value = false;
+    }
+}
 /**
  * Begin::Some logical section
  */
+
+onMounted(async (): Promise<void> => {
+    await checkFullscreen();
+})
 </script>

@@ -30,7 +30,7 @@
                     :popper="{ offsetDistance: 12 }">
                     <UButton
                         :icon="isOpenFilter ? 'material-symbols:close-rounded' : 'material-symbols:filter-alt-outline'"
-                        size="sm"
+                        size="md"
                         color="black"
                         variant="soft" 
                         :padded="false"
@@ -54,6 +54,14 @@
                             value-attribute="id"
                             option-attribute="name"
                             id-attribute="id"
+                            placeholder="Select a exam"
+                            class="w-[250px]"/>
+                        <SelectMenu
+                            name=""
+                            :options="[]"
+                            value-attribute="id"
+                            option-attribute="name"
+                            id-attribute="id"
                             placeholder="Select a department"
                             class="w-[250px]"/>
                         <SelectMenu
@@ -71,14 +79,6 @@
                             option-attribute="name"
                             id-attribute="id"
                             placeholder="Select a shift"
-                            class="w-[250px]"/>
-                        <SelectMenu
-                            name=""
-                            :options="[]"
-                            value-attribute="id"
-                            option-attribute="name"
-                            id-attribute="id"
-                            placeholder="Select a nationality"
                             class="w-[250px]"/>
                         <UTooltip 
                             text="Sort by Letter"

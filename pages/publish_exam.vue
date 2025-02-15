@@ -21,7 +21,7 @@
                     type="text"
                     color="white"
                     variant="outline"
-                    size="md"
+                    size="sm"
                     name="district"
                     role="input"
                     placeholder="Search here..."

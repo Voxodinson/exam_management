@@ -199,7 +199,7 @@
                                             label: 'Views Student Info',
                                             iconClass: 'text-blue-500',
                                             class: 'text-blue-500',
-                                            icon: 'i-heroicons-pencil-square-20-solid',
+                                            icon: 'material-symbols:folder-eye-outline',
                                             click: () => {
                                                 studentId = data.id as number;
                                                 if(studentId){

@@ -22,7 +22,7 @@
                     type="text"
                     color="white"
                     variant="outline"
-                    size="md"
+                    size="sm"
                     name="district"
                     role="input"
                     placeholder="Search here..."
@@ -32,7 +32,7 @@
                     :popper="{ offsetDistance: 12 }">
                     <UButton
                         icon="material-symbols:add-circle-outline-rounded"
-                        size="sm"
+                        size="md"
                         color="black"
                         label="New Exam"
                         variant="soft" 
@@ -47,7 +47,7 @@
                     :popper="{ offsetDistance: 12 }">
                     <UButton
                         :icon="isOpenFilter ? 'material-symbols:close-rounded' : 'material-symbols:filter-alt-outline'"
-                        size="sm"
+                        size="md"
                         color="black"
                         variant="soft" 
                         :padded="false"
@@ -110,21 +110,38 @@
                                 :items="[
                                     [
                                         {
+                                            class: 'text-green-500',
+                                            iconClass: 'text-green-500',
                                             label: 'Publish Exam',
                                             icon: 'material-symbols:arrow-upload-progress-rounded',
                                             click: () => {}
                                         },
                                         {
-                                        label: 'Edit',
-                                        icon: 'i-heroicons-pencil-square-20-solid',
-                                        click: () => {}
-                                    }
+                                            class: 'text-yellow-500',
+                                            iconClass: 'text-yellow-500',
+                                            label: 'Edit',
+                                            icon: 'i-heroicons-pencil-square-20-solid',
+                                            click: () => {}
+                                        }
                                     ], 
-                                    [{
-                                        label: 'Delete',
-                                        icon: 'i-heroicons-trash-20-solid',
-                                        click: () => {}
-                                    }]
+                                    [
+                                    {
+                                            class: 'text-blue-500',
+                                            iconClass: 'text-blue-500',
+                                            label: 'View Exam Information',
+                                            icon: 'material-symbols:folder-eye-outline',
+                                            click: () => {}
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            class: 'text-red-500',
+                                            iconClass: 'text-red-500',
+                                            label: 'Delete',
+                                            icon: 'i-heroicons-trash-20-solid',
+                                            click: () => {}
+                                        }
+                                    ]
                                 ]" 
                                 :popper="{ placement: 'bottom-start' }">
                                 <UButton 
@@ -137,6 +154,9 @@
             </div>
         </div>
     </template>
+    <ExamInfoModal 
+        :open="isOpenExamInfoModal"
+        @toggle="toggleInfoModal"/>
 </template>
 
 <script setup lang="ts">
@@ -158,6 +178,9 @@ import type {
 import { 
     NewExam 
 } from '@/collector/pages';
+import { 
+    ExamInfoModal 
+} from '@/modal';
 definePageMeta({
     colorMode: 'light'
 });
@@ -183,6 +206,7 @@ const filters: Ref<Items> = ref<Items>({
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const openCreate: Ref<boolean> = ref<boolean>(false);
 const examId: Ref<number | null> = ref<number | null>(null);
+const isOpenExamInfoModal: Ref<boolean> = ref<boolean>(false);
 const linksItem = [
   {
       label: 'Main Menu'
@@ -288,6 +312,9 @@ const toggle = (): void => {
 }
 const toggleCreate = (value: boolean): void => {
     openCreate.value = value as boolean;
+}
+const toggleInfoModal = (value: boolean) => {
+    isOpenExamInfoModal.value = value as boolean;
 }
 /**
  * End::Some logical in this component
