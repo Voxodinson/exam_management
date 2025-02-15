@@ -23,7 +23,7 @@
             method="POST"
             enctype="multipart/form-data"
             @submit.prevent=""
-            class="p-2 w-full bg-white h-[85vh] overflow-y-auto">
+            class="p-2 w-full bg-white h-fit max-h-[85vh] overflow-y-auto">
             <div class="p-2 rounded-md">
                 <div 
                     class="w-full flex gap-2">
