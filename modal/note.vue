@@ -13,7 +13,7 @@
         <div
             class="px-2 pt-2 flex items-center justify-between border-b-[1px] border-gray-200 pb-1">
             <h3
-                class="font-semibold capitalize">
+                class="font-semibold capitalize text-[#3A6D8C]">
                 Team Note
             </h3>
             <UIcon 
@@ -94,7 +94,7 @@
                     @click="() => {
                         toggleSendTo();
                     }"
-                    class="text-blue-500 hover:scale-110 transition boder-none w-6 h-6 text-[2rem]"/>
+                    class="text-[#3A6D8C] hover:scale-110 transition boder-none w-6 h-6 text-[2rem]"/>
                 <USelectMenu
                     v-if="openSendTo"
                     v-model="sentToSelected"
@@ -122,7 +122,7 @@
                     icon="iconoir:send-solid"
                     variant="soft" 
                     :padded="false"
-                    class="bg-blue-400 h-fit text-white hover:bg-blue-300 p-2 rounded-full px-3 transition"/>
+                    class="bg-[#3A6D8C] h-fit text-white hover:bg-opacity-80 p-2 rounded-full px-3 transition"/>
             </div>
         </form>
     </UModal>
