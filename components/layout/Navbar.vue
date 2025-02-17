@@ -4,7 +4,7 @@
             src="../../assets/images/logo.png" 
             alt="logo"
             class="w-[50px] ml-28">
-        <UButtonGroup size="md" orientation="horizontal">
+        <!-- <UButtonGroup size="md" orientation="horizontal">
             <UInput
                 icon="i-heroicons-magnifying-glass-20-solid"
                 size="sm"
@@ -23,7 +23,7 @@
                         name="solar:history-bold"
                         class="group-hover:scale-110 text-gray-500 hover:text-black transition text-[1.2rem]"/>
                 </UButton>
-        </UButtonGroup>
+        </UButtonGroup> -->
         <div class="flex h-full gap-3 py-3 items-center justify-center mr-4">
             <UTooltip 
                 text="Create New Exam"

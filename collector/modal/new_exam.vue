@@ -10,7 +10,11 @@
         }"
         prevent-close>
         <div
-            class="px-2 pt-2 flex items-center justify-end">
+            class="px-2 pt-2 flex items-center justify-between border-b-[1px] border-gray-200 pb-1">
+            <h3
+                class="font-semibold capitalize text-[#3A6D8C]">
+                Create New Exam
+            </h3>
             <UIcon 
                 name="material-symbols:close-rounded" 
                 class="text-[1.2rem] hover:scale-110 transition-all ease-in-out duration-150 cursor-pointer"
