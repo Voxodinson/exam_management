@@ -109,6 +109,7 @@
             <User/>
         </div>
     </div>
+    
     <NewExamModal
         :open="isOpenCreateModal"
         @toggle="toggleCreateExamModal"/>
@@ -127,12 +128,11 @@ import {
 import { 
     User 
 } from '.';
-
 /**
  * Begin::Declare variable section
  */
 const isOpenCreateModal: Ref<boolean> = ref<boolean>(false);
-const isOpenNoteModal: Ref<boolean> = ref<boolean>(true);
+const isOpenNoteModal: Ref<boolean> = ref<boolean>(false);
 const isFullscreen: Ref<boolean> = ref<boolean>(false);
 /**
  * Begin::Declare variable section

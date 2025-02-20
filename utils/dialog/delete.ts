@@ -5,22 +5,21 @@ import Swal, {
 const Delete = (title: string, callback: () => void): void => {
     Swal.fire({
         icon: 'question',
+        iconColor: '#f4d03f',
         title: title,
         showCancelButton: true,
         reverseButtons: true,
-        width: '21rem',
-        cancelButtonColor: '#f62e2e',
-        confirmButtonColor: '#0cb8fd',
+        width: 'fit-content',
         customClass: {
-            title: 'text-xl'
+            popup: 'items-center rounded-lg shadow-lg p-0.5',
+            title: ' font-thin text-gray-600 text-[1rem]',
+            confirmButton: 'w-[250px] rounded py-1.5 text-blue-400 bg-blue-100 font-medium hover:bg-blue-400 hover:text-white transition-all',
+            cancelButton: 'w-[250px] py-1.5 rounded bg-red-100 text-red-400 font-medium hover:bg-red-500 hover:text-white transition-all',
         }
-    })
-    .then((result: SweetAlertResult) => {
-        if(result.isConfirmed)
-        {
+    }).then((result: SweetAlertResult): void => {
+        if(result.isConfirmed) {
             callback && callback();
         }
     });
-};
-
+}
 export default Delete;
