@@ -105,7 +105,7 @@
                 </UFormGroup>
                 <UFormGroup
                     class="w-[calc(98%/2)]"
-                    label="Password"
+                    label="Confirm Password"
                     name="">
                     <UInput
                         type="text"
@@ -114,7 +114,7 @@
                         size="md"
                         name=""
                         role="input"
-                        placeholder="enter password here..."/>
+                        placeholder="enter confirm password here..."/>
                 </UFormGroup>
             </div>        
         </div>
