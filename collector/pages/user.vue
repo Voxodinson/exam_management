@@ -1,32 +1,31 @@
 <template>
+    <div
+        class="bg-white p-2 flex items-center h-[45px] px-4 border-b-[1px] border-gray-200">
+        <UTooltip 
+            text="Back to shift list"
+            :popper="{ offsetDistance: 12 }">
+            <UButton
+                icon="material-symbols-light:chevron-left-rounded"
+                size="sm"
+                color="black"
+                label="Back"
+                variant="soft" 
+                :padded="false"
+                @click="()=>{
+                    emits('toggle', false);
+                }"
+                class="bg-[#3A6D8C] w-[70px] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
+        </UTooltip>
+    </div>
     <form
         name="user"
         method="POST"
         enctype="multipart/form-data"
         @submit.prevent="getData"
         class="bg-white rounded-md p-3 space-y-4">
-        <div
-            class="flex items-center gap-x-3">
-            <UButton
-                type="reset"
-                color="green"
-                variant="solid"
-                size="md"
-                @click="emits('toggle', false)"
-                class="gap-x-0"
-                square>
-                <UIcon
-                    name="material-symbols:arrow-back-ios-rounded"
-                    class="text-xl"/>
-                <span
-                    class="font-medium text-base">Back</span>
-            </UButton>
-            <span
-                class="font-semibold text-lg">Category</span>
-        </div>
         <div class="w-full flex gap-3 flex-wrap">
             <div class="w-[200px] h-[210px] border-[1px] border-gray-200 rounded-md overflow-hidden">
-                <ChooseSingleImage
+                <ChoosePhoto
                     name="photo"/>
             </div>
             <div class="w-[calc(98%-200px)] flex gap-3 flex-wrap">
@@ -39,8 +38,7 @@
                         :options="dataOptions.roles"
                         option-attribute="name"
                         value-attribute="id"
-                        placeholder="Select role"
-                        required/>
+                        placeholder="Select role"/>
                 </UFormGroup>
                 <UFormGroup
                     class="w-[calc(99%/2)]"
@@ -51,8 +49,7 @@
                         :options="dataOptions.branches"
                         option-attribute="name"
                         value-attribute="id"
-                        placeholder="Select branch"
-                        required/>
+                        placeholder="Select branch"/>
                 </UFormGroup>
                 <UFormGroup
                     class="w-[calc(98%/2)]"
@@ -81,7 +78,7 @@
                         placeholder="enter phone here..."/>
                 </UFormGroup>
                 <UFormGroup
-                    class="w-[calc(98%/2)]"
+                    class="w-[calc(100%)]"
                     label="Email"
                     name="email">
                     <UInput
@@ -95,6 +92,19 @@
                 </UFormGroup>
                 <UFormGroup
                     class="w-[calc(99%/2)]"
+                    label="Password"
+                    name="">
+                    <UInput
+                        type="text"
+                        color="white"
+                        variant="outline"
+                        size="md"
+                        name=""
+                        role="input"
+                        placeholder="enter password here..."/>
+                </UFormGroup>
+                <UFormGroup
+                    class="w-[calc(98%/2)]"
                     label="Password"
                     name="">
                     <UInput
@@ -160,9 +170,9 @@ import type {
     Items
 } from "@/models/type";
 import { 
-    SelectMenu
+    SelectMenu,
+    ChoosePhoto
 } from "@/components/ui";
-
 /**
  * Begin::Set event trigger to parent component
  */

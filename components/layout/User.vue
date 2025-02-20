@@ -9,7 +9,7 @@
             background: 'bg-white',
         }">
         <div
-            class="bg-white flex gap-x-2  rounded-md items-center">
+            class="bg-white flex gap-x-2  rounded-md items-start">
             <UAvatar
                 src=""
                 alt="user"
@@ -48,7 +48,7 @@ const items: Ref<DropdownItem[][]> = computed(() => [
     [
         {
             label: (username.value as string),
-            class: 'justify-center pb-3 hover:bg-transparent',
+            class: 'justify-start pb-3 hover:bg-transparent',
             avatar: {
                 src: '',
                 size: 'lg'
