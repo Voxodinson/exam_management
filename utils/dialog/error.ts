@@ -2,16 +2,16 @@ import Swal from "sweetalert2";
 
 const Error = (title: string): void => {
     Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'error',
+        position: 'bottom-right',
         title: title,
+        toast: true,
         showCancelButton: false,
         showConfirmButton: false,
         timerProgressBar: true,
-        timer: 3000,
+        timer: 4000,
+        width: '500px',
         customClass: {
-            title: 'text-xl'
+            title: ' font-normal text-red-600 text-[1rem]',
         }
     });
 }

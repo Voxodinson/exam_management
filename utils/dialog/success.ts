@@ -3,15 +3,15 @@ import Swal from "sweetalert2";
 const Success = (title: string): void => {
     Swal.fire({
         toast: true,
-        position: 'top-end',
-        icon: 'success',
+        position: 'bottom-right',
         title: title,
         showCancelButton: false,
         showConfirmButton: false,
         timerProgressBar: true,
-        timer: 3000,
+        timer: 4000,
+        width: '500px',
         customClass: {
-            title: 'text-xl'
+            title: 'font-normal text-green-600 text-[1rem]',
         }
     });
 }
