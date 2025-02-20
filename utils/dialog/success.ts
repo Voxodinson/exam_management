@@ -5,6 +5,7 @@ const Success = (title: string): void => {
         toast: true,
         position: 'bottom-right',
         title: title,
+        icon: 'success',
         showCancelButton: false,
         showConfirmButton: false,
         timerProgressBar: true,

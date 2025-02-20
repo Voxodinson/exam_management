@@ -125,7 +125,7 @@
             <div
                 class="w-full rounded-md grid grid-cols-3 gap-2">
                 <div
-                    v-for="(user, idx) in datas.data"
+                    v-for="(user, idx) in data"
                     :key="idx"
                     class="w-full h-fit bg-white border-[1px] border-gray-100 rounded-md p-2 relative">
                     <div class="w-full flex flex-col items-center justify-center">
@@ -137,18 +137,27 @@
                                 class="w-full h-full object-cover">
                         </div>
                         <span
-                            class=" absolute top-2 right-2 py-0.5 px-4 text-white rounded-md text-[.8rem]"
+                            class=" absolute top-2 left-2 py-0.5 px-4 text-white rounded-md text-[.8rem]"
                             :class="[
                                 user.lock ? 'bg-red-400' : 'bg-blue-400'
                             ]">
                             {{ user.lock ? 'Lock' : 'Active'}}
                         </span>
+                        <div class=" absolute top-2 right-2">
+                            <UDropdown 
+                                :items="dropDownItems(user as any)" 
+                                :popper="{ placement: 'bottom-end' }">
+                                <UButton 
+                                    color="white"
+                                    trailing-icon="mdi:dots-vertical" />
+                            </UDropdown>
+                        </div>
                         <h3>
                             {{ user.user_name }}
                         </h3>
                         <span
                             class="text-gray-400 text-[.8rem]">
-                            {{ user.user_role }}
+                            {{ user.user_role ? user.user_role : '---' }}
                         </span>
                     </div>
                     <div class="flex flex-col gap-2 *:border-b-[1px] mt-2 *:border-gray-200 *:flex *:items-center *:justify-between *:w-full bg-gray-100 rounded-md p-3">
@@ -180,47 +189,18 @@
                             class="*:text-gray-600 *:text-[.9rem]">
                             <span>Address:</span>
                             <span>
-                                Phnom Penh Cambodia
+                                {{  }}
                             </span>
                         </div>
-                    </div>
-                    <div class="flex items-center justify-between gap-3 p-2 bg-green-100 mt-2 rounded-md">
-                        <UButton 
-                            icon="carbon:password"
-                            color="sky" 
-                            variant="outline"
-                            label="Change Password"
-                            class="hover:bg-blue-100"/>
-                        <UIcon 
-                            :name="user.lock ? 'streamline:interface-lock-combination-combo-lock-locked-padlock-secure-security-shield-keyhole' : 'streamline:interface-unlock-combination-combo-key-keyhole-lock-secure-security-square-unlock-unlocked'" 
-                            class="text-[1.6rem] text-red-500 hover:scale-105" 
-                            v-if="true"
-                            @click="async (): Promise<void> => {
-                                Confirm('Do you want to lock user account?', async (): Promise<void> => {
-                                    const result = await api.update(``, true, {}) as ResponseStatus;
-                                    if(result){
-                                        await fetchData();
-                                    }
-                                });
-                            }"/>
-                        <UButton 
-                            icon="streamline:interface-edit-write-2-change-document-edit-modify-paper-pencil-write-writing"
-                            color="sky" 
-                            variant="outline"
-                            label="Modify User"
-                            @click="()=>{
-                                toggleCreate(true);
-                            }"
-                            class="hover:bg-blue-100"/>
                     </div>
                 </div>
             </div>
             <div
-                v-if="datas" 
+                v-if="data" 
                 class="w-full flex items-center mt-2 justify-end p-2 bg-white rounded-md">
                 <UPagination
                     size="sm"
-                    :total="datas.total || 0" 
+                    :total="Number(data.total) || 0" 
                     show-last 
                     show-first
                     @update:model-value="async (current_page: number): Promise<void> => {
@@ -279,7 +259,7 @@ definePageMeta({
  * Begin::Declare variable section
  */
 const dataOptions: Ref<Options> = ref<Options>({});
-const data: Ref<Items[]> = ref<Items[]>([]);
+const data: Ref<any> = ref<any>({});
 const userID: Ref<number | null> = ref<number | null>(null);
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
 const page: Ref<number> = ref<number>(1);
@@ -299,69 +279,48 @@ const linksItem = [
       label: 'All Exam',
   }
 ];
-const datas = {
-    status: 'ok',
-    data: [
+const dropDownItems = (data: Items): any => [
+    [
         {
-            "user_name": "John Doe",
-            "img_link_url": "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-            "user_role": "Admin",
-            "email": "johndoe@example.com",
-            "start_date": "2025-01-23",
-            "phone": "+1234567890",
-            "lock": false
+            label: 'Lock User',
+            iconClass: 'text-red-500',
+            class: 'text-red-500',
+            icon: `${data.lock ? 'streamline:interface-lock-combination-combo-lock-locked-padlock-secure-security-shield-keyhole' : 'streamline:interface-unlock-combination-combo-key-keyhole-lock-secure-security-square-unlock-unlocked'}`,
+            click: async (): Promise<void> => {
+                Confirm('Do you want to lock user account?', async (): Promise<void> => {
+                    const result = await api.update(`user/lock/${data.id}`, true, {}) as ResponseStatus;
+                    if(result){
+                        await fetchData();
+                    }
+                });
+            }
         },
         {
-            "user_name": "John Doe",
-            "img_link_url": "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-            "user_role": "Admin",
-            "email": "johndoe@example.com",
-            "start_date": "2025-01-23",
-            "phone": "+1234567890",
-            "lock": true
+            iconClass: 'text-yellow-500',
+            class: 'text-yellow-500',
+            label: 'Modify User',
+            icon: 'streamline:interface-edit-write-2-change-document-edit-modify-paper-pencil-write-writing',
+            click: () => {
+                userID.value = data.id as number;
+                toggleCreate(true);
+            }
         },
         {
-            "user_name": "John Doe",
-            "img_link_url": "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-            "user_role": "Admin",
-            "email": "johndoe@example.com",
-            "start_date": "2025-01-23",
-            "phone": "+1234567890",
-            "lock": true
-        },
-        {
-            "user_name": "John Doe",
-            "img_link_url": "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-            "user_role": "Admin",
-            "email": "johndoe@example.com",
-            "start_date": "2025-01-23",
-            "phone": "+1234567890",
-            "lock": false
-        },
-        {
-            "user_name": "John Doe",
-            "img_link_url": "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-            "user_role": "Admin",
-            "email": "johndoe@example.com",
-            "start_date": "2025-01-23",
-            "phone": "+1234567890",
-            "lock": false
-        },
-        {
-            "user_name": "John Doe",
-            "img_link_url": "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-            "user_role": "Super Admin",
-            "email": "johndoe@example.com",
-            "start_date": "2025-01-23",
-            "phone": "+1234567890",
-            "lock": true
+            iconClass: 'text-red-500',
+            class: 'text-red-500',
+            label: 'Delete',
+            icon: 'material-symbols:delete-outline',
+            click: async (): Promise<void> => {
+                Confirm('Do you want to delete user account?', async (): Promise<void> => {
+                    const result = await api.update(``, true, {}) as ResponseStatus;
+                    if(result){
+                        await fetchData();
+                    }
+                });
+            }
         }
-    ],
-    page_no: 1,
-    per_page: 10,
-    total: 20,
-    total_page: 10
- };
+    ]
+]
 /**
  * End::Declare variable section
  */
@@ -434,5 +393,6 @@ watch((): boolean => openCreate.value, async (value: boolean): Promise<void> => 
  * End::Fetch data section
  */
 onMounted(async (): Promise<void> => {
+    await fetchData();
 });
 </script>

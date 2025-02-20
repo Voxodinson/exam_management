@@ -48,7 +48,7 @@
         </div>
         <div
             v-else
-            class="relative w-full h-full">
+            class="relative w-full h-full group">
             <img
                 :src="image"
                 alt="photo"
@@ -56,7 +56,7 @@
                 class="data-set w-full h-full object-scale-down"/>
             <div
                 @click="resetFile"
-                class="absolute top-0 right-0 bg-gray-200 p-1 cursor-pointer">
+                class="absolute top-0 right-0 opacity-20 group-hover:opacity-90 p-1 cursor-pointer transition ">
                 <Xmark/>
             </div>
         </div>

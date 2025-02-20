@@ -27,7 +27,7 @@
             <div 
                 class="flex flex-col p-3 gap-3 ">
                 <div 
-                    v-for="i in 10"
+                    v-for="i in 1"
                     class="w-full flex gap-3">
                     <div
                         class="w-[60px] h-[60px] overflow-hidden rounded-full border-[1px] border-gray-200">
@@ -36,7 +36,7 @@
                             alt=""
                             class="w-full h-full object-cover hover:scale-110 transition">
                     </div>
-                    <div class="w-[calc(100%-100px)]">
+                    <div class="w-[calc(100%-144px)]">
                         <span
                             class=" font-meduim">Vox Odinson</span>
                         <div 
@@ -57,7 +57,7 @@
                             alt=""
                             class="w-full h-full object-cover hover:scale-110 transition">
                     </div>
-                    <div class="w-[calc(100%-100px)] flex flex-col items-end">
+                    <div class="w-[calc(100%-144px)] flex flex-col items-end">
                         <span
                             class=" font-meduim text-end">Vox Odinson</span>
                         <div 
