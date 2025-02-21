@@ -65,7 +65,7 @@
                             name="nationality"
                             :options="countries"
                             option-attribute="value"
-                            value-attribute="id"
+                            value-attribute="value"
                             id-attribute="id"
                             placeholder="Please select nationality"
                             required/>

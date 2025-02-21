@@ -215,8 +215,8 @@
                                             iconClass: 'text-red-500',
                                             class: 'text-red-500',
                                             click: async (): Promise<void> => {
-                                                Confirm(`Do you want to delete ${data.name} department?`, async (): Promise<void> => {
-                                                    const result = await api.update(`department/${data.id}`, true, {}) as ResponseStatus;
+                                                Confirm(`Do you want to student ${data.name} name?`, async (): Promise<void> => {
+                                                    const result = await api.update(`student/${data.id}`, true, {}) as ResponseStatus;
                                                     if (!result.error) {
                                                         await fetchData();
                                                     }
