@@ -1,9 +1,15 @@
 import AddImage from "./addImage.png";
 import Logo from "./logo.png";
-import UserImage from './user_image.jpg'
+import UserImage from './user_image.jpg';
+import BackgroundLogin from './background.jpeg';
+import Platform from './platform_image.png';
+import Technology from "./technology.png";
 export
 {
     AddImage,
     Logo,
-    UserImage
+    UserImage,
+    BackgroundLogin,
+    Platform,
+    Technology
 };
