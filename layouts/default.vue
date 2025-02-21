@@ -23,7 +23,6 @@ import {
   Sidebar,
   Navbar
 } from '@/components/layout';
-
 /**
 * Begin::Declare variable section
 */
