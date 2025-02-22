@@ -26,7 +26,11 @@
                     name="district"
                     role="input"
                     placeholder="Search here..."
-                    class="w-[250px]"/>
+                    class="w-[250px]"
+                    @input="async (event: Event): Promise<void> => {
+                        const value: string = (event?.target as HTMLInputElement)?.value;
+                        await searchData(value);
+                    }"/>
                 <UTooltip 
                     text="Create New Exam"
                     :popper="{ offsetDistance: 12 }">
@@ -71,7 +75,17 @@
                         option-attribute="name"
                         id-attribute="id"
                         placeholder="Select a subject"
-                        class="w-[250px]"/>
+                        class="w-[250px]"
+                        @update:model-value="async (value: Items): Promise<void> => {
+                            if(value?.id){
+                                filters.warehouse_id = Number(value.id);
+                            }
+                            else{
+                                filters.warehouse_id = '';
+                            }
+                            await fetchData(Number($route.query.page_no) || 1);
+                        }"
+                        :model-value="filters.warehouse_id"/>
                     <InputDate
                         class="w-[250px]"/>
                 </div>
@@ -201,9 +215,12 @@ definePageMeta({
 const dataOptions: Ref<Options> = ref<Options>({});
 const data: Ref<object> = ref<object>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
-const filters: Ref<Items> = ref<Items>({
-    status_id: '',
-    warehouse_id: ''
+const filters: Ref<any> = ref<any>({
+    subject_id: '',
+    date: {
+        start: '',
+        end: ''
+    }
 });
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const openCreate: Ref<boolean> = ref<boolean>(false);
@@ -325,9 +342,8 @@ const toggleInfoModal = (value: boolean) => {
 /**
  * Begin::Fetch data section
  */
- const fetchData = async (current_page: number = 1, search: string = ''): Promise<void> => {
-    const per_page: number = 10;
-    let url: string = `purchase?per_page=${per_page}&page_no=${current_page}`;
+ const fetchData = async (current_page: number = 1, per_page: number = 10, search: string = ''): Promise<void> => {
+    let url: string = `package?per_page=${per_page}&page_no=${current_page}&subject_id=${filters.value.subject_id}&start_date=${filters.value.date.start}$end_date=${filters.value.date.end}`;
     if(search)
     {
         url += `&search=${search}`;
@@ -353,19 +369,10 @@ const searchData = async (value: string): Promise<void> => {
         clearTimeout(timeout.value);
     }
     timeout.value = setTimeout(async (): Promise<void> => {
-        await fetchData(1, value);
+        await fetchData(1, 10, value);
     }, 250);
 }
 
-const filterData = async (current_page: number = 1): Promise<void> => {
-    const per_page: number = 10;
-    const url: string = `package?per_page=${per_page}&page_no=${current_page}&status_id=${filters.value.status_id}&warehouse_id=${filters.value.warehouse_id}`;
-    const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
-    if(!result.error)
-    {
-        data.value = result as object;
-    }
-}
 /**
  * End::Fetch data section
  */

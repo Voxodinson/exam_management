@@ -25,7 +25,11 @@
                     name="district"
                     role="input"
                     placeholder="Search here..."
-                    class="w-[250px]"/>
+                    class="w-[250px]"
+                    @input="async (event: Event): Promise<void> => {
+                        const value: string = (event?.target as HTMLInputElement)?.value;
+                        await searchData(value);
+                    }"/>
                 <UTooltip 
                     text="Create New Exam"
                     :popper="{ offsetDistance: 12 }">
@@ -81,7 +85,17 @@
                         option-attribute="name"
                         id-attribute="id"
                         placeholder="Select a department"
-                        class="w-[250px]"/>
+                        class="w-[250px]"
+                        @update:model-value="async (value: Items): Promise<void> => {
+                            if(value?.id){
+                                filters.major_id = Number(value.id);
+                            }
+                            else{
+                                filters.major_id = '';
+                            }
+                            await fetchData(Number($route.query.page_no) || 1);
+                        }"
+                        :model-value="filters.major_id"/>
                     <UTooltip 
                         text="Sort by Letter"
                         :popper="{ offsetDistance: 12 }">

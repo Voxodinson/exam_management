@@ -27,7 +27,11 @@
                     name="district"
                     role="input"
                     placeholder="Search name here..."
-                    class="w-[300px]"/>
+                    class="w-[300px]"
+                    @input="async (event: Event): Promise<void> => {
+                        const value: string = (event?.target as HTMLInputElement)?.value;
+                        await searchData(value);
+                    }"/>
                 <UTooltip 
                     text="Create New Exam"
                     :popper="{ offsetDistance: 12 }">
@@ -64,54 +68,54 @@
             <div 
                 v-if="isOpenFilter"
                 class="w-full flex gap-2 justify-between bg-white rounded-md p-2 mb-2" >
-                    <div 
-                        class="flex w-fit flex-wrap gap-2">
-                        <UInput
-                            icon="material-symbols:search"
-                            type="text"
-                            color="white"
-                            variant="outline"
-                            size="md"
-                            name="district"
-                            role="input"
-                            placeholder="Search name here..."
-                            class="w-[400px]"/>
-                        <SelectMenu
-                            name=""
-                            :options="[]"
-                            value-attribute="id"
-                            option-attribute="name"
-                            id-attribute="id"
-                            placeholder="Select a department"
-                            class="w-[250px]"/>
-                        <UTooltip 
-                            text="Sort by Letter"
-                            :popper="{ offsetDistance: 12 }">
-                            <UButton
-                                icon="solar:round-sort-vertical-broken"
-                                size="sm"
-                                color="black"
-                                variant="soft" 
-                                :padded="false"
-                                @click="()=>{
-                                }"
-                                class="bg-white hover:bg-gray-200 text-black p-2 transition"/>
-                        </UTooltip>
-                    </div>
-                
+                <div 
+                    class="flex w-fit flex-wrap gap-2">
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        value-attribute="id"
+                        option-attribute="name"
+                        id-attribute="id"
+                        placeholder="Select a department"
+                        class="w-[250px]"
+                        @update:model-value="async (value: Items): Promise<void> => {
+                            if(value?.id){
+                                filters.major_id = Number(value.id);
+                            }
+                            else{
+                                filters.major_id = '';
+                            }
+                            await fetchData(Number($route.query.page_no) || 1);
+                        }"
+                        :model-value="filters.major_id"/>
                     <UTooltip 
-                        text="Cleare Filter"
+                        text="Sort by Letter"
                         :popper="{ offsetDistance: 12 }">
                         <UButton
-                            icon="pajamas:clear-all"
+                            icon="solar:round-sort-vertical-broken"
                             size="sm"
                             color="black"
                             variant="soft" 
                             :padded="false"
                             @click="()=>{
                             }"
-                            class="bg-white hover:bg-gray-200 text-red-500 px-2 transition"/>
+                            class="bg-white hover:bg-gray-200 text-black p-2 transition"/>
                     </UTooltip>
+                </div>
+            
+                <UTooltip 
+                    text="Cleare Filter"
+                    :popper="{ offsetDistance: 12 }">
+                    <UButton
+                        icon="pajamas:clear-all"
+                        size="sm"
+                        color="black"
+                        variant="soft" 
+                        :padded="false"
+                        @click="()=>{
+                        }"
+                        class="bg-white hover:bg-gray-200 text-red-500 px-2 transition"/>
+                </UTooltip>
             </div>
             <div 
                 class="w-full bg-white rounded-md overflow-hidden">
