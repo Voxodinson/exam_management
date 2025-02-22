@@ -27,7 +27,11 @@
                     name="district"
                     role="input"
                     placeholder="Search name here..."
-                    class="w-[300px]"/>
+                    class="w-[300px]"
+                    @input="async (event: Event): Promise<void> => {
+                        const value: string = (event?.target as HTMLInputElement)?.value;
+                        await searchData(value);
+                    }"/>
                 <UTooltip 
                     text="Create New Exam"
                     :popper="{ offsetDistance: 12 }">
@@ -73,23 +77,35 @@
                             option-attribute="name"
                             id-attribute="id"
                             placeholder="Select a department"
-                            class="w-[230px]"/>
+                            class="w-[230px]"
+                            @update:model-value="async (value: Items): Promise<void> => {
+                                if(value?.id){
+                                    filters.department_id = Number(value.id);
+                                }
+                                else{
+                                    filters.department_id = '';
+                                }
+                                await fetchData(Number($route.query.page_no) || 1);
+                            }"
+                            :model-value="filters.warehouse_id"/>
                         <SelectMenu
                             name=""
                             :options="[]"
                             value-attribute="id"
                             option-attribute="name"
                             id-attribute="id"
-                            placeholder="Select a department"
-                            class="w-[230px]"/>
-                        <SelectMenu
-                            name=""
-                            :options="[]"
-                            value-attribute="id"
-                            option-attribute="name"
-                            id-attribute="id"
-                            placeholder="Select a class"
-                            class="w-[230px]"/>
+                            placeholder="Select a major"
+                            class="w-[230px]"
+                            @update:model-value="async (value: Items): Promise<void> => {
+                                if(value?.id){
+                                    filters.major_id = Number(value.id);
+                                }
+                                else{
+                                    filters.major_id = '';
+                                }
+                                await fetchData(Number($route.query.page_no) || 1);
+                            }"
+                            :model-value="filters.major_id"/>
                         <UTooltip 
                             text="Sort by Letter"
                             :popper="{ offsetDistance: 12 }">
@@ -234,8 +250,8 @@ const data: Ref<object> = ref<object>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const filters: Ref<Items> = ref<Items>({
-    status_id: '',
-    warehouse_id: ''
+    department_id: '',
+    major_id: ''
 });
 const openCreate: Ref<boolean> = ref<boolean>(false);
 const classId: Ref<number | null> = ref<number | null>(null);
@@ -289,13 +305,13 @@ const toggleFilter = (): void => {
 /**
  * Begin::Fetch data section
  */
- const fetchData = async (current_page: number = 1,per_page: number = 10, search: string = ''): Promise<void> => {
-    let url: string = `class?per_page=${per_page}&page_no=${current_page}&department_id=${filters.value.department_id}&major_id=${filters.value.major_id}`;
+ const fetchData = async (current_page: number = 1, per_page: number = 10, search: string = ''): Promise<void> => {
+    let url: string = `class?per_page=${per_page}&page_no=${current_page}&department_id=${filters.value.department_id}$major_id${filters.value.major_id}`;
     if(search)
     {
         url += `&search=${search}`;
     }
-    const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
+    const result: ResponseStatus = await api.get(url) as ResponseStatus;
     if(!result.error)
     {
         data.value = result as object;

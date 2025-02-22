@@ -31,7 +31,11 @@
                     name="district"
                     role="input"
                     placeholder="Search name here..."
-                    class="w-[400px]"/>
+                    class="w-[400px]"
+                    @input="async (event: Event): Promise<void> => {
+                        const value: string = (event?.target as HTMLInputElement)?.value;
+                        await searchData(value);
+                    }"/>
                 <UTooltip 
                     text="Create new student"
                     :popper="{ offsetDistance: 12 }">
@@ -83,7 +87,17 @@
                                 option-attribute="name"
                                 id-attribute="id"
                                 placeholder="Select a department"
-                                class="w-full"/>
+                                class="w-full"
+                                @update:model-value="async (value: Items): Promise<void> => {
+                                    if(value?.id){
+                                        filters.major_id = Number(value.id);
+                                    }
+                                    else{
+                                        filters.major_id = '';
+                                    }
+                                    await fetchData(Number($route.query.page_no) || 1);
+                                }"
+                                :model-value="filters.major_id"/>
                         </UFormGroup>
                         <UFormGroup
                             class="w-[calc(98%/4)]"
@@ -96,7 +110,17 @@
                                 option-attribute="name"
                                 id-attribute="id"
                                 placeholder="Select a class"
-                                class="w-full"/>
+                                class="w-full"
+                                @update:model-value="async (value: Items): Promise<void> => {
+                                    if(value?.id){
+                                        filters.major_id = Number(value.id);
+                                    }
+                                    else{
+                                        filters.major_id = '';
+                                    }
+                                    await fetchData(Number($route.query.page_no) || 1);
+                                }"
+                                :model-value="filters.major_id"/>
                         </UFormGroup>  
                         <UFormGroup
                             class="w-[calc(98%/4)]"
@@ -109,7 +133,17 @@
                                 option-attribute="name"
                                 id-attribute="id"
                                 placeholder="Select a shift"
-                                class="w-full"/>
+                                class="w-full"
+                                @update:model-value="async (value: Items): Promise<void> => {
+                                    if(value?.id){
+                                        filters.major_id = Number(value.id);
+                                    }
+                                    else{
+                                        filters.major_id = '';
+                                    }
+                                    await fetchData(Number($route.query.page_no) || 1);
+                                }"
+                                :model-value="filters.major_id"/>
                         </UFormGroup>  
                         <UFormGroup
                             class="w-[calc(97.5%/4)]"
@@ -122,7 +156,17 @@
                                 option-attribute="name"
                                 id-attribute="id"
                                 placeholder="Select a nationality"
-                                class="w-full"/>
+                                class="w-full"
+                                @update:model-value="async (value: Items): Promise<void> => {
+                                    if(value?.id){
+                                        filters.major_id = Number(value.id);
+                                    }
+                                    else{
+                                        filters.major_id = '';
+                                    }
+                                    await fetchData(Number($route.query.page_no) || 1);
+                                }"
+                                :model-value="filters.major_id"/>
                         </UFormGroup>  
                     </div>
                 </div>
