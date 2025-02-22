@@ -88,14 +88,14 @@
                         class="w-[250px]"
                         @update:model-value="async (value: Items): Promise<void> => {
                             if(value?.id){
-                                filters.major_id = Number(value.id);
+                                filters.deprtment_id = Number(value.id);
                             }
                             else{
-                                filters.major_id = '';
+                                filters.deprtment_id = '';
                             }
                             await fetchData(Number($route.query.page_no) || 1);
                         }"
-                        :model-value="filters.major_id"/>
+                        :model-value="filters.deprtment_id"/>
                     <UTooltip 
                         text="Sort by Letter"
                         :popper="{ offsetDistance: 12 }">
@@ -368,8 +368,7 @@ const data: Ref<any> = ref<any>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
 const publishId: Ref<number | null> = ref<number | null>(null);
 const filters: Ref<Items> = ref<Items>({
-    status_id: '',
-    warehouse_id: ''
+    department_id: '',
 });
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const openCreate: Ref<boolean> = ref<boolean>(false);
@@ -567,7 +566,7 @@ const toggleShowQuestion = (idx: number): void => {
  */
  const fetchData = async (current_page: number = 1, search: string = ''): Promise<void> => {
     const per_page: number = 10;
-    let url: string = `purchase?per_page=${per_page}&page_no=${current_page}`;
+    let url: string = `purchase?per_page=${per_page}&page_no=${current_page}&department=${filters.value.deprtment_id}`;
     if(search)
     {
         url += `&search=${search}`;

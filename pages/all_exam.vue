@@ -67,27 +67,92 @@
                 v-if="isOpenFilter"
                 class="flex gap-2 mb-2 justify-between p-2 rounded-md bg-white">
                 <div 
-                    class="flex gap-2">
+                    class="flex w-fit flex-wrap gap-2">
                     <SelectMenu
                         name=""
                         :options="[]"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
-                        placeholder="Select a subject"
+                        placeholder="Select a exam"
                         class="w-[250px]"
                         @update:model-value="async (value: Items): Promise<void> => {
                             if(value?.id){
-                                filters.warehouse_id = Number(value.id);
+                                filters.exam_id = Number(value.id);
                             }
                             else{
-                                filters.warehouse_id = '';
+                                filters.exam_id = '';
                             }
                             await fetchData(Number($route.query.page_no) || 1);
                         }"
-                        :model-value="filters.warehouse_id"/>
-                    <InputDate
-                        class="w-[250px]"/>
+                        :model-value="filters.exam_id"/>
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        value-attribute="id"
+                        option-attribute="name"
+                        id-attribute="id"
+                        placeholder="Select a department"
+                        class="w-[250px]"
+                        @update:model-value="async (value: Items): Promise<void> => {
+                            if(value?.id){
+                                filters.department_id = Number(value.id);
+                            }
+                            else{
+                                filters.deprtment_id = '';
+                            }
+                            await fetchData(Number($route.query.page_no) || 1);
+                        }"
+                        :model-value="filters.deprtment_id"/>
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        value-attribute="id"
+                        option-attribute="name"
+                        id-attribute="id"
+                        placeholder="Select a class"
+                        class="w-[250px]"
+                        @update:model-value="async (value: Items): Promise<void> => {
+                            if(value?.id){
+                                filters.class_id = Number(value.id);
+                            }
+                            else{
+                                filters.class_id = '';
+                            }
+                            await fetchData(Number($route.query.page_no) || 1);
+                        }"
+                        :model-value="filters.major_id"/>
+                    <SelectMenu
+                        name=""
+                        :options="[]"
+                        value-attribute="id"
+                        option-attribute="name"
+                        id-attribute="id"
+                        placeholder="Select a shift"
+                        class="w-[250px]"
+                        @update:model-value="async (value: Items): Promise<void> => {
+                            if(value?.id){
+                                filters.shift_id = Number(value.id);
+                            }
+                            else{
+                                filters.shift_id = '';
+                            }
+                            await fetchData(Number($route.query.page_no) || 1);
+                        }"
+                        :model-value="filters.shift_id"/>
+                    <UTooltip 
+                        text="Sort by Letter"
+                        :popper="{ offsetDistance: 12 }">
+                        <UButton
+                            icon="solar:round-sort-vertical-broken"
+                            size="sm"
+                            color="black"
+                            variant="soft" 
+                            :padded="false"
+                            @click="()=>{
+                            }"
+                            class="bg-white hover:bg-gray-200 text-black p-2 transition"/>
+                    </UTooltip>
                 </div>
             </div>
             <div class="w-full bg-white rounded-md overflow-hidden">
@@ -215,12 +280,11 @@ definePageMeta({
 const dataOptions: Ref<Options> = ref<Options>({});
 const data: Ref<object> = ref<object>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
-const filters: Ref<any> = ref<any>({
-    subject_id: '',
-    date: {
-        start: '',
-        end: ''
-    }
+const filters: Ref<Items> = ref<Items>({
+    exam_id: '',
+    department_id: '',
+    class_id: '',
+    shift: '',
 });
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const openCreate: Ref<boolean> = ref<boolean>(false);
@@ -343,7 +407,7 @@ const toggleInfoModal = (value: boolean) => {
  * Begin::Fetch data section
  */
  const fetchData = async (current_page: number = 1, per_page: number = 10, search: string = ''): Promise<void> => {
-    let url: string = `package?per_page=${per_page}&page_no=${current_page}&subject_id=${filters.value.subject_id}&start_date=${filters.value.date.start}$end_date=${filters.value.date.end}`;
+    let url: string = `purchase?per_page=${per_page}&page_no=${current_page}&exam_id=${filters.value.exam_id}&department_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}`;
     if(search)
     {
         url += `&search=${search}`;

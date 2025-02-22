@@ -90,14 +90,14 @@
                                 class="w-full"
                                 @update:model-value="async (value: Items): Promise<void> => {
                                     if(value?.id){
-                                        filters.major_id = Number(value.id);
+                                        filters.deprtment_id = Number(value.id);
                                     }
                                     else{
-                                        filters.major_id = '';
+                                        filters.deprtment_id = '';
                                     }
                                     await fetchData(Number($route.query.page_no) || 1);
                                 }"
-                                :model-value="filters.major_id"/>
+                                :model-value="filters.deprtment_id"/>
                         </UFormGroup>
                         <UFormGroup
                             class="w-[calc(98%/4)]"
@@ -113,14 +113,14 @@
                                 class="w-full"
                                 @update:model-value="async (value: Items): Promise<void> => {
                                     if(value?.id){
-                                        filters.major_id = Number(value.id);
+                                        filters.class_id = Number(value.id);
                                     }
                                     else{
-                                        filters.major_id = '';
+                                        filters.class_id = '';
                                     }
                                     await fetchData(Number($route.query.page_no) || 1);
                                 }"
-                                :model-value="filters.major_id"/>
+                                :model-value="filters.class_id"/>
                         </UFormGroup>  
                         <UFormGroup
                             class="w-[calc(98%/4)]"
@@ -136,14 +136,14 @@
                                 class="w-full"
                                 @update:model-value="async (value: Items): Promise<void> => {
                                     if(value?.id){
-                                        filters.major_id = Number(value.id);
+                                        filters.shift_id = Number(value.id);
                                     }
                                     else{
-                                        filters.major_id = '';
+                                        filters.shift_id = '';
                                     }
                                     await fetchData(Number($route.query.page_no) || 1);
                                 }"
-                                :model-value="filters.major_id"/>
+                                :model-value="filters.shift_id"/>
                         </UFormGroup>  
                         <UFormGroup
                             class="w-[calc(97.5%/4)]"
@@ -159,14 +159,14 @@
                                 class="w-full"
                                 @update:model-value="async (value: Items): Promise<void> => {
                                     if(value?.id){
-                                        filters.major_id = Number(value.id);
+                                        filters.nationality = Number(value.value);
                                     }
                                     else{
-                                        filters.major_id = '';
+                                        filters.nationality = '';
                                     }
                                     await fetchData(Number($route.query.page_no) || 1);
                                 }"
-                                :model-value="filters.major_id"/>
+                                :model-value="filters.nationality"/>
                         </UFormGroup>  
                     </div>
                 </div>
@@ -333,7 +333,7 @@ const filters: Ref<Items> = ref<Items>({
     shift_id: '',
     class_id: '',
     major_id: '',
-    nationality_id: ''
+    nationality: ''
 });
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const openCreate: Ref<boolean> = ref<boolean>(false);
@@ -382,7 +382,7 @@ const columns: Ref<Column[]> = ref<Column[]>([
  * Begin::Fetch data section
  */
  const fetchData = async (current_page: number = 1,per_page: number = 10, search: string = ''): Promise<void> => {
-    let url: string = `student?per_page=${per_page}&page_no=${current_page}&department_id=${filters.value.department_id}&major_id=${filters.value.major_id}&class_id=${filters.value.class_id}&nationality_id=${filters.value.nationality_id}&shift_id=${filters.value.shift_id}`;
+    let url: string = `student?per_page=${per_page}&page_no=${current_page}&department_id=${filters.value.department_id}&major_id=${filters.value.major_id}&class_id=${filters.value.class_id}&nationality=${filters.value.nationality}&shift_id=${filters.value.shift_id}`;
     if(search)
     {
         url += `&search=${search}`;
