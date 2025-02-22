@@ -57,14 +57,14 @@
                         class="w-[250px]"
                         @update:model-value="async (value: Items): Promise<void> => {
                             if(value?.id){
-                                filters.major_id = Number(value.id);
+                                filters.exam_id = Number(value.id);
                             }
                             else{
-                                filters.major_id = '';
+                                filters.exam_id = '';
                             }
                             await fetchData(Number($route.query.page_no) || 1);
                         }"
-                        :model-value="filters.major_id"/>
+                        :model-value="filters.exam_id"/>
                     <SelectMenu
                         name=""
                         :options="[]"
@@ -75,14 +75,14 @@
                         class="w-[250px]"
                         @update:model-value="async (value: Items): Promise<void> => {
                             if(value?.id){
-                                filters.major_id = Number(value.id);
+                                filters.department_id = Number(value.id);
                             }
                             else{
-                                filters.major_id = '';
+                                filters.deprtment_id = '';
                             }
                             await fetchData(Number($route.query.page_no) || 1);
                         }"
-                        :model-value="filters.major_id"/>
+                        :model-value="filters.deprtment_id"/>
                     <SelectMenu
                         name=""
                         :options="[]"
@@ -93,10 +93,10 @@
                         class="w-[250px]"
                         @update:model-value="async (value: Items): Promise<void> => {
                             if(value?.id){
-                                filters.major_id = Number(value.id);
+                                filters.class_id = Number(value.id);
                             }
                             else{
-                                filters.major_id = '';
+                                filters.class_id = '';
                             }
                             await fetchData(Number($route.query.page_no) || 1);
                         }"
@@ -111,14 +111,14 @@
                         class="w-[250px]"
                         @update:model-value="async (value: Items): Promise<void> => {
                             if(value?.id){
-                                filters.major_id = Number(value.id);
+                                filters.shift_id = Number(value.id);
                             }
                             else{
-                                filters.major_id = '';
+                                filters.shift_id = '';
                             }
                             await fetchData(Number($route.query.page_no) || 1);
                         }"
-                        :model-value="filters.major_id"/>
+                        :model-value="filters.shift_id"/>
                     <UTooltip 
                         text="Sort by Letter"
                         :popper="{ offsetDistance: 12 }">
@@ -275,8 +275,10 @@ const data: Ref<object> = ref<object>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const filters: Ref<Items> = ref<Items>({
-    status_id: '',
-    warehouse_id: ''
+    exam_id: '',
+    department_id: '',
+    class_id: '',
+    shift: '',
 });
 const openResultModal: Ref<boolean> = ref<boolean>(false);
 const majorId: Ref<number | null> = ref<number | null>(null);
@@ -350,7 +352,7 @@ const toggleFilter = (): void => {
  */
  const fetchData = async (current_page: number = 1, search: string = ''): Promise<void> => {
     const per_page: number = 10;
-    let url: string = `purchase?per_page=${per_page}&page_no=${current_page}`;
+    let url: string = `purchase?per_page=${per_page}&page_no=${current_page}&exam_id=${filters.value.exam_id}&department_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}`;
     if(search)
     {
         url += `&search=${search}`;

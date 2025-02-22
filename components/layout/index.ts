@@ -4,7 +4,7 @@ import Navbar from "./Navbar.vue";
 import Sidebar from "./Sidebar.vue";
 import User from "./User.vue";
 import DisableMenu from "./DisableMenu.vue";
-
+import StudentNavigation from "./StudentNavigation.vue";
 export
 {
     Section,
@@ -13,4 +13,5 @@ export
     Sidebar,
     User,
     DisableMenu,
+    StudentNavigation
 };

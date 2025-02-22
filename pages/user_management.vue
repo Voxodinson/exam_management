@@ -85,14 +85,14 @@
                                 class="w-full"
                                 @update:model-value="async (value: Items): Promise<void> => {
                                     if(value?.id){
-                                        filters.warehouse_id = Number(value.id);
+                                        filters.deprtment_id = Number(value.id);
                                     }
                                     else{
-                                        filters.warehouse_id = '';
+                                        filters.deprtment_id = '';
                                     }
-                                    await filterData(Number($route.query.page_no) || 1);
+                                    await fetchData(Number($route.query.page_no) || 1);
                                 }"
-                                :model-value="filters.warehouse_id"/>
+                                :model-value="filters.department_id"/>
                         </UFormGroup>
                         <UFormGroup
                             class="w-[calc(98%/4)]"
@@ -108,14 +108,14 @@
                                 class="w-full"
                                 @update:model-value="async (value: Items): Promise<void> => {
                                     if(value?.id){
-                                        filters.warehouse_id = Number(value.id);
+                                        filters.class_idc = Number(value.id);
                                     }
                                     else{
-                                        filters.warehouse_id = '';
+                                        filters.class_id = '';
                                     }
-                                    await filterData(Number($route.query.page_no) || 1);
+                                    await fetchData(Number($route.query.page_no) || 1);
                                 }"
-                                :model-value="filters.warehouse_id"/>
+                                :model-value="filters.class_id"/>
                         </UFormGroup>  
                         <UFormGroup
                             class="w-[calc(98%/4)]"
@@ -131,14 +131,14 @@
                                 class="w-full"
                                 @update:model-value="async (value: Items): Promise<void> => {
                                     if(value?.id){
-                                        filters.warehouse_id = Number(value.id);
+                                        filters.shift_id = Number(value.id);
                                     }
                                     else{
-                                        filters.warehouse_id = '';
+                                        filters.shift_id = '';
                                     }
-                                    await filterData(Number($route.query.page_no) || 1);
+                                    await fetchData(Number($route.query.page_no) || 1);
                                 }"
-                                :model-value="filters.warehouse_id"/>
+                                :model-value="filters.shift_id"/>
                         </UFormGroup>  
                         <UFormGroup
                             class="w-[calc(97.5%/4)]"
@@ -154,14 +154,14 @@
                                 class="w-full"
                                 @update:model-value="async (value: Items): Promise<void> => {
                                     if(value?.id){
-                                        filters.warehouse_id = Number(value.id);
+                                        filters.nationality = Number(value.value);
                                     }
                                     else{
-                                        filters.warehouse_id = '';
+                                        filters.nationality = '';
                                     }
-                                    await filterData(Number($route.query.page_no) || 1);
+                                    await fetchData(Number($route.query.page_no) || 1);
                                 }"
-                                :model-value="filters.warehouse_id"/>
+                                :model-value="filters.nationality"/>
                         </UFormGroup>  
                     </div>
                 </div>
@@ -311,9 +311,10 @@ const _result: Ref<any> = ref<any>({});
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const openCreate: Ref<boolean> = ref<boolean>(false);
 const filters: Ref<Items> = ref<Items>({
-    search: '',
-    role: '',
-    branches: ''
+    department_id: '',
+    class_id: '',
+    shift_id: '',
+    nationality: '',
 });
 const linksItem = [
   {
@@ -385,18 +386,16 @@ const toggle = (): void => {
 /**
  * Begin::Fetch data section
  */
- const fetchData = async (current_page: number = 1, search: string = ''): Promise<void> => {
-    const per_page: number = 6;
-    let url: string = `user?per_page=${per_page}&page_no=${current_page}`;
+ const fetchData = async (current_page: number = 1, per_page: number = 10, search: string = ''): Promise<void> => {
+    let url: string = `user?per_page=${per_page}&page_no=${current_page}&deprtment_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}&nationality=${filters.value.nationality}`;
     if(search)
     {
         url += `&search=${search}`;
     }
     const result: ResponseStatus = await api.get(url) as ResponseStatus;
-    _result.value = result as object;
     if(!result.error)
     {
-        data.value = result.data as Items[];
+        data.value = result as object;
     }
 }
 
@@ -414,18 +413,8 @@ const searchData = async (value: string): Promise<void> => {
         clearTimeout(timeout.value);
     }
     timeout.value = setTimeout(async (): Promise<void> => {
-        await fetchData(1, value);
+        await fetchData(1, 10, value);
     }, 250);
-}
-
-const filterData = async (current_page: number = 1): Promise<void> => {
-    const per_page: number = 10;
-    const url: string = `user?per_page=${per_page}&page_no=${current_page}&role=${filters.value.role}&branches=${filters.value.branches}`;
-    const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
-    if(!result.error)
-    {
-        data.value = result.data as Items[];
-    }
 }
 watch((): boolean => openCreate.value, async (value: boolean): Promise<void> => {
     if(!value)

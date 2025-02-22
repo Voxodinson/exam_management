@@ -81,14 +81,14 @@
                             class="w-[250px]"
                             @update:model-value="async (value: Items): Promise<void> => {
                                 if(value?.id){
-                                    filters.major_id = Number(value.id);
+                                    filters.department_id = Number(value.id);
                                 }
                                 else{
-                                    filters.major_id = '';
+                                    filters.deprtment_id = '';
                                 }
                                 await fetchData(Number($route.query.page_no) || 1);
                             }"
-                            :model-value="filters.major_id"/>
+                            :model-value="filters.deprtment_id"/>
                         <SelectMenu
                             name=""
                             :options="[]"
