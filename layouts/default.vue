@@ -1,4 +1,3 @@
-
 <template>
     <div
         class="flex flex-col w-full h-[100vh] ">
