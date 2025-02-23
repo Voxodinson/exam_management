@@ -45,7 +45,27 @@
                     </span>
                 </div>
             </div>
-            <div class="w-full h-[100vh] bg-white shadow-md rounded-md border-[1px] border-gray-200 flex flex-col gap-3 mt-3"></div>
+            <div 
+                class="w-full h-[100vh] bg-white shadow-md rounded-md border-[1px] border-gray-200 mt-3">
+                <form
+                    name=""
+                    method="POST"
+                    enctype="multipart/form-data"
+                    @submit.prevent=""
+                    class="p-2 w-full flex flex-col gap-3 ">
+                    <div 
+                        class="w-full p-3">
+                        <div 
+                            class="w-full flex gap-2">
+                            <span
+                                class="font-semibold">1. </span>
+                            <p
+                                class="text-gray-600 font-medium">
+                                Who built Angkor Wat? Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus ipsa, error laudantium nesciunt velit voluptates est quod delectus. Officiis tempora doloribus tenetur sint quos et ab saepe veritatis quis inventore, ea ad ex magnam perferendis odio excepturi quaerat nulla voluptates iusto quia illo porro non soluta earum. Aut eligendi molestiae ab, dolores eius et tenetur laborum unde commodi beatae cumque, dolore omnis, vitae a labore quas officiis laudantium aliquam! Dolor voluptates veritatis et accusantium distinctio aliquid minus iusto suscipit voluptate? Similique ut velit, saepe id eius nobis dolore aliquam laboriosam voluptatibus optio incidunt dolores enim facere, architecto libero repudiandae beatae.</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </template>
