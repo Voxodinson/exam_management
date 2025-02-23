@@ -13,7 +13,7 @@
             <UAvatar
                 src=""
                 alt="user"
-                size="sm"/>
+                size="md"/>
         </div>
     </UDropdown>
 </template>
