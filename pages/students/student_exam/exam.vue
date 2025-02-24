@@ -61,7 +61,8 @@
                                 class="font-semibold">1. </span>
                             <p
                                 class="text-gray-600 font-medium">
-                                Who built Angkor Wat? Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus ipsa, error laudantium nesciunt velit voluptates est quod delectus. Officiis tempora doloribus tenetur sint quos et ab saepe veritatis quis inventore, ea ad ex magnam perferendis odio excepturi quaerat nulla voluptates iusto quia illo porro non soluta earum. Aut eligendi molestiae ab, dolores eius et tenetur laborum unde commodi beatae cumque, dolore omnis, vitae a labore quas officiis laudantium aliquam! Dolor voluptates veritatis et accusantium distinctio aliquid minus iusto suscipit voluptate? Similique ut velit, saepe id eius nobis dolore aliquam laboriosam voluptatibus optio incidunt dolores enim facere, architecto libero repudiandae beatae.</p>
+                                Who built Angkor Wat?
+                            </p>
                         </div>
                     </div>
                 </form>

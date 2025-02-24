@@ -55,6 +55,7 @@
                             value-attribute="id"
                             id-attribute="id"
                             placeholder="Please select major"
+                            has-editor
                             required/>
                     </UFormGroup>
                     <UFormGroup
@@ -120,7 +121,7 @@
                             size="md"
                             name="dob"
                             role="input"
-                            placeholder="enter email here..."/>
+                            placeholder="enter date of birth here..."/>
                     </UFormGroup>
                     <UFormGroup
                         class="w-[calc(97%/3)]"
