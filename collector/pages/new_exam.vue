@@ -156,16 +156,14 @@
                 </UFormGroup>
 
                 <div
-                    class="w-full flex items-center  gap-3"
-                    :class="item.type === 'Answer Question' ? 'justify-end' : 'justify-between'">
+                    class="w-full flex items-center  gap-3 justify-between">
                     <div 
                         class="flex items-center gap-3">
                         <h3
                             v-if="item.type != 'Answer Question'"
                             class="text-[.9rem] font-normal">
-                            Chose Correct Answer
+                            Chose Correct Answer -
                         </h3>
-                        -
                         <div 
                             class="flex items-center gap-2">
                             <span
@@ -371,7 +369,7 @@ interface IQuestion {
     question: string;
     type: string,
     mark: number; 
-    answer: IAnswer[];
+    answer: IAnswer[] | any;
 }
 
 /**
@@ -503,12 +501,7 @@ const setData = async (): Promise<void> => {
                 type: 'Answer Question',
                 question: '',
                 mark: 0,
-                answer: [
-                    {
-                        checked: false,
-                        answer: ''
-                    }
-                ]
+                answer: ''
             });
             break;
         default:

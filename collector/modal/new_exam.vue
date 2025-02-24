@@ -164,9 +164,10 @@
                         class="w-full flex items-center  gap-3"
                         :class="item.type === 'Answer Question' ? 'justify-end' : 'justify-between'">
                         <div 
+                            v-if="item.type != 'Answer Question'"
                             class="flex items-center gap-3">
                             <h3
-                                v-if="item.type != 'Answer Question'"
+                                v-if="item.type !== 'Answer Question'"
                                 class="text-[.9rem] font-normal">
                                 Chose Correct Answer
                             </h3>
