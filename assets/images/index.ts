@@ -4,6 +4,7 @@ import UserImage from './user_image.jpg';
 import BackgroundLogin from './background.jpeg';
 import Platform from './platform_image.png';
 import Technology from "./technology.png";
+import Check from './check.png';
 export
 {
     AddImage,
@@ -11,5 +12,6 @@ export
     UserImage,
     BackgroundLogin,
     Platform,
-    Technology
+    Technology,
+    Check
 };
