@@ -92,7 +92,6 @@
                     size="md"
                     name="class_code"
                     role="input"
-                    pattern="^[A-Za-z\s]{2,50}$"
                     minlength="3"
                     maxlength="50"
                     placeholder="enter class code here..."/>
