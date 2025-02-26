@@ -38,7 +38,7 @@
                         icon="material-symbols:add-circle-outline-rounded"
                         size="md"
                         color="black"
-                        label="New Exam"
+                        label="New User"
                         variant="soft" 
                         :padded="false"
                         @click="()=>{

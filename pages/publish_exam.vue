@@ -37,7 +37,7 @@
                         icon="material-symbols:add-circle-outline-rounded"
                         size="sm"
                         color="black"
-                        label="New Exam"
+                        label="Publish Exam"
                         variant="soft" 
                         :padded="false"
                         @click="()=>{
@@ -172,33 +172,6 @@
                                     });
                                 }"/>
                         </div>
-                        <UDropdown 
-                            :items="[
-                                [{
-                                    label: 'Edit',
-                                    icon: 'i-heroicons-pencil-square-20-solid',
-                                    click: () => {
-                                        
-                                    }
-                                }], 
-                                [{
-                                    label: 'Delete',
-                                    icon: 'i-heroicons-trash-20-solid',
-                                    click: () => {
-                                        Confirm('Are you sure to delete exam..?', async (): Promise<void> => {
-                                            const result = await api.update(``, true, {}) as ResponseStatus;
-                                            if(result){
-                                                await fetchData();
-                                            }
-                                        });
-                                    }
-                                }]
-                            ]" 
-                            :popper="{ placement: 'bottom-start' }">
-                            <UButton 
-                                color="white"
-                                trailing-icon="mdi:dots-vertical" />
-                        </UDropdown>
                     </div>
                     <div 
                         class="w-full grid grid-cols-4 pt-2">

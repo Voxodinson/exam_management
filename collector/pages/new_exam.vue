@@ -143,24 +143,11 @@
                 v-for="(item, index) in questions"
                 :key="index"
                 class="mt-2 flex flex-col gap-3 bg-gray-100 rounded-md overflow-hidden p-2">
-                <UFormGroup
-                    class="w-full"
-                    :label="`${item.type} (Question ${ index +1 })`"
-                    name="">
-                    <UTextarea 
-                        color="white" 
-                        placeholder="Enter question here..."
-                        name="" 
-                        role="input"
-                        v-model="item.question"/>
-                </UFormGroup>
-
                 <div
                     class="w-full flex items-center  gap-3 justify-between">
                     <div 
                         class="flex items-center gap-3">
                         <h3
-                            v-if="item.type != 'Answer Question'"
                             class="text-[.9rem] font-normal">
                             Chose Correct Answer -
                         </h3>
@@ -199,7 +186,7 @@
                                 variant="soft" 
                                 :padded="false"
                                 @click="()=>{
-                                    deleteQuestion(index)
+                                    deleteQuestion(index, item);
                                 }"
                                 class="text-red-500 hover:text-white hover:bg-red-300 p-1 transition"/>
                         </UTooltip>
@@ -295,21 +282,6 @@
                         :padded="false"
                         @click="()=>{
                             addNewQuestion('cloed_question')
-                        }"
-                        class="text-blue-400 hover:text-white hover:bg-blue-300 p-1 transition"/>
-                </UTooltip>
-                <UTooltip 
-                    text="Add New Question"
-                    :popper="{ offsetDistance: 12 }">
-                    <UButton
-                        icon="material-symbols:add-circle-outline-rounded"
-                        size="sm"
-                        color="black"
-                        label="New Question"
-                        variant="soft" 
-                        :padded="false"
-                        @click="()=>{
-                            addNewQuestion('answer_question');
                         }"
                         class="text-blue-400 hover:text-white hover:bg-blue-300 p-1 transition"/>
                 </UTooltip>
@@ -496,31 +468,30 @@ const setData = async (): Promise<void> => {
                 ]
             });
             break;
-        case 'answer_question':
-            questions.value.push({
-                type: 'Answer Question',
-                question: '',
-                mark: 0,
-                answer: ''
-            });
-            break;
         default:
             console.error('Unsupported question type');
     }
 };
 
-const deleteQuestion = (idx: number): void => {
+const deleteQuestion = (idx: number, item: any): void => {
     if (idx >= 0 && idx < questions.value.length) {
         const question = questions.value[idx];
         if (question.answer.length > 0) {
             Confirm('Are you sure to delete this question?', () => {
                 questions.value.splice(idx, 1);
+                recalculateScore(item);
             });
         }else{
             questions.value.splice(idx, 1);
         }
     }
 };
+
+const recalculateScore = (item: any) => {
+    calculateMark.value.total = Number(calculateMark.value.total) - Number(item.mark)
+    calculateMark.value.passing = Number(calculateMark.value.total) / Number(2);
+}
+
 const addNewAnswer = (idx: number): void => {
     if (questions.value[idx]) {
         questions.value[idx].answer.push({
