@@ -47,7 +47,7 @@ abstract class StateAPI
 
         if(!token.value)
         {
-            return navigateTo('/login');
+            return navigateTo('/signin');
         }
     }
 

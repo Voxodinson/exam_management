@@ -158,7 +158,7 @@
             <div class="w-full bg-white rounded-md overflow-hidden">
                 <Table
                     :columns="columns"
-                    :data="datas"
+                    :data="data"
                     is-custom
                     v-slot="{ data }"
                     @update:data="async (current_page: number): Promise<void> => {
@@ -173,16 +173,28 @@
                             </span>
                         </td>
                         <td>
-                            <span>{{ data.exam }}</span>
+                            <span
+                                class=" capitalize">{{ data.name }}</span>
                         </td>
                         <td>
-                            <span>{{ data.due_date }}</span>
+                            {{ data.created_at.toString().split(' ')[0] }} <br>
+                            <span
+                                class="text-[.8rem] block text-blue-400">
+                                {{ data.created_at.toString().split(' ')[1] }}
+                            </span>
                         </td>
                         <td>
-                            <span>{{ data.created_at }}</span>
-                        </td>
-                        <td>
-                            <span>{{ data.status }}</span>
+                            <span
+                                :class="{
+                                    ' text-blue-400 border-blue-200': data.status === 'publishing',
+                                    'text-yellow-400 border-yellow-200': data.status === 'pending',
+                                }"
+                                class="uppercase rounded-full py-1 px-2 border-[1px] text-[.8rem] flex items-center justify-center gap-3 w-fit">
+                                {{ data.status }}
+                                <UIcon 
+                                    name="ic:sharp-circle" 
+                                    class="w-3 h-3 animate-ping"/>
+                            </span>
                         </td>
                         <td>
                             <UDropdown 
@@ -200,17 +212,25 @@
                                             iconClass: 'text-yellow-500',
                                             label: 'Edit',
                                             icon: 'i-heroicons-pencil-square-20-solid',
-                                            click: () => {}
+                                            click: () => {
+                                                toggleCreate(Boolean(true));
+                                                if(data.id){
+                                                    examId = data.id as number;
+                                                }
+                                            }
                                         }
                                     ], 
                                     [
-                                    {
+                                        {
                                             class: 'text-blue-500',
                                             iconClass: 'text-blue-500',
                                             label: 'View Exam Information',
                                             icon: 'material-symbols:folder-eye-outline',
                                             click: () => {
                                                 toggleInfoModal(Boolean(true));
+                                                if(data.id){
+                                                    examId = data.id as number;
+                                                }
                                             }
                                         }
                                     ],
@@ -236,6 +256,7 @@
         </div>
     </template>
     <ExamInfoModal 
+        :exam-id="examId"
         :open="isOpenExamInfoModal"
         @toggle="toggleInfoModal"/>
 </template>
@@ -243,8 +264,7 @@
 <script setup lang="ts">
 import { 
     Table,
-    SelectMenu,
-    InputDate
+    SelectMenu
 } from '@/components/ui';
 import {
     ContextAPI,
@@ -284,7 +304,7 @@ const filters: Ref<Items> = ref<Items>({
     exam_id: '',
     department_id: '',
     class_id: '',
-    shift: '',
+    shift_id: '',
 });
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const openCreate: Ref<boolean> = ref<boolean>(false);
@@ -309,80 +329,12 @@ const columns: Ref<Column[]> = ref<Column[]>([
         title: 'Created At'
     },
     {
-        title: "Due Date"
-    },
-    {
         title: "status"
     },
     {
         title: 'Action'
     }
- ]);
- const datas = {
-    status: 'ok',
-    data: [
-        {   
-            "id":"EXAM-100503",
-            "exam": "Web Final Exam",
-            "due_date": "10-05-2003",
-            "status": "Active",
-            "created_at": "2024-10-20"
-        },
-        {
-            "id":"EXAM-100503",
-            "exam": "Web Final Exam",
-            "due_date": "10-05-2003",
-            "status": "Active",
-            "created_at": "2024-10-20"
-        },
-        {
-            "id":"EXAM-100503",
-            "exam": "Web Final Exam",
-            "due_date": "10-05-2003",
-            "status": "Active",
-            "created_at": "2024-10-20"
-        },
-        {
-            "id":"EXAM-100503",
-            "exam": "Web Final Exam",
-            "due_date": "10-05-2003",
-            "status": "Active",
-            "created_at": "2024-10-20"
-        },
-        {
-            "id":"EXAM-100503",
-            "exam": "Web Final Exam",
-            "due_date": "10-05-2003",
-            "status": "Active",
-            "created_at": "2024-10-20"
-        },
-        {
-            "id":"EXAM-100503",
-            "exam": "Web Final Exam",
-            "due_date": "10-05-2003",
-            "status": "Active",
-            "created_at": "2024-10-20"
-        },
-        {
-            "id":"EXAM-100503",
-            "exam": "Web Final Exam",
-            "due_date": "10-05-2003",
-            "status": "Active",
-            "created_at": "2024-10-20"
-        },
-        {
-            "id":"EXAM-100503",
-            "exam": "Web Final Exam",
-            "due_date": "10-05-2003",
-            "status": "Active",
-            "created_at": "2024-10-20"
-        }
-    ],
-    page_no: 1,
-    per_page: 10,
-    total: 10,
-    total_page: 10
- };
+]);
 /**
  * End::Declare variable section
  */ 
@@ -407,12 +359,13 @@ const toggleInfoModal = (value: boolean) => {
  * Begin::Fetch data section
  */
  const fetchData = async (current_page: number = 1, per_page: number = 10, search: string = ''): Promise<void> => {
-    let url: string = `purchase?per_page=${per_page}&page_no=${current_page}&exam_id=${filters.value.exam_id}&department_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}`;
+    let url: string = `exam?per_page=${per_page}&page_no=${current_page}&exam_id=${filters.value.exam_id}&department_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}`;
+    console.log(url)
     if(search)
     {
         url += `&search=${search}`;
     }
-    const result: ResponseStatus = await api.get(url) as ResponseStatus;
+    const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
     if(!result.error)
     {
         data.value = result as object;
@@ -440,7 +393,14 @@ const searchData = async (value: string): Promise<void> => {
 /**
  * End::Fetch data section
  */
+watch((): boolean => isOpenExamInfoModal.value, async (value: boolean): Promise<void> => {
+    if(!value)
+    {
+        examId.value = null;
+    }
+});
 
 onMounted(async (): Promise<void> => {
+    await fetchData();
 });
 </script>

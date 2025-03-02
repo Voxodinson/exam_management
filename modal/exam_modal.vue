@@ -39,10 +39,11 @@
                             <UIcon
                                 name="material-symbols:code-blocks-outline-rounded"
                                 class="w-6 h-6 text-yellow-400"/>
-                            Exam ID :
+                            Exam :
                         </span>
-                        <span>
-                            {{ datas.exam_code}}
+                        <span
+                            class=" capitalize">
+                            {{ data.name}}
                         </span>
                     </li>
                     <li>
@@ -55,22 +56,22 @@
                         </span>
                         <span
                             class=" capitalize">
-                            {{ datas.subject }}
+                            {{ data.major_id }}
                         </span>
                     </li>
                     <li>
                         <span
                             class="font-meduim flex items-center gap-3">
                             <UIcon
-                                :name="datas.status == 'publish' ? 'material-symbols:check-circle-outline-rounded' : 'ph:x-circle-duotone'"
+                                :name="data.status == 'publishing' ? 'material-symbols:check-circle-outline-rounded' : 'ph:x-circle-duotone'"
                                 class="w-6 h-6"
-                                :class="datas.status == 'publish' ? 'text-green-500' : 'text-red-500'"/>
+                                :class="data.status == 'publishing' ? 'text-green-500' : 'text-red-500'"/>
                             Status :
                         </span>
                         <span
                             class="px-4 rounded-md text-white text-[.8rem] py-0.5 mb-1 uppercase"
-                            :class="datas.status === 'publish' ? 'bg-blue-400' : 'bg-red-500'">
-                            {{ datas.status }}
+                            :class="data.status === 'publishing' ? 'bg-blue-400' : 'bg-red-500'">
+                            {{ data.status }}
                         </span>
                     </li>
                     <li>
@@ -83,7 +84,7 @@
                         </span>
                         <span
                             class=" capitalize">
-                            {{ datas.created_by }}
+                            {{ data.create_uid }}
                         </span>
                     </li>
                     <li>
@@ -95,7 +96,7 @@
                              Create At :
                         </span>
                         <span>
-                            {{ datas.created_at }}
+                            {{ data.created_at }}
                         </span>
                     </li>
                     <li
@@ -105,7 +106,7 @@
                         class="w-full border-none hover:bg-blue-50 cursor-pointer bg-blue-100 rounded-md p-2">
                         <span
                             class="font-semibold capitalize">
-                            Question & Answer ( <span class="text-blue-400">{{ datas.questions.length }}</span> )
+                            Question & Answer
                         </span>
                         <UIcon
                             :name="viewQuestion ? 'line-md:chevron-right-circle-twotone' : 'line-md:chevron-down-circle-twotone'"
@@ -114,13 +115,13 @@
                 </ul>
                 <div 
                     v-if="viewQuestion"
-                    v-for="(question, idx) in datas.questions"
+                    v-for="(question, idx) in data.questions"
                     class="w-full flex-col gap-2 mt-3 p-3 bg-gray-100 rounded-md">
                     <div 
                         class="w-full">
                         <p
                             class="w-full flex justify-between items-center">
-                            {{ idx+1 }}. {{ question.question }} 
+                            <span>{{ idx+1 }}. {{ question.question }} - <span>{{ question.mark || 0 }} pt</span></span>
                             <span class=" capitalize text-[.9rem] text-blue-400">
                                 {{ question.question_type }}
                             </span>
@@ -128,28 +129,20 @@
                         <div 
                             class="px-4 flex flex-col gap-3">
                             <p
-                                v-for="(answer, idx) in question.answers">
-                                {{ idx+1 }}. {{ answer.option_id }} = {{ answer.text }}
+                                v-for="(answer, idx) in question.qcm_answers">
+                                {{ idx+1 }}. {{ answer.name }}
                             </p>
                         </div>
                         <div 
                             class="border-t-[1px] border-gray-200 pt-2 mt-2">
                             <p
-                                v-if="question.question_type != 'Q&A' && question.question_type != 'multiple choice'">
-                                Correct Answer is: 
-                                <span 
-                                    class="text-blue-400">
-                                    {{ question.correct }}
-                                </span>
-                            </p>
-                            <p
-                                v-if="Array.isArray(question.correct)"
                                 class="flex gap-3">
                                 Correct Answer is: 
                                 <span
                                     class="text-blue-400"
-                                    v-for="ans in question.correct">
-                                    {{ ans }}
+                                    v-for="ans in question.qcm_answers">
+                                    <span
+                                        v-if="ans.is_correct">{{ ans.name }}</span>
                                 </span>
                             </p>
                         </div>
@@ -177,16 +170,12 @@ import {
     GetDataNormalForm
 } from "@/composable/dataHandler";
 import type {
-    ResponseStatus,
-    Items
+    ResponseStatus
 } from "@/models/type";
 import { 
-    SelectMenu,
-    InputDate
-} from "@/components/ui";
-import { 
-    Confirm 
-} from "@/utils/dialog";
+    watch 
+} from 'vue';
+
 
 interface IAnswer {
     checked: boolean; 
@@ -209,8 +198,10 @@ const emits = defineEmits<{
 
 const props = withDefaults(defineProps<{
     open: boolean
+    examId: number | null
 }>(),{
-    open: false
+    open: false,
+    examId: null
 });
 /**
  * End::Set event trigger to parent component
@@ -228,61 +219,8 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
 /**
  *Begin::Declare variable in this section 
  */ 
-const data: Ref<object> = ref<object>({});
+const data: Ref<any> = ref<any>({});
 const viewQuestion: Ref<boolean> = ref<boolean>(false);
-const datas = {
-    "start_time": "7:30AM 10-12-2025",
-    "end_time": "9:00AM 10-12-2025",
-    "exam":"Final",
-    "exam_code":"EXAM-001",
-    "subject":"Web Development",
-    "grade":"Year 4",
-    "status":"publish",
-    "isActive": true,
-    "duration_minutes":"120 Minutes",
-    "total_marks": 100,
-    "passing_marks": 50,
-    "show": false,
-    "class":"M3",
-    "department":"Information Technology",
-    "room":"406",
-    "created_by": "admin",
-    "created_at": "10-05-2003",
-    "questions": [
-        {
-            "question_id": "Q1",
-            "question": "What is 2 + 2?",
-            "question_type":"checkbox",
-            "marks": 5,
-            "answers": [
-                { "option_id": "A", "text": "3" },
-                { "option_id": "B", "text": "4" },
-                { "option_id": "C", "text": "5" },
-                { "option_id": "D", "text": "6" }
-            ],
-            "correct": "B"
-        },
-        {
-            "question_id": "Q3",
-            "question": "Which of the following are prime numbers?",
-            "marks": 5,
-            "question_type":"multiple choice",
-            "answers": [
-                { "option_id": "A", "text": "2" },
-                { "option_id": "B", "text": "4" },
-                { "option_id": "C", "text": "5" },
-                { "option_id": "D", "text": "9" }
-            ],
-            "correct": ["A", "C"]
-        },
-        {
-            "question_id": "Q3",
-            "question": "When angkor was build? Exaplain and find example how they build?",
-            "marks": 25,
-            "question_type":"Q&A"
-        },
-    ]
- };
 /**
  *End::Declare variable in this section 
  */ 
@@ -290,7 +228,14 @@ const datas = {
 /**
  * Begin::Fetch data section
  */
-
+ const fetchData = async (): Promise<void> => {
+    const result: ResponseStatus = await api.get(`exam/${props.examId}`) as ResponseStatus;
+    if(!result.error)
+    {
+        data.value = result.data as any;
+        console.log(data.value)
+    }
+}
 
 /**
  * End::Fetch data section
@@ -306,6 +251,13 @@ const toggleViewQuestion = (): void => {
 /**
  * End::Some logical section
  */
-onMounted(async (): Promise<void> => {
-})
+
+watch(
+    () => [props.open, props.examId], async ([newOpen, newExamId]) => {
+        if (newOpen || newExamId) {
+            await fetchData();
+        }
+    },
+    { immediate: true }
+);
 </script>

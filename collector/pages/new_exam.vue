@@ -18,7 +18,7 @@
         </UTooltip>
     </div>
     <form
-        name=""
+        name="exam"
         method="POST"
         enctype="multipart/form-data"
         @submit.prevent="getData"
@@ -29,9 +29,9 @@
                 <UFormGroup
                     class="w-[calc(99%/3)]"
                     label="Department"
-                    name="">
+                    name="department_id">
                     <SelectMenu
-                        name=""
+                        name="department_id"
                         :options="[]"
                         value-attribute="id"
                         option-attribute="name"
@@ -42,9 +42,9 @@
                 <UFormGroup
                     class="w-[calc(99%/3)]"
                     label="Major"
-                    name="">
+                    name="major_id">
                     <SelectMenu
-                        name=""
+                        name="major_id"
                         :options="[]"
                         value-attribute="id"
                         option-attribute="name"
@@ -63,7 +63,7 @@
                             color="white"
                             variant="outline"
                             size="md"
-                            name=""
+                            name="total_mark"
                             role="input"
                             class="w-full"
                             placeholder="Enter total mark..."
@@ -74,7 +74,7 @@
                             color="white"
                             variant="outline"
                             size="md"
-                            name=""
+                            name="passing_mark"
                             role="input"
                             class="w-full"
                             placeholder="Enter passing mark..."
@@ -90,13 +90,13 @@
                 <UFormGroup
                     class="w-[calc(99%/3)]"
                     label="Exam"
-                    name="">
+                    name="name">
                     <UInput
                         type="text"
                         color="white"
                         variant="outline"
                         size="md"
-                        name=""
+                        name="name"
                         role="input"
                         class="w-full"
                         placeholder="Enter exam here..."/>
@@ -104,13 +104,30 @@
                 <UFormGroup
                     class="w-[calc(99%/3)]"
                     label="Status"
-                    name="">
+                    name="name">
                     <SelectMenu
                         name=""
-                        :options="[]"
-                        value-attribute="id"
-                        option-attribute="name"
-                        id-attribute="id"
+                        :options="[
+                            {
+                                label: 'Pending',
+                                value: 'pending'
+                            },
+                            {
+                                label: 'Publishing',
+                                value: 'publishing'
+                            }
+
+                        ]"
+                        value-attribute="value"
+                        option-attribute="label"
+                        id-attribute="value"
+                        @update:model-value="(value: Items): void => {
+                            if(value.value === 'publishing'){
+                                isPublishing = value.value as string;
+                            }else{
+                                isPublishing = '';
+                            }
+                        }"
                         placeholder="Please select status"
                         class="w-full"/>
                 </UFormGroup>
@@ -129,13 +146,36 @@
                         placeholder="Enter exam duration in (minutes)..."/>
                 </UFormGroup>
             </div>
-            <div class="mt-3 border-b-[1px] border-gray-200">
-                <h3>
+            <UDivider 
+                v-if="isPublishing === 'publishing'"
+                label="Please select the class relevant to this exam." 
+                class="w-full text-yellow-500 text-[.8rem] mt-6"/>
+            <div 
+                v-if="isPublishing === 'publishing'"
+                class="w-full flex flex-col items-start mt-3 bg-yellow-100 justify-start border-[1px] border-yellow-400 border-dotted p-2 rounded-md">
+                <UFormGroup
+                    class="w-full z-50"
+                    label="Class"
+                    name="class_id">
+                    <SelectMenu
+                        name="class_id"
+                        :options="[]"
+                        option-attribute="name"
+                        value-attribute="id"
+                        id-attribute="id"
+                        placeholder="Please select major"
+                        class="w-full"/>
+                </UFormGroup>
+                <span
+                    class="text-[.8rem] mt-2">Note: After you select the status as "Publishing" make sure to assign it to the appropriate "Class". This exam will be <span class="text-yellow-500 italic uppercase">publishing</span>  after it is successfully created.</span>
+            </div>
+            <div class="mt-3 flex items-center sticky bg-white z-30 top-0 right-0 justify-between border-b-[1px] py-2 border-gray-200">
+                <h3 class="text-[.9rem] font-semibold">
                     Questions
                 </h3>
             </div>
             <div 
-                v-if="!questions.length"
+                v-if="!questions"
                 class="w-full flex items-center justify-center text-gray-400 py-2 font-normal">
                 No Questions...
             </div>
@@ -143,13 +183,24 @@
                 v-for="(item, index) in questions"
                 :key="index"
                 class="mt-2 flex flex-col gap-3 bg-gray-100 rounded-md overflow-hidden p-2">
+                <UFormGroup
+                    class="w-full"
+                    :label="`${item.type} (Question ${ index +1 })`"
+                    name="">
+                    <UTextarea 
+                        color="white" 
+                        placeholder="Enter question here..."
+                        name="" 
+                        role="input"
+                        v-model="item.question"/>
+                </UFormGroup>
                 <div
                     class="w-full flex items-center  gap-3 justify-between">
                     <div 
                         class="flex items-center gap-3">
                         <h3
                             class="text-[.9rem] font-normal">
-                            Chose Correct Answer -
+                            Chose Correct Answer &ensp; - 
                         </h3>
                         <div 
                             class="flex items-center gap-2">
@@ -208,20 +259,21 @@
                     </div>
                 </div>
                 <div 
-                    v-for="(ans, idx) in item.answer"
+                    v-for="(ans, idx) in item.qcm_answers"
                     :key="idx"
                     class="flex items-center gap-2 ">
-                    <UCheckbox
+                    <UCheckbox 
                         v-if="item.type === 'Multiple Choice'"
                         :ui="{
                             base: 'w-5 h-5'
                         }"
                         @update:model-value="()=>{
                             ans.checked = true as boolean;
-                        }"/>
+                        }"
+                        v-model="ans.is_correct"/>
                     <URadio
                         v-if="item.type === 'Cloed Question'"
-                        v-model="ans.checked"
+                        v-model="ans.is_correct"
                         :name="item.type" />
                     <UInput
                         v-if="item.type != 'Answer Question'"
@@ -233,7 +285,7 @@
                         role="input"
                         class="w-full"
                         placeholder=""
-                        v-model="ans.answer"/>
+                        v-model="ans.name"/>
                     <UTextarea 
                         v-else
                         color="white" 
@@ -254,39 +306,43 @@
                         class="text-red-500 hover:text-white hover:bg-red-300 p-1 transition"/>
                 </div>
             </div>
-            <div class="w-full flex items-center gap-3 justify-end border-t-[1px] border-gray-200 mt-3 py-2">
-                <UTooltip 
-                    text="Add New Mutiple Question"
-                    :popper="{ offsetDistance: 12 }">
-                    <UButton
-                        icon="material-symbols:add-circle-outline-rounded"
-                        size="sm"
-                        color="black"
-                        label="New Mutiple Question"
-                        variant="soft" 
-                        :padded="false"
-                        @click="()=>{
-                            addNewQuestion('multiple_choice');
-                        }"
-                        class="text-blue-400 hover:text-white hover:bg-blue-300 p-1 transition"/>
-                </UTooltip>
-                <UTooltip 
-                    text="Add New Closed Question"
-                    :popper="{ offsetDistance: 12 }">
-                    <UButton
-                        icon="material-symbols:add-circle-outline-rounded"
-                        size="sm"
-                        color="black"
-                        label="New Closed Question"
-                        variant="soft" 
-                        :padded="false"
-                        @click="()=>{
-                            addNewQuestion('cloed_question')
-                        }"
-                        class="text-blue-400 hover:text-white hover:bg-blue-300 p-1 transition"/>
-                </UTooltip>
+            <div class="w-full flex flex-wrap rounded-md bg-gray-100 items-end justify-start border-[1px] border-dotted p-2 border-gray-200 mt-3">
+                <div class="w-full block pb-1">
+                    <h3
+                        class="text-[.9rem] font-semibold">Add New Questions</h3>
+                </div>
+                <div class="flex gap-3">
+                    <UTooltip 
+                        text="Add New Mutiple Question"
+                        :popper="{ offsetDistance: 12 }">
+                        <UButton
+                            icon="tabler:checkbox"
+                            size="sm"
+                            color="black"
+                            variant="soft" 
+                            :padded="false"
+                            @click="()=>{
+                                addNewQuestion('multiple_choice');
+                            }"
+                            class="text-blue-400 text-[2rem] w-[50px] h-[50px] flex items-center justify-center bg-blue-100 hover:text-white hover:bg-blue-300 p-1 transition"/>
+                    </UTooltip>
+                    <UTooltip 
+                        text="Add New Closed Question"
+                        :popper="{ offsetDistance: 12 }">
+                        <UButton
+                            icon="ic:sharp-radio-button-checked"
+                            size="sm"
+                            color="black"
+                            variant="soft" 
+                            :padded="false"
+                            @click="()=>{
+                                addNewQuestion('cloed_question')
+                            }"
+                            class="text-blue-400 text-[2rem] w-[50px] h-[50px] flex items-center justify-center bg-blue-100 hover:text-white hover:bg-blue-300 p-1 transition"/>
+                    </UTooltip>
+                </div>
             </div>
-            <div class="w-full flex items-center justify-end gap-2 border-t-[1px] border-gray-200 py-2">
+            <div class="flex gap-2 mt-3 pt-2 items-end justify-end w-full  border-t-[1px] border-gray-200 ">
                 <UButton
                     type="button"
                     size="sm"
@@ -297,7 +353,7 @@
                     @click="() => {
                         emits('toggle', false);
                     }"
-                    class="bg-red-500 text-white hover:bg-red-300 p-1 transition"/>
+                    class="bg-red-500 px-4 py-2 text-white hover:bg-red-300  transition"/>
                 <UButton
                     type="submit"
                     size="sm"
@@ -305,7 +361,7 @@
                     label="Create Exam"
                     variant="soft" 
                     :padded="false"
-                    class="bg-blue-400 text-white hover:bg-blue-300 p-1 transition"/>
+                    class="bg-blue-400 px-4 py-2 text-white hover:bg-blue-300 transition"/>
             </div>
         </div>
     </form>
@@ -341,7 +397,7 @@ interface IQuestion {
     question: string;
     type: string,
     mark: number; 
-    answer: IAnswer[] | any;
+    qcm_answers: IAnswer[] | any;
 }
 
 /**
@@ -375,6 +431,7 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
  *Begin::Declare variable in this section 
  */ 
 const questions: Ref<IQuestion[]> = ref<IQuestion[]>([]);
+const isPublishing: Ref<string> = ref<string>('');
 const calculateMark: Ref<Items> = ref<Items>({
     total: 0,
     passing: 0
@@ -389,34 +446,46 @@ const calculateMark: Ref<Items> = ref<Items>({
  const getData = async (event: Event): Promise<void> => {
     const formData: any = context.getDataForm(event as SubmitEvent) as any;
     formData.questions = questions.value
-    console.log(formData)
-    // if(props.examId != null)
-    // {
-    //     await api.post(``, true, formData) as ResponseStatus;
-    // }
-    // else
-    // {
-    //     const result: ResponseStatus = await api.post('', true, formData) as ResponseStatus;
-    //     if(!result.error)
-    //     {
-    //         emits('toggle', false);
-    //         (event.target as HTMLFormElement).reset();
-    //     }
-    // }
-    // emits('update:data');
+    if(props.examId != null)
+    {
+        await api.post(`exam`, true, formData) as ResponseStatus;
+    }
+    else
+    {
+        const result: ResponseStatus = await api.post('exam', true, formData) as ResponseStatus;
+        if(!result.error)
+        {
+            emits('toggle', false);
+            (event.target as HTMLFormElement).reset();
+        }
+    }
+    emits('update:data');
 }
 
 const setData = async (): Promise<void> => {
-    const result: ResponseStatus = await api.get(`company`, false) as ResponseStatus;
+    const result: any = await api.get(`exam/${props.examId}`,false) as any;
+    console.log(result.data)
     if(!result.error)
     {
-        let timeout: NodeJS.Timeout = setTimeout((): void => {
-            const form: HTMLFormElement = document.forms.namedItem('company') as HTMLFormElement;
-            context.setDataWithFile(form, result.data as Items);
-            clearTimeout(timeout);
-        },0);
+        const form: HTMLFormElement = document.forms.namedItem('exam') as HTMLFormElement;
+        const questionsAttr = result.data.questions as any;
+
+        // Push each question into the questions.value array
+        if (questionsAttr && Array.isArray(questionsAttr)) {
+            questions.value = [];
+            questionsAttr.forEach((question: any) => {
+                questions.value.push({
+                    ...question
+                });
+            });
+        }
+
+        console.log('set:', questions.value)
+        context.setData(form, result.data as Items);
     }
 }
+
+
 /**
  * End::Fetch data section
  */
@@ -431,7 +500,7 @@ const setData = async (): Promise<void> => {
                 type: 'Multiple Choice',
                 question: '',
                 mark: 0,
-                answer: [
+                qcm_answers: [
                     { 
                         checked: false, 
                         answer: '' 
@@ -456,7 +525,7 @@ const setData = async (): Promise<void> => {
                 type: 'Cloed Question',
                 question: '',
                 mark: 0,
-                answer: [
+                qcm_answers: [
                     { 
                         checked: false, 
                         answer: '' 
@@ -476,7 +545,7 @@ const setData = async (): Promise<void> => {
 const deleteQuestion = (idx: number, item: any): void => {
     if (idx >= 0 && idx < questions.value.length) {
         const question = questions.value[idx];
-        if (question.answer.length > 0) {
+        if (question.qcm_answers.length > 0) {
             Confirm('Are you sure to delete this question?', () => {
                 questions.value.splice(idx, 1);
                 recalculateScore(item);
@@ -494,7 +563,7 @@ const recalculateScore = (item: any) => {
 
 const addNewAnswer = (idx: number): void => {
     if (questions.value[idx]) {
-        questions.value[idx].answer.push({
+        questions.value[idx].qcm_answers.push({
             checked: false,
             answer: ''
         });
@@ -503,13 +572,13 @@ const addNewAnswer = (idx: number): void => {
 
 const deleteAnswer = (questionIdx: number, idx: number): void => {
     const question = questions.value[questionIdx];
-    if (question && question.answer) {
-        if (question.answer.length > 0 && question.answer[idx].answer != '' || question.answer[idx].checked != false) {
+    if (question && question.qcm_answers) {
+        if (question.qcm_answers.length > 0 && question.qcm_answers[idx].answer != '' || question.qcm_answers[idx].checked != false) {
             Confirm('Are you sure to delete this answer?', () => {
-                question.answer.splice(idx, 1);
+                question.qcm_answers.splice(idx, 1);
             });
         } else {
-            question.answer.splice(idx, 1);
+            question.qcm_answers.splice(idx, 1);
         }
     }
 };
@@ -518,5 +587,8 @@ const deleteAnswer = (questionIdx: number, idx: number): void => {
  * End::Some logical section
  */
 onMounted(async (): Promise<void> => {
+    if(props.examId){
+        await setData();
+    }
 })
 </script>
