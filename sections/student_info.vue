@@ -17,23 +17,31 @@
                 class="bg-[#3A6D8C] w-[70px] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
         </UTooltip>
     </div>
-    <div 
-        class="rounded-md p-2">
         <div 
-            class="w-full h-fit flex gap-3 items-start justify-start p-2 bg-white rounded-md">
-            <div class="w-[400px] h-[400px] rounded-md overflow-hidden relative group">
-                <img 
-                    :src="String(data.img_link_url) || UserImage" 
-                    alt=""
-                    class="w-full h-full object-cover">
-                <UIcon
-                    name="streamline:interface-user-edit-actions-close-edit-geometric-human-pencil-person-single-up-user-write"
-                    class="w-6 h-6 hover:scale-110 transition cursor-pointer absolute top-2 right-2 p-2 text-white group-hover:opacity-100 opacity-30"/>
-            </div>
+            class="w-full h-fit flex gap-3 pb-6 items-center justify-center p-2 bg-white rounded-md">
             <div 
-                class="w-[calc(100%-400px)] h-full p-2 bg-gray-100 rounded-md">
+                class=" flex flex-col gap-3 p-3 border-[1px] border-gray-200 bg-gray-50 items-center w-full justify-center h-fit rounded-md">
+                <div class="w-[250px] h-[250px] rounded-full border-[1px] border-gray-200 overflow-hidden relative group">
+                    <img 
+                        :src="String(data.img_link_url) || UserImage" 
+                        alt=""
+                        class="w-full h-full object-cover">
+                    <UIcon
+                        name="streamline:interface-user-edit-actions-close-edit-geometric-human-pencil-person-single-up-user-write"
+                        class="w-6 h-6 hover:scale-110 transition cursor-pointer absolute top-2 right-2 p-2 text-white group-hover:opacity-100 opacity-30"/>
+                </div>
+                <div class="w-full flex flex-col items-center justify-center">
+                    <h3
+                        class=" font-medium text-[1.2rem] text-gray-600">
+                        {{ data.name_kh }} - {{ data.first_name }} {{ data.last_name }}
+                    </h3>
+                    <p
+                        class="text-gray-400">
+                        {{ data.department_name }} - {{ data.major_name }} - {{ data.class_name }} - {{ data.shift_name }}
+                    </p>
+                </div>
                 <ul
-                    class="*:w-full *:flex *:items-start *:px-2 flex flex-col gap-3 *:justify-between *:border-b-[1px] *:border-gray-200 ">
+                    class="w-full mt-3 *:w-full *:flex *:items-start *:px-2 flex flex-col gap-3 *:justify-between *:border-b-[1px] *:border-gray-200 ">
                     <li
                         class="w-full border-none bg-blue-100 rounded-md p-2">
                         <span
@@ -45,24 +53,12 @@
                         <span
                             class="font-meduim flex items-center gap-3">
                             <UIcon
-                                name="material-symbols:code-blocks-outline-rounded"
+                                name="material-symbols:grid-3x3-rounded"
                                 class="w-6 h-6 text-gray-400"/>
                             Code :
                         </span>
                         <span>
                             {{ data.code }}
-                        </span>
-                    </li>
-                    <li>
-                        <span
-                            class="font-meduim flex items-center gap-3">
-                            <UIcon
-                                name="ph:student-fill"
-                                class="w-6 h-6 text-gray-400"/>
-                            Student Name :
-                        </span>
-                        <span>
-                            {{ data.name_kh }} - {{ data.first_name }} {{ data.last_name }}
                         </span>
                     </li>
                     <li>
@@ -81,7 +77,7 @@
                         <span
                             class="font-meduim flex items-center gap-3">
                             <UIcon
-                                name="solar:global-outline"
+                                name="mdi:earth"
                                 class="w-6 h-6 text-gray-400"/>
                             Nationality :
                         </span>
@@ -105,7 +101,7 @@
                         <span
                             class="font-meduim flex items-center gap-3">
                             <UIcon
-                                name="material-symbols:contact-phone-outline"
+                                name="material-symbols:contact-phone"
                                 class="w-6 h-6 text-gray-400"/>
                             Contact :
                         </span>
@@ -123,7 +119,7 @@
                         <span
                             class="font-meduim flex items-center gap-3">
                             <UIcon
-                                name="streamline:interface-login-password-lock-login-padlock-password-secure-security-textbox-type"
+                                name="gridicons:status"
                                 class="w-6 h-6 text-gray-400"/>
                             Bio :
                         </span>
@@ -186,7 +182,7 @@
                         <span
                             class="font-meduim flex items-center gap-3">
                             <UIcon
-                                name="weui:done2-outlined"
+                                name="material-symbols:alarm-on-outline"
                                 class="w-6 h-6 text-gray-400"/>
                             Created At :
                         </span>
@@ -198,7 +194,7 @@
                         <span
                             class="font-meduim flex items-center gap-3">
                             <UIcon
-                                name="weui:done2-outlined"
+                                name="material-symbols:edit-outline"
                                 class="w-6 h-6 text-gray-400"/>
                             Updated At :
                         </span>
@@ -209,7 +205,6 @@
                 </ul>
             </div>
         </div>
-    </div>
 </template>
 
 <script setup lang="ts">
@@ -217,10 +212,6 @@ import {
     ContextAPI,
     SimpleAPI
 } from "@/composable/apiHandler";
-import {
-    GetDataContext,
-    GetDataNormalForm
-} from "@/composable/dataHandler";
 import type {
     ResponseStatus,
     Items
@@ -247,7 +238,6 @@ const props = withDefaults(defineProps<{
  * Begin::Declare variables object section
  */
 const api: ContextAPI = new ContextAPI(new SimpleAPI());
-const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
 /**
  * End::Declare variables object section
  */

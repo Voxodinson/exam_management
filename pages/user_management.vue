@@ -387,6 +387,7 @@ const toggle = (): void => {
  * Begin::Fetch data section
  */
  const fetchData = async (current_page: number = 1, per_page: number = 10, search: string = ''): Promise<void> => {
+
     let url: string = `user?per_page=${per_page}&page_no=${current_page}&deprtment_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}&nationality=${filters.value.nationality}`;
     if(search)
     {
