@@ -30,26 +30,25 @@
             </div>
             <div class="w-[calc(98%-200px)] flex gap-3 flex-wrap">
                 <UFormGroup
-                    class="w-[calc(98%/2)]"
+                    class="w-full"
                     label="Choose Role"
                     name="role_id">
                     <SelectMenu
                         name="role_id"
-                        :options="dataOptions.roles"
+                        :options="[
+                            {
+                                id: 1,
+                                name: 'admin'
+                            },
+                            {
+                                id: 2,
+                                name: 'user'
+                            }
+                        ]"
                         option-attribute="name"
                         value-attribute="id"
+                        id-attribute="id"
                         placeholder="Select role"/>
-                </UFormGroup>
-                <UFormGroup
-                    class="w-[calc(99%/2)]"
-                    label="Choose Branch"
-                    name="branch_id">
-                    <SelectMenu
-                        name="branch_id"
-                        :options="dataOptions.branches"
-                        option-attribute="name"
-                        value-attribute="id"
-                        placeholder="Select branch"/>
                 </UFormGroup>
                 <UFormGroup
                     class="w-[calc(98%/2)]"
@@ -77,6 +76,9 @@
                         role="input"
                         placeholder="enter phone here..."/>
                 </UFormGroup>
+                <UDivider 
+                    label="Login Information"
+                    class="mt-3 text-green-400" />
                 <UFormGroup
                     class="w-[calc(100%)]"
                     label="Email"
@@ -173,6 +175,7 @@ import {
     SelectMenu,
     ChoosePhoto
 } from "@/components/ui";
+import type { id } from "date-fns/locale";
 /**
  * Begin::Set event trigger to parent component
  */

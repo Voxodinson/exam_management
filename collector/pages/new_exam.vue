@@ -32,7 +32,12 @@
                     name="department_id">
                     <SelectMenu
                         name="department_id"
-                        :options="[]"
+                        :options="[
+                            {
+                                id: 1,
+                                name: 'Roote'
+                            }
+                        ]"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
@@ -45,7 +50,12 @@
                     name="major_id">
                     <SelectMenu
                         name="major_id"
-                        :options="[]"
+                        :options="[
+                            {
+                                id: 1,
+                                name: 'Roote'
+                            }
+                        ]"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
@@ -445,7 +455,9 @@ const calculateMark: Ref<Items> = ref<Items>({
  */
  const getData = async (event: Event): Promise<void> => {
     const formData: any = context.getDataForm(event as SubmitEvent) as any;
-    formData.questions = questions.value
+    formData.questions = questions.value;
+    console.log(formData)
+    return;
     if(props.examId != null)
     {
         await api.post(`exam`, true, formData) as ResponseStatus;

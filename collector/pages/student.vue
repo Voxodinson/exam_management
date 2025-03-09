@@ -510,7 +510,7 @@ const selectGender: Ref<string> = ref<string>('');
             (event.target as HTMLFormElement).reset();
         }
     }
-    emits('update:data');
+     emits('update:data');
 }
 
 const fetchOption = async (): Promise<void> => {

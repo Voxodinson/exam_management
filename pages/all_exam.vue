@@ -205,7 +205,9 @@
                                             iconClass: 'text-green-500',
                                             label: 'Publish Exam',
                                             icon: 'material-symbols:arrow-upload-progress-rounded',
-                                            click: () => {}
+                                            click: () => {
+                                                togglePublishExam(Boolean(true));
+                                            }
                                         },
                                         {
                                             class: 'text-yellow-500',
@@ -259,6 +261,9 @@
         :exam-id="examId"
         :open="isOpenExamInfoModal"
         @toggle="toggleInfoModal"/>
+    <PublishExam
+        :open="isOpenPublishExam"
+        @toggle="togglePublishExam"/>
 </template>
 
 <script setup lang="ts">
@@ -282,6 +287,9 @@ import {
 import { 
     ExamInfoModal 
 } from '@/modal';
+import { 
+    PublishExam 
+} from '@/collector/modal';
 definePageMeta({
     colorMode: 'light'
 });
@@ -307,6 +315,7 @@ const filters: Ref<Items> = ref<Items>({
     shift_id: '',
 });
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
+const isOpenPublishExam: Ref<boolean> = ref<boolean>(false);
 const openCreate: Ref<boolean> = ref<boolean>(false);
 const examId: Ref<number | null> = ref<number | null>(null);
 const isOpenExamInfoModal: Ref<boolean> = ref<boolean>(false);
@@ -351,6 +360,9 @@ const toggleCreate = (value: boolean): void => {
 const toggleInfoModal = (value: boolean) => {
     isOpenExamInfoModal.value = value as boolean;
 }
+const togglePublishExam = (value: boolean) => {
+    isOpenPublishExam.value = value;
+}
 /**
  * End::Some logical in this component
  */
@@ -359,8 +371,9 @@ const toggleInfoModal = (value: boolean) => {
  * Begin::Fetch data section
  */
  const fetchData = async (current_page: number = 1, per_page: number = 10, search: string = ''): Promise<void> => {
-    let url: string = `exam?per_page=${per_page}&page_no=${current_page}&exam_id=${filters.value.exam_id}&department_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}`;
-    console.log(url)
+    //let url: string = `exam?per_page=${per_page}&page_no=${current_page}&exam_id=${filters.value.exam_id}&department_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}`;
+    
+    let url: string = `exam`;
     if(search)
     {
         url += `&search=${search}`;
@@ -369,6 +382,7 @@ const toggleInfoModal = (value: boolean) => {
     if(!result.error)
     {
         data.value = result as object;
+        console.log(data.value)
     }
 }
 

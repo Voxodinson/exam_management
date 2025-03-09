@@ -37,7 +37,12 @@
                         name="department_id">
                         <SelectMenu
                             name="department_id"
-                            :options="[]"
+                            :options="[
+                                {
+                                    id: 1,
+                                    name: 'Roote'
+                                }
+                            ]"
                             value-attribute="id"
                             option-attribute="name"
                             id-attribute="id"

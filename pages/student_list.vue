@@ -414,7 +414,7 @@ const searchData = async (value: string): Promise<void> => {
 /**
  * End::Fetch data section
  */
- watch((): boolean => openCreate.value, async (value: boolean): Promise<void> => {
+ watch((): boolean => openCreate.value || openDetails.value, async (value: boolean): Promise<void> => {
     if(!value)
     {
         studentId.value = null;
