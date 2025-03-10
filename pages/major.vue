@@ -151,27 +151,34 @@
                         <td
                             class="w-[150px]">
                             <span>
-                                {{ data.department_name }}
+                                {{ data.department_name || '-----' }}
                             </span>
                         </td>
                         <td>
-                            <span>{{ data.name }}</span>
+                            <span>{{ data.name || '-----' }}</span>
                         </td>
                         <td>
-                            <span>{{ data.name_kh }}</span>
+                            <span>{{ data.name_kh || '-----' }}</span>
                         </td>
                         <td
                             class="w-[200px]">
                             <span 
                                 class="text-[.8rem]">
-                                {{ data.description }}
+                                {{ data.description || '-----' }}
                             </span>
                         </td>
                         <td>
-                            <span>{{ data.created_by }}</span>
+                            <span>{{ data.created_by || '-----' }}</span>
                         </td>
                         <td>
-                            <span>{{ data.created_at }}</span>
+                            <div
+                                class="ml-2 w-[150px] leading-4">
+                                {{ data.created_at.toString().split(' ')[0] || '-----' }} <br>
+                                <span
+                                    class="text-[.8rem] text-blue-400">
+                                    {{ data.created_at.toString().split(' ')[1] || '-----' }}
+                                </span>
+                            </div>
                         </td>
                         <td>
                             <UDropdown 

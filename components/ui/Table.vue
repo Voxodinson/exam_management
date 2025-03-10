@@ -2,7 +2,7 @@
     <template
         v-if="!isCustom && Array.from(columns)[0]">
         <table
-            class="w-full overflow-hidden border border-solid border-gray-300 rounded-md">
+            class="w-full overflow-hidden border-[1px] border-gray-200 rounded-md">
             <thead>
                 <tr>
                     <th
@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody
-                class="divide-y divide-slate-300">
+                class="divide-y divide-gray-200">
                 <tr
                     v-for="(item, idx) in data.data"
                     :key="idx"
@@ -52,7 +52,7 @@
     <template
         v-else-if="isCustom && Array.from(columns)[0]">
         <table
-            class="w-full overflow-hidden border border-solid border-gray-300 rounded-md ">
+            class="w-full overflow-hidden border-[1px] border-gray-200 rounded-md ">
             <thead>
                 <tr>
                     <th
@@ -63,7 +63,7 @@
                 </tr>
             </thead>
             <tbody
-                class="divide-y divide-slate-300 ">
+                class="divide-y divide-gray-200 ">
                 <template
                     v-for="(item, idx) in data.data">
                     <slot

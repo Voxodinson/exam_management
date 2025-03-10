@@ -197,7 +197,7 @@
                             </UDropdown>
                         </div>
                         <h3>
-                            {{ user.user_name }}
+                            {{ user.user_name || '-----'}}
                         </h3>
                         <span
                             class="text-gray-400 text-[.8rem]">
@@ -208,32 +208,28 @@
                         <div
                             class="*:text-gray-600 *:text-[.9rem]">
                             <span>Email:</span> 
-                            <span>{{user.email}}</span>
+                            <span>{{ user.email || '-----'}}</span>
                         </div>
                         <div
                             class="*:text-gray-600 *:text-[.9rem]">
                             <span>Login Account:</span>
-                            <span>{{ user.email }}</span>
+                            <span>{{ user.email || '-----'}}</span>
                         </div>
                         <div
                             class="*:text-gray-600 *:text-[.9rem]">
                             <span>Start Date:</span>
-                            <span>{{ user.start_date }}</span>
-                            <span
-                                v-if="!user.start_date">
-                                ---- -- --
-                            </span>
+                            <span>{{ user.start_date || '---- -- --'}}</span>
                         </div>
                         <div
                             class="*:text-gray-600 *:text-[.9rem]">
                             <span>Phone Number:</span>
-                            <span>{{ user.phone }}</span>
+                            <span>{{ user.phone || '-----'}}</span>
                         </div>
                         <div
                             class="*:text-gray-600 *:text-[.9rem]">
                             <span>Address:</span>
                             <span>
-                                {{  }}
+                                {{ user.address || '-----'}}
                             </span>
                         </div>
                     </div>

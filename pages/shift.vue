@@ -54,18 +54,25 @@
                         </td>
                         <td>
                             <span>
-                                {{ data.start_time }} - {{ data.end_time }}
+                                {{ data.start_time || '--:--' }}  -  {{ data.end_time || '--:--' }}
                             </span>
                         </td>
                         <td
                             class="w-[200px]">
                             <span
                                 class="text-[.8rem]">
-                                {{ data.description }}
+                                {{ data.description || '-----' }}
                             </span>
                         </td>
                         <td>
-                            <span>{{ data.created_at }}</span>
+                            <div
+                                class="w-[150px] leading-5">
+                                {{ data.created_at.toString().split(' ')[0] || '-----' }} <br>
+                                <span
+                                    class="text-[.8rem] text-blue-400">
+                                    {{ data.created_at.toString().split(' ')[1] || '-----' }}
+                                </span>
+                            </div>
                         </td>
                         <td>
                             <UDropdown 
