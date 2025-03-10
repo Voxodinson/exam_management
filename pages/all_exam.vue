@@ -206,7 +206,10 @@
                                             label: 'Publish Exam',
                                             icon: 'material-symbols:arrow-upload-progress-rounded',
                                             click: () => {
-                                                togglePublishExam(Boolean(true));
+                                                if(data.id){
+                                                    examId = data.id as number;
+                                                    togglePublishExam(Boolean(true));
+                                                }
                                             }
                                         },
                                         {
@@ -215,9 +218,9 @@
                                             label: 'Edit',
                                             icon: 'i-heroicons-pencil-square-20-solid',
                                             click: () => {
-                                                toggleCreate(Boolean(true));
                                                 if(data.id){
                                                     examId = data.id as number;
+                                                    toggleCreate(Boolean(true));
                                                 }
                                             }
                                         }
@@ -229,9 +232,9 @@
                                             label: 'View Exam Information',
                                             icon: 'material-symbols:folder-eye-outline',
                                             click: () => {
-                                                toggleInfoModal(Boolean(true));
                                                 if(data.id){
                                                     examId = data.id as number;
+                                                    toggleInfoModal(Boolean(true));
                                                 }
                                             }
                                         }
@@ -262,6 +265,7 @@
         :open="isOpenExamInfoModal"
         @toggle="toggleInfoModal"/>
     <PublishExam
+        :id="examId"
         :open="isOpenPublishExam"
         @toggle="togglePublishExam"/>
 </template>
@@ -371,14 +375,13 @@ const togglePublishExam = (value: boolean) => {
  * Begin::Fetch data section
  */
  const fetchData = async (current_page: number = 1, per_page: number = 10, search: string = ''): Promise<void> => {
-    //let url: string = `exam?per_page=${per_page}&page_no=${current_page}&exam_id=${filters.value.exam_id}&department_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}`;
-    
-    let url: string = `exam`;
+    let url: string = `exam?per_page=${per_page}&page_no=${current_page}&exam_id=${filters.value.exam_id}&department_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}`;
     if(search)
     {
         url += `&search=${search}`;
     }
     const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
+    console.log(result)
     if(!result.error)
     {
         data.value = result as object;

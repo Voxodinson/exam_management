@@ -26,7 +26,7 @@
             name=""
             method="POST"
             enctype="multipart/form-data"
-            @submit.prevent=""
+            @submit.prevent="getData"
             class=" w-full max-h-[80vh] rounded-md overflow-hidden">
             <div 
                 class="flex flex-col w-full gap-3 p-3">
@@ -46,13 +46,13 @@
                 <UFormGroup
                     class="w-full"
                     label="Exam Time (Mins)"
-                    name="">
+                    name="exam_time">
                     <UInput
                         type="text"
                         color="white"
                         variant="outline"
                         size="md"
-                        name=""
+                        name="exam_time"
                         role="input"
                         class="w-full"
                         placeholder="Enter exam duration in (minutes)..."/>
@@ -94,8 +94,7 @@ import {
     GetDataNormalForm
 } from "@/composable/dataHandler";
 import type {
-    ResponseStatus,
-    Items
+    ResponseStatus
 } from "@/models/type";
 import { 
     SelectMenu
@@ -110,9 +109,11 @@ const emits = defineEmits<{
 }>();
 
 const props = withDefaults(defineProps<{
-    open: boolean
+    open: boolean,
+    id: number | null
 }>(),{
-    open: false
+    open: false, 
+    id: null
 });
 /**
  * End::Set event trigger to parent component
@@ -141,7 +142,7 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
  const getData = async (event: Event): Promise<void> => {
     const formData: any = context.getDataForm(event as SubmitEvent) as any;
 
-    const result: ResponseStatus = await api.post('exam', true, formData) as ResponseStatus;
+    const result: ResponseStatus = await api.post(`exam/assign/${props.id}`, true, formData) as ResponseStatus;
     if(!result.error)
     {
         emits('toggle', false);
