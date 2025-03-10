@@ -176,13 +176,14 @@
                             <span
                                 class=" capitalize">{{ data.name }}</span>
                         </td>
-                        <td>
-                            {{ data.created_at.toString().split(' ')[0] }} <br>
+                        <div
+                            class="w-[150px] leading-4">
+                            {{ data.created_at.toString().split(' ')[0] || '-----' }} <br>
                             <span
-                                class="text-[.8rem] block text-blue-400">
-                                {{ data.created_at.toString().split(' ')[1] }}
+                                class="text-[.8rem] text-blue-400">
+                                {{ data.created_at.toString().split(' ')[1] || '-----' }}
                             </span>
-                        </td>
+                        </div>
                         <td>
                             <span
                                 :class="{
