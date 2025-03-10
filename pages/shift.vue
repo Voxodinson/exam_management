@@ -66,7 +66,7 @@
                         </td>
                         <td>
                             <div
-                                class="w-[150px] leading-5">
+                                class="w-[150px] leading-4">
                                 {{ data.created_at.toString().split(' ')[0] || '-----' }} <br>
                                 <span
                                     class="text-[.8rem] text-blue-400">
