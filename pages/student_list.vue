@@ -183,12 +183,6 @@
                     }">
                     <tr
                         class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
-                        <td
-                            class="w-[150px]">
-                            <span>
-                                {{ data.code }}
-                            </span>
-                        </td>
                         <td>
                             <div 
                                 @click="(): void => {
@@ -204,14 +198,20 @@
                                     class="w-full h-full object-cover hover:scale-110 transition">
                             </div>
                         </td>
-                        <td>
-                            <span>{{ data.first_name }} {{ data.last_name }}</span>
+                        <td
+                            class="w-[150px]">
+                            <span>
+                                {{ data.code }}
+                            </span>
                         </td>
                         <td>
-                            <span>{{ data.name_kh }}</span>
+                            <span>{{ data.first_name || '-----' }} {{ data.last_name || '-----' }}</span>
                         </td>
                         <td>
-                            <span>{{ data.dob }}</span>
+                            <span>{{ data.name_kh || '-----' }}</span>
+                        </td>
+                        <td>
+                            <span>{{ data.dob || '-----' }}</span>
                         </td>
                         <td>
                             <span>
@@ -219,7 +219,7 @@
                             </span>
                         </td>
                         <td>
-                            <span>{{ data.nationality }}</span>
+                            <span>{{ data.nationality || '-----' }}</span>
                         </td>
                         <td>
                             <UDropdown 
@@ -350,10 +350,10 @@ const linksItem = [
 ];
 const columns: Ref<Column[]> = ref<Column[]>([
     {
-        title:'STU ID',
+        title: "Profile"
     },
     {
-        title: "Profile"
+        title:'STU ID',
     },
     {
         title:'Full Name',
