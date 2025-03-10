@@ -166,35 +166,39 @@
                     }">
                     <tr 
                         class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
-                        <td
-                            class="w-[150px]">
-                            <span>
-                                {{ data.id }}
-                            </span>
-                        </td>
                         <td>
                             <span
                                 class=" capitalize">{{ data.name }}</span>
                         </td>
-                        <div
-                            class="w-[150px] leading-4">
-                            {{ data.created_at.toString().split(' ')[0] || '-----' }} <br>
+                        <td>
                             <span
-                                class="text-[.8rem] text-blue-400">
-                                {{ data.created_at.toString().split(' ')[1] || '-----' }}
-                            </span>
-                        </div>
+                                class=" capitalize">{{ data.department_id }}</span> -
+                            <span
+                                class=" capitalize">{{ data.major_id }}</span> -
+                            <span
+                                class=" capitalize">{{ data.class_id }}</span>
+                        </td>
+                        <td>
+                            <div
+                                class="w-[150px] leading-4">
+                                {{ data.created_at.toString().split(' ')[0] || '-----' }} <br>
+                                <span
+                                    class="text-[.8rem] text-blue-400">
+                                    {{ data.created_at.toString().split(' ')[1] || '-----' }}
+                                </span>
+                            </div>
+                        </td>
                         <td>
                             <span
                                 :class="{
                                     ' text-blue-400 border-blue-200': data.status === 'publishing',
-                                    'text-yellow-400 border-yellow-200': data.status === 'pending',
+                                    'text-white bg-yellow-400 border-yellow-400': data.status === 'pending',
                                 }"
-                                class="uppercase rounded-full py-1 px-2 border-[1px] text-[.8rem] flex items-center justify-center gap-3 w-fit">
+                                class="uppercase rounded-full py-0.5 px-2 border-[1px] text-[.8rem] flex items-center justify-center gap-3 w-fit">
                                 {{ data.status }}
                                 <UIcon 
                                     name="ic:sharp-circle" 
-                                    class="w-3 h-3 animate-ping"/>
+                                    class="w-3 h-3 animate-ping text-white"/>
                             </span>
                         </td>
                         <td>
@@ -334,10 +338,10 @@ const linksItem = [
 ];
 const columns: Ref<Column[]> = ref<Column[]>([
     {
-        title:'ID',
+        title:'Exam',
     },
     {
-        title:'Exam',
+        title:'Info',
     },
     {
         title: 'Created At'
@@ -382,11 +386,9 @@ const togglePublishExam = (value: boolean) => {
         url += `&search=${search}`;
     }
     const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
-    console.log(result)
     if(!result.error)
     {
         data.value = result as object;
-        console.log(data.value)
     }
 }
 
@@ -411,12 +413,13 @@ const searchData = async (value: string): Promise<void> => {
 /**
  * End::Fetch data section
  */
-watch((): boolean => isOpenExamInfoModal.value, async (value: boolean): Promise<void> => {
+ watch((): boolean => openCreate.value || isOpenExamInfoModal.value, async (value: boolean): Promise<void> => {
     if(!value)
     {
         examId.value = null;
     }
 });
+
 
 onMounted(async (): Promise<void> => {
     await fetchData();

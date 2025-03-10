@@ -169,11 +169,16 @@
                     name="class_id">
                     <SelectMenu
                         name="class_id"
-                        :options="[]"
+                        :options="[
+                            {
+                                id: 1,
+                                name: 'Roote'
+                            }
+                        ]"
                         option-attribute="name"
                         value-attribute="id"
                         id-attribute="id"
-                        placeholder="Please select major"
+                        placeholder="Please select class"
                         class="w-full"/>
                 </UFormGroup>
                 <span
@@ -277,14 +282,16 @@
                         :ui="{
                             base: 'w-5 h-5'
                         }"
-                        @update:model-value="()=>{
-                            ans.checked = true as boolean;
+                        @update:model-value="() => {
+                            ans.is_correct = true as boolean;
                         }"
                         v-model="ans.is_correct"/>
                     <URadio
                         v-if="item.type === 'Cloed Question'"
-                        v-model="ans.is_correct"
-                        :name="item.type" />
+                        @update:model-value="() => {
+                            ans.is_correct = true as boolean;
+                        }"
+                        v-model="ans.is_correct"/>
                     <UInput
                         v-if="item.type != 'Answer Question'"
                         type="text"
@@ -296,14 +303,6 @@
                         class="w-full"
                         placeholder=""
                         v-model="ans.name"/>
-                    <UTextarea 
-                        v-else
-                        color="white" 
-                        placeholder="Enter question here..."
-                        name="" 
-                        role="input"
-                        class="w-full"
-                        v-model="item.question"/>
                     <UButton
                         icon="material-symbols:delete-outline"
                         size="sm"
@@ -399,8 +398,8 @@ import {
 } from "@/utils/dialog";
 
 interface IAnswer {
-    checked: boolean; 
-    answer: string;
+    is_correct: boolean; 
+    name: string;
     
 }
 interface IQuestion {
@@ -457,7 +456,6 @@ const calculateMark: Ref<Items> = ref<Items>({
     const formData: any = context.getDataForm(event as SubmitEvent) as any;
     formData.questions = questions.value;
     console.log(formData)
-    return;
     if(props.examId != null)
     {
         await api.post(`exam`, true, formData) as ResponseStatus;
@@ -514,20 +512,28 @@ const setData = async (): Promise<void> => {
                 mark: 0,
                 qcm_answers: [
                     { 
-                        checked: false, 
-                        answer: '' 
+                        name: '',
+                        is_correct: false, 
+                        name_kh: 'w',
+                        description: 'we'
                     },
                     { 
-                        checked: false, 
-                        answer: '' 
+                        name: '',
+                        is_correct: false, 
+                        name_kh: 'w',
+                        description: 'we'
                     },
                     { 
-                        checked: false, 
-                        answer: '' 
+                        name: '',
+                        is_correct: false, 
+                        name_kh: 'w',
+                        description: 'we'
                     },
                     { 
-                        checked: false, 
-                        answer: '' 
+                        name: '',
+                        is_correct: false, 
+                        name_kh: 'w',
+                        description: 'we'
                     }
                 ]
             });
@@ -539,12 +545,16 @@ const setData = async (): Promise<void> => {
                 mark: 0,
                 qcm_answers: [
                     { 
-                        checked: false, 
-                        answer: '' 
+                        name: '',
+                        is_correct: false, 
+                        name_kh: 'w',
+                        description: 'we' 
                     },
                     { 
-                        checked: false, 
-                        answer: '' 
+                        name: '',
+                        is_correct: false, 
+                        name_kh: 'w',
+                        description: 'we' 
                     }
                 ]
             });
@@ -576,8 +586,8 @@ const recalculateScore = (item: any) => {
 const addNewAnswer = (idx: number): void => {
     if (questions.value[idx]) {
         questions.value[idx].qcm_answers.push({
-            checked: false,
-            answer: ''
+            is_correct: false,
+            name: ''
         });
     }
 };
@@ -585,7 +595,7 @@ const addNewAnswer = (idx: number): void => {
 const deleteAnswer = (questionIdx: number, idx: number): void => {
     const question = questions.value[questionIdx];
     if (question && question.qcm_answers) {
-        if (question.qcm_answers.length > 0 && question.qcm_answers[idx].answer != '' || question.qcm_answers[idx].checked != false) {
+        if (question.qcm_answers.length > 0 && question.qcm_answers[idx].name != '' || question.qcm_answers[idx].checked != false) {
             Confirm('Are you sure to delete this answer?', () => {
                 question.qcm_answers.splice(idx, 1);
             });
