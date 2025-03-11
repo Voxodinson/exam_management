@@ -69,9 +69,15 @@
                             Status :
                         </span>
                         <span
-                            class="px-4 rounded-md text-white text-[.8rem] py-0.5 mb-1 uppercase"
-                            :class="data.status === 'publishing' ? 'bg-blue-400' : 'bg-red-500'">
+                            :class="{
+                                ' text-white border-blue-200 bg-blue-400': data.status === 'publishing',
+                                'text-white bg-yellow-400 border-yellow-400': data.status === 'pending',
+                            }"
+                            class="uppercase w-[120px] rounded-full py-0.5 mb-1 px-2 border-[1px] text-[.8rem] flex items-center justify-between gap-3">
                             {{ data.status }}
+                            <UIcon 
+                                name="ic:sharp-circle" 
+                                class="w-3 h-3 animate-ping text-white"/>
                         </span>
                     </li>
                     <li>

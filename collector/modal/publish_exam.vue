@@ -147,7 +147,7 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
  const getData = async (event: Event): Promise<void> => {
     const formData: any = context.getDataForm(event as SubmitEvent) as any;
 
-    const result: ResponseStatus = await api.post(`exam/assign/${props.id}`, true, formData) as ResponseStatus;
+    const result: ResponseStatus = await api.update(`exam/assign/${props.id}`, true, formData) as ResponseStatus;
     if(!result.error)
     {
         emits('toggle', false);

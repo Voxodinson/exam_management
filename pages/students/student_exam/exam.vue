@@ -140,7 +140,8 @@ import {
 } from '@/utils/dialog';
 definePageMeta({
   layout: 'student',
-  colorMode: 'light'
+  colorMode: 'light',
+  
 });
 
 
