@@ -191,10 +191,10 @@
                         <td>
                             <span
                                 :class="{
-                                    ' text-blue-400 border-blue-200': data.status === 'publishing',
+                                    ' text-white border-blue-200 bg-blue-400': data.status === 'publishing',
                                     'text-white bg-yellow-400 border-yellow-400': data.status === 'pending',
                                 }"
-                                class="uppercase rounded-full py-0.5 px-2 border-[1px] text-[.8rem] flex items-center justify-center gap-3 w-fit">
+                                class="uppercase w-[120px] rounded-full py-0.5 px-2 border-[1px] text-[.8rem] flex items-center justify-between gap-3">
                                 {{ data.status }}
                                 <UIcon 
                                     name="ic:sharp-circle" 
@@ -272,6 +272,7 @@
     <PublishExam
         :id="examId"
         :open="isOpenPublishExam"
+        @update:data="fetchData"
         @toggle="togglePublishExam"/>
 </template>
 
@@ -341,7 +342,7 @@ const columns: Ref<Column[]> = ref<Column[]>([
         title:'Exam',
     },
     {
-        title:'Info',
+        title:'Information',
     },
     {
         title: 'Created At'

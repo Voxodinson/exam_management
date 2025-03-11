@@ -458,7 +458,7 @@ const calculateMark: Ref<Items> = ref<Items>({
     console.log(formData)
     if(props.examId != null)
     {
-        await api.post(`exam`, true, formData) as ResponseStatus;
+        await api.update(`exam/${props.examId}`, true, formData) as ResponseStatus;
     }
     else
     {
