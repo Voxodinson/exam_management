@@ -162,9 +162,9 @@
                 class="w-full text-yellow-500 text-[.8rem] mt-6"/>
             <div 
                 v-if="isPublishing === 'publishing'"
-                class="w-full flex flex-col items-start mt-3 bg-yellow-100 justify-start border-[1px] border-yellow-400 border-dotted p-2 rounded-md">
+                class="w-full flex flex-col items-start mt-3 bg-yellow-100 justify-start border-[1px] border-yellow-400 border-dotted p-2 rounded-md z-10">
                 <UFormGroup
-                    class="w-full z-50"
+                    class="w-full z-10"
                     label="Class"
                     name="class_id">
                     <SelectMenu
@@ -184,7 +184,7 @@
                 <span
                     class="text-[.8rem] mt-2">Note: After you select the status as "Publishing" make sure to assign it to the appropriate "Class". This exam will be <span class="text-yellow-500 italic uppercase">publishing</span>  after it is successfully created.</span>
             </div>
-            <div class="mt-3 flex items-center sticky bg-white z-30 top-0 right-0 justify-between border-b-[1px] py-2 border-gray-200">
+            <div class="mt-3 flex items-center  sticky bg-white top-0 right-0 justify-between border-b-[1px] py-2 border-gray-200">
                 <h3 class="text-[.9rem] font-semibold">
                     Questions
                 </h3>

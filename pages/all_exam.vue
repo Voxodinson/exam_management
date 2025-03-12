@@ -414,11 +414,15 @@ const searchData = async (value: string): Promise<void> => {
 /**
  * End::Fetch data section
  */
- watch((): boolean => openCreate.value || isOpenExamInfoModal.value, async (value: boolean): Promise<void> => {
-    if(!value)
-    {
-        examId.value = null;
-    }
+watch((): boolean => 
+    openCreate.value || 
+    isOpenExamInfoModal.value || 
+    isOpenPublishExam.value,  
+    async (value: boolean): Promise<void> => {
+        if(!value)
+        {
+            examId.value = null;
+        }
 });
 
 
