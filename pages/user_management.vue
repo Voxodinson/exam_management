@@ -1,7 +1,7 @@
 <template>
     <template
         v-if="openCreate">
-        <User
+        <Upubser
             @toggle="toggleCreate"
             @update:data="fetchData"
             :user-id="userID"/>
@@ -169,7 +169,7 @@
             <div
                 class="w-full rounded-md grid grid-cols-3 gap-2">
                 <div
-                    v-for="(user, idx) in data"
+                    v-for="(user, idx) in data.data"
                     :key="idx"
                     class="w-full h-fit bg-white border-[1px] border-gray-100 rounded-md p-2 relative">
                     <div class="w-full flex flex-col items-center justify-center">
@@ -384,7 +384,8 @@ const toggle = (): void => {
  */
  const fetchData = async (current_page: number = 1, per_page: number = 10, search: string = ''): Promise<void> => {
 
-    let url: string = `user?per_page=${per_page}&page_no=${current_page}&deprtment_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}&nationality=${filters.value.nationality}`;
+    // let url: string = `user?per_page=${per_page}&page_no=${current_page}&deprtment_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}&nationality=${filters.value.nationality}`;
+    let url: string = 'user';
     if(search)
     {
         url += `&search=${search}`;
@@ -393,6 +394,7 @@ const toggle = (): void => {
     if(!result.error)
     {
         data.value = result as object;
+        console.log(data.value)
     }
 }
 
