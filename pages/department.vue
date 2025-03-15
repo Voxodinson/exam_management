@@ -8,7 +8,7 @@
     <template
         v-else>
         <div 
-        class="flex items-center justify-between h-[45px] px-4 bg-white border-b-[1px] border-gray-200">
+            class="flex items-center justify-between h-[45px] px-4 bg-white border-b-[1px] border-gray-200">
             <UBreadcrumb 
                 :links="linksItem"
                 divider="/"
@@ -47,76 +47,10 @@
                         }"
                         class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
                 </UTooltip>
-                <UTooltip 
-                    :text="isOpenFilter ? 'Close Filters' : 'Open Filters'"
-                    :popper="{ offsetDistance: 12 }">
-                    <UButton
-                        :icon="isOpenFilter ? 'material-symbols:close-rounded' : 'material-symbols:filter-alt-outline'"
-                        size="sm"
-                        color="black"
-                        variant="soft" 
-                        :padded="false"
-                        @click="()=>{
-                            toggleFilter();
-                        }"
-                        class="bg-[#3A6D8C] hover:bg-gray-200 text-white hover:text-black p-1.5 transition"/>
-                </UTooltip>
             </div>
         </div>
         <div 
             class="w-full p-2 ">
-            <div 
-                v-if="isOpenFilter"
-                class="w-full flex gap-2 justify-between bg-white rounded-md p-2 mb-2" >
-                <div 
-                    class="flex w-fit flex-wrap gap-2">
-                    <SelectMenu
-                        name=""
-                        :options="[]"
-                        value-attribute="id"
-                        option-attribute="name"
-                        id-attribute="id"
-                        placeholder="Select a department"
-                        class="w-[250px]"
-                        @update:model-value="async (value: Items): Promise<void> => {
-                            if(value?.id){
-                                filters.department_id = Number(value.id);
-                            }
-                            else{
-                                filters.department_id = '';
-                            }
-                            await fetchData(Number($route.query.page_no) || 1);
-                        }"
-                        :model-value="filters.department_id"/>
-                    <UTooltip 
-                        text="Sort by Letter"
-                        :popper="{ offsetDistance: 12 }">
-                        <UButton
-                            icon="solar:round-sort-vertical-broken"
-                            size="sm"
-                            color="black"
-                            variant="soft" 
-                            :padded="false"
-                            @click="()=>{
-                            }"
-                            class="bg-white hover:bg-gray-200 text-black p-2 transition"/>
-                    </UTooltip>
-                </div>
-            
-                <UTooltip 
-                    text="Cleare Filter"
-                    :popper="{ offsetDistance: 12 }">
-                    <UButton
-                        icon="pajamas:clear-all"
-                        size="sm"
-                        color="black"
-                        variant="soft" 
-                        :padded="false"
-                        @click="()=>{
-                        }"
-                        class="bg-white hover:bg-gray-200 text-red-500 px-2 transition"/>
-                </UTooltip>
-            </div>
             <div 
                 class="w-full bg-white rounded-md overflow-hidden">
                 <Table

@@ -7,7 +7,7 @@
             class="object-cover w-full h-full opacity-90"
             loading="lazy" />
     </div>
-    <div
+[    <div
         class="flex h-full w-full absolute top-0 left-0 justify-center items-center shadow-sm overflow-hidden">
         <div
             class="form-submit w-1/2 flex items-center justify-center">
@@ -17,7 +17,7 @@
                 enctype="multipart/form-data"
                 class="panel-login p-6 rounded-md z-10  py-10 flex flex-col w-[80%] overflow-hidden relative justify-center gap-3 bg-white"
                 @submit.prevent="getData">
-                    <img 
+                <img 
                     :src="Technology" 
                     alt=""
                     class="w-[350px] h-[350px] opacity-20 absolute bottom-[10px] right-[10px]">
@@ -25,7 +25,7 @@
                     class="text-[2rem] text-sky-300 text-center font-normal ">
                     Welcome Back
                     <p class="text-center text-[.9rem] text-gray-400 font-thin">
-                        You are about to login ass admin account
+                        You are about to login as student account.
                     </p>
                 </h4>
                 <div
@@ -82,7 +82,7 @@
                     </UButton>
                 </UFormGroup>
                 <UDivider
-                    label="Login Into Your Admin Account"
+                    label="Login Into Your Student Account"
                     :ui="{ label: 'text-gray-500 dark:text-white-400' }"
                     class="mt-6"
                     />
@@ -90,7 +90,7 @@
                     type="submit"
                     size="md"
                     class="flex items-center bg-gradient-to-r z-10 from-sky-400 to-blue-600 hover:bg-gradient-to-r hover:from-sky-300 hover:to-blue-500 transition justify-center mt-3"
-                    label="Admin Login"
+                    label="Student Login"
                     square/>
             </form>
         </div>
@@ -179,7 +179,7 @@ const login = async (): Promise<void> => {
     await authenticateUser(user.value);
     if(authenticated)
     {
-        router.push('/');
+        router.push('/students/students_exam');
     }
 }
 /**

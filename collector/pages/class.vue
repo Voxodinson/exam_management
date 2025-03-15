@@ -25,7 +25,7 @@
         class="p-2 rounded-md">
         <div class="p-2 bg-white flex gap-3 flex-wrap rounded-md">
             <UFormGroup
-                class="w-full"
+                class="w-[calc(98%/3)]"
                 label="Department"
                 name="">
                 <SelectMenu
@@ -38,51 +38,20 @@
                     class="w-full"/>
             </UFormGroup>
             <UFormGroup
-                class="w-[calc(98%/2)]"
-                label="Class Name (EN)"
-                name="name">
-                <UInput
-                    type="text"
-                    color="white"
-                    variant="outline"
-                    size="md"
-                    name="name"
-                    role="input"
-                    minlength="3"
-                    maxlength="50"
-                    placeholder="enter class name as English language here..."/>
+                class="w-[calc(98%/3)]"
+                label="Major"
+                name="">
+                <SelectMenu
+                    name=""
+                    :options="[]"
+                    value-attribute="id"
+                    option-attribute="name"
+                    id-attribute="id"
+                    placeholder="please select major"
+                    class="w-full"/>
             </UFormGroup>
             <UFormGroup
-                class="w-[calc(99.5%/2)]"
-                label="Class Name (EN)"
-                name="name_kh">
-                <UInput
-                    type="text"
-                    color="white"
-                    variant="outline"
-                    size="md"
-                    name="name_kh"
-                    role="input"
-                    pattern="^[A-Za-z\s]{2,50}$"
-                    minlength="3"
-                    maxlength="50"
-                    placeholder="enter class name as Khmer language here..."/>
-            </UFormGroup>
-            <UFormGroup
-                class="w-[calc(98%/2)]"
-                label="Room"
-                name="room_number">
-                <UInput
-                    type="text"
-                    color="white"
-                    variant="outline"
-                    size="md"
-                    name="room_number"
-                    role="input"
-                    placeholder="enter major name as Khmer language here..."/>
-            </UFormGroup>
-            <UFormGroup
-                class="w-[calc(99.5%/2)]"
+                class="w-[calc(97%/3)]"
                 label="Class Code"
                 name="class_code">
                 <UInput

@@ -32,12 +32,7 @@
                     name="department_id">
                     <SelectMenu
                         name="department_id"
-                        :options="[
-                            {
-                                id: 1,
-                                name: 'Roote'
-                            }
-                        ]"
+                        :options="dataOptions.department"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
@@ -50,12 +45,7 @@
                     name="major_id">
                     <SelectMenu
                         name="major_id"
-                        :options="[
-                            {
-                                id: 1,
-                                name: 'Roote'
-                            }
-                        ]"
+                        :options="dataOptions.major"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
@@ -169,12 +159,7 @@
                     name="class_id">
                     <SelectMenu
                         name="class_id"
-                        :options="[
-                            {
-                                id: 1,
-                                name: 'Roote'
-                            }
-                        ]"
+                        :options="dataOptions.class"
                         option-attribute="name"
                         value-attribute="id"
                         id-attribute="id"
@@ -387,11 +372,11 @@ import {
 } from "@/composable/dataHandler";
 import type {
     ResponseStatus,
-    Items
+    Items,
+    Options
 } from "@/models/type";
 import { 
-    SelectMenu,
-    InputDate
+    SelectMenu
 } from "@/components/ui";
 import { 
     Confirm 
@@ -441,6 +426,7 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
  */ 
 const questions: Ref<IQuestion[]> = ref<IQuestion[]>([]);
 const isPublishing: Ref<string> = ref<string>('');
+const dataOptions: Ref<Options> = ref<Options>({});
 const calculateMark: Ref<Items> = ref<Items>({
     total: 0,
     passing: 0
@@ -495,7 +481,13 @@ const setData = async (): Promise<void> => {
     }
 }
 
-
+const fetchOption = async (): Promise<void> => {
+    const options: ResponseStatus = await api.get("setting/filter/exam") as ResponseStatus;
+    if(!options.error)
+    {
+        dataOptions.value = options.data as unknown as Options;
+    }
+};
 /**
  * End::Fetch data section
  */
@@ -609,6 +601,7 @@ const deleteAnswer = (questionIdx: number, idx: number): void => {
  * End::Some logical section
  */
 onMounted(async (): Promise<void> => {
+    await fetchOption();
     if(props.examId){
         await setData();
     }
