@@ -1,7 +1,7 @@
 <template>
     <template
         v-if="openCreate">
-        <Upubser
+        <User
             @toggle="toggleCreate"
             @update:data="fetchData"
             :user-id="userID"/>

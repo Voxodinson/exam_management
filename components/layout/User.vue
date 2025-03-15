@@ -74,7 +74,7 @@ const items: Ref<DropdownItem[][]> = computed(() => [
 const logout = (): void => {
     Confirm('Do you want to log out now?', (): void => {
         logUserOut();
-        router.push('/signin');
+        router.push('/choose_signin');
     });
 }
 
