@@ -82,7 +82,7 @@
                             name="">
                             <SelectMenu
                                 name=""
-                                :options="[]"
+                                :options="dataOptions.department"
                                 value-attribute="id"
                                 option-attribute="name"
                                 id-attribute="id"
@@ -105,7 +105,7 @@
                             name="">
                             <SelectMenu
                                 name=""
-                                :options="[]"
+                                :options="dataOptions.class"
                                 value-attribute="id"
                                 option-attribute="name"
                                 id-attribute="id"
@@ -128,7 +128,7 @@
                             name="">
                             <SelectMenu
                                 name=""
-                                :options="[]"
+                                :options="dataOptions.shift"
                                 value-attribute="id"
                                 option-attribute="name"
                                 id-attribute="id"
@@ -151,7 +151,7 @@
                             name="">
                             <SelectMenu
                                 name=""
-                                :options="[]"
+                                :options="dataOptions.nationality"
                                 value-attribute="id"
                                 option-attribute="name"
                                 id-attribute="id"
@@ -260,7 +260,7 @@
                                             class: 'text-red-500',
                                             click: async (): Promise<void> => {
                                                 Confirm(`Do you want to student ${data.name} name?`, async (): Promise<void> => {
-                                                    const result = await api.update(`student/${data.id}`, true, {}) as ResponseStatus;
+                                                    const result = await api.delete(`student/${data.id}`, true, {}) as ResponseStatus;
                                                     if (!result.error) {
                                                         await fetchData();
                                                     }
@@ -395,7 +395,7 @@ const columns: Ref<Column[]> = ref<Column[]>([
 }
 
 const fetchOption = async (): Promise<void> => {
-    const options: ResponseStatus = await api.get("") as ResponseStatus;
+    const options: ResponseStatus = await api.get("setting/filter/student") as ResponseStatus;
     if(!options.error)
     {
         dataOptions.value = options.data as unknown as Options;
@@ -437,6 +437,7 @@ const toggleStudentInfo = (value: boolean): void => {
  */
 
 onMounted(async (): Promise<void> => {
+    await fetchOption();
     await fetchData();
 })
 </script>

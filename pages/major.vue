@@ -73,7 +73,7 @@
                         class="flex w-fit flex-wrap gap-2">
                         <SelectMenu
                             name=""
-                            :options="[]"
+                            :options="dataOptions.department"
                             value-attribute="id"
                             option-attribute="name"
                             id-attribute="id"
@@ -89,24 +89,6 @@
                                 await fetchData(Number($route.query.page_no) || 1);
                             }"
                             :model-value="filters.deprtment_id"/>
-                        <SelectMenu
-                            name=""
-                            :options="[]"
-                            value-attribute="id"
-                            option-attribute="name"
-                            id-attribute="id"
-                            placeholder="Select an major"
-                            class="w-[250px]"
-                            @update:model-value="async (value: Items): Promise<void> => {
-                                if(value?.id){
-                                    filters.major_id = Number(value.id);
-                                }
-                                else{
-                                    filters.major_id = '';
-                                }
-                                await fetchData(Number($route.query.page_no) || 1);
-                            }"
-                            :model-value="filters.major_id"/>
                         <UTooltip 
                             text="Sort by Letter"
                             :popper="{ offsetDistance: 12 }">
@@ -148,8 +130,7 @@
                     }">
                     <tr 
                         class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
-                        <td
-                            class="w-[150px]">
+                        <td>
                             <span>
                                 {{ data.department_name || '-----' }}
                             </span>
@@ -160,8 +141,7 @@
                         <td>
                             <span>{{ data.name_kh || '-----' }}</span>
                         </td>
-                        <td
-                            class="w-[200px]">
+                        <td>
                             <span 
                                 class="text-[.8rem]">
                                 {{ data.description || '-----' }}
@@ -201,7 +181,7 @@
                                         click: async (): Promise<void> => {
                                             Confirm(`Do you want to delete ${data.name} major?`, 
                                                 async (): Promise<void> => {
-                                                    const result = await api.update(`major/${data.id}`, true, {}) as ResponseStatus;
+                                                    const result = await api.delete(`major/${data.id}`, true, {}) as ResponseStatus;
                                                     if (!result.error) {
                                                         await fetchData();
                                                     }
@@ -336,7 +316,7 @@ const toggleFilter = (): void => {
 }
 
 const fetchOption = async (): Promise<void> => {
-    const options: ResponseStatus = await api.get("") as ResponseStatus;
+    const options: ResponseStatus = await api.get("setting/option/major") as ResponseStatus;
     if(!options.error)
     {
         dataOptions.value = options.data as unknown as Options;
@@ -363,6 +343,7 @@ watch((): boolean => openCreate.value, async (value: boolean): Promise<void> => 
 });
 
 onMounted(async (): Promise<void> => {
+    await fetchOption();
     await fetchData();
 });
 </script>

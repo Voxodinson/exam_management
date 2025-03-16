@@ -72,7 +72,7 @@
                         class="flex w-fit flex-wrap gap-2">
                         <SelectMenu
                             name=""
-                            :options="[]"
+                            :options="dataOptions.department"
                             value-attribute="id"
                             option-attribute="name"
                             id-attribute="id"
@@ -87,10 +87,10 @@
                                 }
                                 await fetchData(Number($route.query.page_no) || 1);
                             }"
-                            :model-value="filters.warehouse_id"/>
+                            :model-value="filters.department_id"/>
                         <SelectMenu
                             name=""
-                            :options="[]"
+                            :options="dataOptions.major"
                             value-attribute="id"
                             option-attribute="name"
                             id-attribute="id"
@@ -106,6 +106,24 @@
                                 await fetchData(Number($route.query.page_no) || 1);
                             }"
                             :model-value="filters.major_id"/>
+                        <SelectMenu
+                            name=""
+                            :options="dataOptions.shift"
+                            value-attribute="id"
+                            option-attribute="name"
+                            id-attribute="id"
+                            placeholder="Select a shift time"
+                            class="w-[230px]"
+                            @update:model-value="async (value: Items): Promise<void> => {
+                                if(value?.id){
+                                    filters.shift_id = Number(value.id);
+                                }
+                                else{
+                                    filters.shift_id = '';
+                                }
+                                await fetchData(Number($route.query.page_no) || 1);
+                            }"
+                            :model-value="filters.shift_id"/>
                         <UTooltip 
                             text="Sort by Letter"
                             :popper="{ offsetDistance: 12 }">
@@ -147,6 +165,20 @@
                     }">
                     <tr 
                         class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
+                        <td>
+                            <span class="block text-[.9rem]">
+                                Dept: <span class="text-blue-400">{{ data.department_name  || '-----'}}</span>
+                            </span>
+                            <span class="block text-[.9rem]">
+                                Major: <span class="text-blue-400">{{ data.major_name || '-----'}}</span>
+                            </span>
+                            <span class="block text-[.9rem]">
+                                Shift: <span class="text-blue-400">{{ data.shift || '-----' }}</span>
+                            </span>
+                        </td>
+                        <td>
+                            <span>{{ data.room  || '-----' }}</span>
+                        </td>
                         <td>
                             <span>{{ data.name || '-----'}}</span>
                         </td>
@@ -272,6 +304,12 @@ const linksItem = [
 ];
 const columns: Ref<Column[]> = ref<Column[]>([
     {
+        title: 'Dept / Major / Shift'
+    },
+    {
+        title: 'Room'
+    },
+    {
         title:'Name (EN)',
     },
     {
@@ -325,7 +363,7 @@ const toggleFilter = (): void => {
 }
 
 const fetchOption = async (): Promise<void> => {
-    const options: ResponseStatus = await api.get("") as ResponseStatus;
+    const options: ResponseStatus = await api.get("setting/option/class") as ResponseStatus;
     if(!options.error)
     {
         dataOptions.value = options.data as unknown as Options;
@@ -352,6 +390,7 @@ const searchData = async (value: string): Promise<void> => {
 });
 
 onMounted(async (): Promise<void> => {
+    await fetchOption();
     await fetchData();
 });
 </script>

@@ -27,10 +27,10 @@
             <UFormGroup
                 class="w-[calc(98%/3)]"
                 label="Department"
-                name="">
+                name="department_id">
                 <SelectMenu
-                    name=""
-                    :options="[]"
+                    name="department_id"
+                    :options="dataOptions.department"
                     value-attribute="id"
                     option-attribute="name"
                     id-attribute="id"
@@ -40,10 +40,10 @@
             <UFormGroup
                 class="w-[calc(98%/3)]"
                 label="Major"
-                name="">
+                name="major_id">
                 <SelectMenu
-                    name=""
-                    :options="[]"
+                    name="major_id"
+                    :options="dataOptions.major"
                     value-attribute="id"
                     option-attribute="name"
                     id-attribute="id"
@@ -52,16 +52,59 @@
             </UFormGroup>
             <UFormGroup
                 class="w-[calc(97%/3)]"
-                label="Class Code"
-                name="class_code">
+                label="Shift Time"
+                name="">
+                <SelectMenu
+                    name=""
+                    :options="[]"
+                    value-attribute="id"
+                    option-attribute="name"
+                    id-attribute="id"
+                    placeholder="please select shift for class"
+                    class="w-full"/>
+            </UFormGroup>
+            <UFormGroup
+                class="w-[calc(98%/3)]"
+                label="Class Name (EN)"
+                name="name">
                 <UInput
                     type="text"
                     color="white"
                     variant="outline"
                     size="md"
-                    name="class_code"
+                    name="name"
                     role="input"
-                    minlength="3"
+                    minlength="2"
+                    maxlength="50"
+                    placeholder="enter class code here..."/>
+            </UFormGroup>
+            <UFormGroup
+                class="w-[calc(98%/3)]"
+                label="Class Name (KH)"
+                name="name_kh">
+                <UInput
+                    type="text"
+                    color="white"
+                    variant="outline"
+                    size="md"
+                    name="name_kh"
+                    role="input"
+                    minlength="2"
+                    maxlength="50"
+                    placeholder="enter class code here..."/>
+            </UFormGroup>
+            <UFormGroup
+                class="w-[calc(97%/3)]"
+                label="Class Code"
+                name="room">
+                <UInput
+                    type="text"
+                    color="white"
+                    variant="outline"
+                    size="md"
+                    name="room"
+                    role="input"
+                    minlength="2"
                     maxlength="50"
                     placeholder="enter class code here..."/>
             </UFormGroup>
@@ -113,7 +156,8 @@ import {
 } from "@/composable/dataHandler";
 import type {
     ResponseStatus,
-    Items
+    Items,
+    Options
 } from "@/models/type";
 import { 
     SelectMenu 
@@ -140,6 +184,7 @@ const props = withDefaults(defineProps<{
  */
 const api: ContextAPI = new ContextAPI(new SimpleAPI());
 const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
+const dataOptions: Ref<Options> = ref<Options>({});
 /**
  * End::Declare variables object section
  */
@@ -178,11 +223,19 @@ const setData = async (): Promise<void> => {
     }
 }
 
+const fetchOption = async (): Promise<void> => {
+    const options: ResponseStatus = await api.get("setting/option/class") as ResponseStatus;
+    if(!options.error)
+    {
+        dataOptions.value = options.data as unknown as Options;
+    }
+};
 /**
  * End::Fetch data section
  */
 
 onMounted(async (): Promise<void> => {
+    await fetchOption();
     if(props.classId){
         await setData();
     }
