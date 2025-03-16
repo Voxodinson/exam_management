@@ -68,16 +68,6 @@
                 class="w-full flex gap-2 justify-between bg-white rounded-md p-2 mb-2" >
                 <div 
                     class="flex w-fit flex-wrap gap-2">
-                    <UInput
-                        icon="material-symbols:search"
-                        type="text"
-                        color="white"
-                        variant="outline"
-                        size="md"
-                        name="district"
-                        role="input"
-                        placeholder="Search name here..."
-                        class="w-[400px]"/>
                     <SelectMenu
                         name=""
                         :options="[]"
@@ -125,9 +115,21 @@
                 </UTooltip>
             </div>
             <div 
+                v-if="data.total === Number(0)"
+                class="w-full flex gap-3 flex-col items-center mt-10 justify-center">
+                <img 
+                    :src="NoDataFound" 
+                    alt="no data image"
+                    class="w-[50px] opacity-30">
+                <span
+                    class="text-gray-400 text-[.8rem]">
+                    Ops...! Publish exam not available
+                </span>
+            </div>
+            <div 
                 class="w-full flex flex-col gap-3 rounded-md overflow-hidden">
                 <div
-                    v-for="(exam, idx) in datas.data"
+                    v-for="(exam, idx) in data.data"
                     :key="idx"
                     class="w-full rounded-md h-fit p-2 border-[1px] bg-white border-gray-200">
                     <div 
@@ -135,43 +137,31 @@
                         <div 
                             class="w-fit">
                             <h3
-                                class="text-[1rem] font-semibold">
-                                {{ exam.exam }} Exam
+                                class="text-[1rem] capitalize font-semibold">
+                                {{ exam.name }} Exam
                             </h3>
-                            <span
-                                class="text-[.8rem] text-gray-400">
-                                {{ exam.subject }} - {{ exam.grade }}
-                            </span>
                         </div>
                         <div 
                             class="flex items-center gap-3 py-1 px-4 border-[1px] border-gray-200 bg-white shadow-sm *:text-[.9rem] rounded-full">
                             <span>
                                 (
                                 <span class="text-blue-400">
-                                    {{ exam.duration_minutes}}
+                                    {{ exam.duration_minutes || 0}}
                                 </span> 
-                                ) from {{ exam.start_time }}&ensp; - &ensp;{{ exam.end_time }}
+                                ) - {{ exam.exam_time }}
                             </span>
                         </div>
-                        <div
-                            :class="exam.isActive ? 'bg-blue-400' : 'bg-red-400'"
-                            class="flex items-center py-1 pl-2 pr-1 shadow-md rounded-full capitalize gap-3">
-                            <span
-                                class="text-white text-[.9rem] pt-0.5">
-                                {{ exam.isActive ? 'Publish' : 'Private'}}
-                            </span>
-                            <UToggle 
-                                size="lg"
-                                v-model="exam.isActive"
-                                @click="async (): Promise<void> => {
-                                    Confirm(`${exam.isActive ? 'Are you sure to unpublish exam..?' : 'Are you sure to publish exam..?'}`, async (): Promise<void> => {
-                                        const result = await api.update(``, true, {}) as ResponseStatus;
-                                        if(result){
-                                            await fetchData();
-                                        }
-                                    });
-                                }"/>
-                        </div>
+                        <span
+                            :class="{
+                                ' text-white border-blue-200 bg-blue-400': exam.status === 'publishing',
+                                'text-white bg-yellow-400 border-yellow-400': exam.status === 'pending',
+                            }"
+                            class="uppercase w-[120px] rounded-full py-1 px-2 border-[1px] text-[.8rem] flex items-center justify-between gap-3">
+                            {{ exam.status }}
+                            <UIcon 
+                                name="ic:sharp-circle" 
+                                class="w-3 h-3 animate-ping text-white"/>
+                        </span>
                     </div>
                     <div 
                         class="w-full grid grid-cols-4 pt-2">
@@ -195,7 +185,7 @@
                                 Created by:
                                 <span
                                     class="text-blue-400">
-                                    {{ exam.created_by }}
+                                    {{ exam.create_uid }}
                                 </span>
                             </span>
                         </div>
@@ -205,7 +195,7 @@
                                 Total question:
                                 <span
                                     class="text-blue-400">
-                                    {{ exam.questions.length }}
+                                    <!-- {{ exam.questions.length || 0 }} -->
                                 </span>
                             </span>
                             <UButton
@@ -225,11 +215,16 @@
                             </span>
                             <span
                                 class="text-blue-400 capitalize">
-                                {{ exam.department }}
+                                {{ exam.department_id }}
                                 -
                                 <span
                                     class="text-blue-400">
-                                    {{ exam.class }}
+                                    {{ exam.class_id }}
+                                </span>
+                                -
+                                <span
+                                    class="text-blue-400">
+                                    {{ exam.major_id }}
                                 </span>
                                 -
                                 <span
@@ -245,7 +240,7 @@
                         <div class="w-full flex items-center justify-between">
                             <h3
                                 class="text-[1rem] font-semibold">
-                                {{ exam.subject }} - {{ exam.exam }} (All Questions)
+                                {{ exam.name }} - (All Questions)
                             </h3>
                             <UIcon
                                 name="material-symbols-light:close"
@@ -321,6 +316,9 @@ import {
 import { 
     PublishExam
 } from "@/collector/pages";
+import { 
+    NoDataFound 
+} from "@/assets/images";
 definePageMeta({
     colorMode: 'light'
 });
@@ -354,166 +352,6 @@ const linksItem = [
       label: 'Publish Exam',
   }
 ];
-const datas = {
-    status: 'ok',
-    data: [
-        {
-            "start_time": "7:30AM 10-12-2025",
-            "end_time": "9:00AM 10-12-2025",
-            "exam":"Final",
-            "subject":"Web Development",
-            "grade":"Year 4",
-            "status":"publish",
-            "isActive": true,
-            "duration_minutes":"120 Minutes",
-            "total_marks": 100,
-            "passing_marks": 50,
-            "show": false,
-            "class":"M3",
-            "department":"Information Technology",
-            "room":"406",
-            "created_by": "admin",
-            "questions": [
-                {
-                    "question_id": "Q1",
-                    "question": "What is 2 + 2?",
-                    "question_type":"checkbox",
-                    "marks": 5,
-                    "answers": [
-                        { "option_id": "A", "text": "3" },
-                        { "option_id": "B", "text": "4" },
-                        { "option_id": "C", "text": "5" },
-                        { "option_id": "D", "text": "6" }
-                    ],
-                    "correct": "B"
-                },
-                {
-                    "question_id": "Q3",
-                    "question": "Which of the following are prime numbers?",
-                    "marks": 5,
-                    "question_type":"multiple choice",
-                    "answers": [
-                        { "option_id": "A", "text": "2" },
-                        { "option_id": "B", "text": "4" },
-                        { "option_id": "C", "text": "5" },
-                        { "option_id": "D", "text": "9" }
-                    ],
-                    "correct": ["A", "C"]
-                },
-                {
-                    "question_id": "Q3",
-                    "question": "When angkor was build? Exaplain and find example how they build?",
-                    "marks": 25,
-                    "question_type":"Q&A"
-                },
-            ]
-        },
-        {
-            "start_time": "7:30AM 10-12-2025",
-            "end_time": "9:00AM 10-12-2025",
-            "exam":"Final",
-            "subject":"Web Development",
-            "grade":"Year 4",
-            "status":"private",
-            "duration_minutes":"120 Minutes",
-            "total_marks": 100,
-            "passing_marks": 50,
-            "isActive": false,
-            "class":"M3",
-            "department":"Information Technology",
-            "room":"406",
-            "created_by": "admin",
-            "questions": [
-                {
-                    "question_id": "Q1",
-                    "question": "What is 2 + 2?",
-                    "question_type":"checkbox",
-                    "marks": 5,
-                    "answers": [
-                        { "option_id": "A", "text": "3" },
-                        { "option_id": "B", "text": "4" },
-                        { "option_id": "C", "text": "5" },
-                        { "option_id": "D", "text": "6" }
-                    ],
-                    "correct": "B"
-                },
-                {
-                    "question_id": "Q3",
-                    "question": "Which of the following are prime numbers?",
-                    "marks": 5,
-                    "question_type":"multiple choice",
-                    "answers": [
-                        { "option_id": "A", "text": "2" },
-                        { "option_id": "B", "text": "4" },
-                        { "option_id": "C", "text": "5" },
-                        { "option_id": "D", "text": "9" }
-                    ],
-                    "correct": ["A", "C"]
-                },
-                {
-                    "question_id": "Q3",
-                    "question": "When angkor was build? Exaplain and find example how they build?",
-                    "marks": 25,
-                    "question_type":"Q&A"
-                },
-            ]
-        },
-        {
-            "start_time": "7:30AM 10-12-2025",
-            "end_time": "9:00AM 10-12-2025",
-            "exam":"Final",
-            "subject":"Web Development",
-            "grade":"Year 4",
-            "status":"publish",
-            "duration_minutes":"120 Minutes",
-            "total_marks": 100,
-            "passing_marks": 50,
-            "isActive": true,
-            "class":"M3",
-            "department":"Information Technology",
-            "room":"406",
-            "created_by": "admin",
-            "questions": [
-                {
-                    "question_id": "Q1",
-                    "question": "What is 2 + 2?",
-                    "question_type":"checkbox",
-                    "marks": 5,
-                    "answers": [
-                        { "option_id": "A", "text": "3" },
-                        { "option_id": "B", "text": "4" },
-                        { "option_id": "C", "text": "5" },
-                        { "option_id": "D", "text": "6" }
-                    ],
-                    "correct": "B"
-                },
-                {
-                    "question_id": "Q3",
-                    "question": "Which of the following are prime numbers?",
-                    "marks": 5,
-                    "question_type":"multiple choice",
-                    "answers": [
-                        { "option_id": "A", "text": "2" },
-                        { "option_id": "B", "text": "4" },
-                        { "option_id": "C", "text": "5" },
-                        { "option_id": "D", "text": "9" }
-                    ],
-                    "correct": ["A", "C"]
-                },
-                {
-                    "question_id": "Q3",
-                    "question": "When angkor was build? Exaplain and find example how they build?",
-                    "marks": 25,
-                    "question_type":"Q&A"
-                },
-            ]
-        }
-    ],
-    page_no: 1,
-    per_page: 10,
-    total: 10,
-    total_page: 10
- };
 /**
  * End::Declare variable section
  */ 
@@ -538,9 +376,8 @@ const toggleShowQuestion = (idx: number): void => {
  * Begin::Fetch data section
  */
  const fetchData = async (current_page: number = 1, search: string = ''): Promise<void> => {
-    return;
     const per_page: number = 10;
-    let url: string = `purchase?per_page=${per_page}&page_no=${current_page}&department=${filters.value.deprtment_id}`;
+    let url: string = `exam/publish?per_page=${per_page}&page_no=${current_page}&department_id=${filters.value.deprtment_id}`;
     if(search)
     {
         url += `&search=${search}`;
@@ -548,7 +385,8 @@ const toggleShowQuestion = (idx: number): void => {
     const result: ResponseStatus = await api.get(url) as ResponseStatus;
     if(!result.error)
     {
-        data.value = result as object;
+        data.value = result as any;
+        console.log(data.value)
     }
 }
 
@@ -572,11 +410,11 @@ const searchData = async (value: string): Promise<void> => {
 
 const filterData = async (current_page: number = 1): Promise<void> => {
     const per_page: number = 10;
-    const url: string = `package?per_page=${per_page}&page_no=${current_page}&status_id=${filters.value.status_id}&warehouse_id=${filters.value.warehouse_id}`;
+    const url: string = `package?per_page=${per_page}&page_no=${current_page}&status_id=${filters.value.status_id}&warehouse_id=${filters.value.status_id}`;
     const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
     if(!result.error)
     {
-        data.value = result as object;
+        data.value = result as any;
     }
 }
 /**
@@ -584,5 +422,6 @@ const filterData = async (current_page: number = 1): Promise<void> => {
  */
 
 onMounted(async (): Promise<void> => {
+    await fetchData();
 });
 </script>
