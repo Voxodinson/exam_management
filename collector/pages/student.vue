@@ -55,7 +55,6 @@
                             value-attribute="id"
                             id-attribute="id"
                             placeholder="Please select major"
-                            has-editor
                             required/>
                     </UFormGroup>
                     <UFormGroup
@@ -153,22 +152,17 @@
                         class="w-[calc(97%/3)]"
                         label="Choose Gender"
                         name="">
-                        <URadioGroup
-                            class="mt-3"
-                            :ui="{
-                                fieldset: 'w-full h-full items-center flex gap-6'
-                            }"
-                            v-model="selectGender"
-                            :options="[
-                                {
-                                    value: 'male',
-                                    label: 'Male'
-                                }, 
-                                {
-                                    value: 'female',
-                                    label: 'Female'
-                                }
-                            ]"/>
+                        <div 
+                            class="flex gap-3 items-center">
+                            <URadio 
+                                v-model="selectGender" 
+                                value="male" 
+                                label="Male"/>
+                            <URadio 
+                                v-model="selectGender" 
+                                value="female" 
+                                label="Female" />
+                        </div>
                     </UFormGroup>
                 </div>      
                 <UFormGroup
@@ -521,8 +515,10 @@ const fetchOption = async (): Promise<void> => {
     }
     console.log(dataOptions.value);
 };
+
 const setData = async (): Promise<void> => {
-    const result: ResponseStatus = await api.get(`student/${props.studentId}`, false) as ResponseStatus;
+    const result: any = await api.get(`student/${props.studentId}`, false) as any;
+    selectGender.value = result.data.gender as string
     if(!result.error)
     {
         let timeout: NodeJS.Timeout = setTimeout((): void => {
@@ -536,6 +532,7 @@ const setData = async (): Promise<void> => {
 /**
  * End::Fetch data section
  */
+
 onMounted(async (): Promise<void> => {
     await fetchOption();
     if(props.studentId)

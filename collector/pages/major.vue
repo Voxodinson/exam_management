@@ -27,10 +27,10 @@
             <UFormGroup
                 class="w-full"
                 label="Department"
-                name="department_name">
+                name="department_id">
                 <SelectMenu
-                    name=""
-                    :options="[]"
+                    name="department_id"
+                    :options="dataOptions.department"
                     value-attribute="id"
                     option-attribute="name"
                     id-attribute="id"
@@ -113,7 +113,8 @@ import {
 } from "@/composable/dataHandler";
 import type {
     ResponseStatus,
-    Items
+    Items,
+    Options
 } from "@/models/type";
 import { 
     SelectMenu 
@@ -142,6 +143,14 @@ const api: ContextAPI = new ContextAPI(new SimpleAPI());
 const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
 /**
  * End::Declare variables object section
+ */
+
+/**
+ * Begin::declare variable section
+ */
+const dataOptions: Ref<Options> = ref<Options>({});
+/**
+ * End::declare variable section
  */
 
 /**
@@ -178,11 +187,20 @@ const setData = async (): Promise<void> => {
     }
 }
 
+const fetchOption = async (): Promise<void> => {
+    const options: ResponseStatus = await api.get("setting/option/major") as ResponseStatus;
+    if(!options.error)
+    {
+        dataOptions.value = options.data as unknown as Options;
+    }
+};
+
 /**
  * End::Fetch data section
  */
 
 onMounted(async (): Promise<void> => {
+    await fetchOption();
     if(props.majorId){
         await setData();
     }
