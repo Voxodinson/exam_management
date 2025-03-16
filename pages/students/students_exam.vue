@@ -9,16 +9,29 @@
                     class="text-[1.2rem] font-semibold capitalize text-gray-600 dark:text-white">All Tasks / Published</h3>
                 <span
                     class="text-gray-500 dark:text-white text-[.9rem] font-semibold">
-                    Total Tasks: 
+                    Total Exam: 
                     <span
                         class="text-blue-500 text-[1rem]">
-                        3
+                        {{ data.total }}
                     </span>
+                </span>
+            </div>
+            <div 
+                v-if="data.total === Number(0)"
+                class="w-full flex gap-3 flex-col items-center mt-10 justify-center">
+                <img 
+                    :src="NoDataFound" 
+                    alt="no data image"
+                    class="w-[50px] opacity-30">
+                <span
+                    class="text-gray-400 text-[.8rem]">
+                    Ops...! Publish exam not available
                 </span>
             </div>
             <div 
                 class="w-full flex flex-col gap-3 items-start justify-start">
                 <div 
+                    v-for="(exam, idx) in data.data"
                     class="w-full dark:bg-white h-fit p-3 flex flex-col rounded-md border-[1px] mt-3 border-gray-200 overflow-hidden">
                     <div 
                         class="flex items-center justify-between">
@@ -26,11 +39,11 @@
                             class="w-fit h-fit">
                             <h3
                                 class="font-semibold capitalize text-[1.2rem] text-gray-600">
-                                Web Development Final Exam
+                                {{ exam.name }}
                             </h3>
                             <span
                                 class="text-blue-500 text-[.8rem] capitalize">
-                                Computer science / M6 - 306 - 25Gen
+                                {{ exam.department_name || "------"}} / {{ exam.class_name || "------"}} / {{exam.class_code  || "------"}}
                             </span>
                         </div>
                         <NuxtLink
@@ -55,7 +68,14 @@
     </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import {
+    ContextAPI,
+    SimpleAPI
+} from "@/composable/apiHandler";
+import {
+     NoDataFound 
+    } from "@/assets/images";
 definePageMeta({
   layout: 'student',
   colorMode: 'light'
@@ -64,4 +84,39 @@ definePageMeta({
 useSeoMeta({
   title: 'Login'
 });
+
+/**
+ * Begin::Declare variable object section
+ */
+ const api: ContextAPI = new ContextAPI(new SimpleAPI());
+/**
+ * End::Declare variable object section
+ */
+
+/**
+ * Begin::Declare variable section
+ */
+const data: Ref<any> = ref<any>({});
+/**
+ * End::Declare variable section
+ */ 
+/**
+ * Begin::Fetch data section
+ */
+ const fetchData = async (): Promise<void> => {
+    const result: any = await api.get('exam/publish', false) as any;
+    if(!result.error)
+    {
+        data.value = result as object;
+        console.log(data.value)
+    }
+}
+
+/**
+ * End::Fetch data section
+ */
+
+onMounted(async (): Promise<void> => {
+    await fetchData();
+})
 </script>
