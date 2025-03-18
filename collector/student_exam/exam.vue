@@ -9,7 +9,9 @@
                     variants="none"
                     size="md" 
                     color="white"
-                    @click="backPrevious()">
+                    @click="() => {
+                        emits('toggle', false);
+                    }">
                     <UIcon
                         name="material-symbols-light:arrow-back-ios-new-rounded"
                         class="w-4 h-4"/>
@@ -41,20 +43,20 @@
                     </span>
                     <span
                         class="text-gray-500 capitalize block">
-                        Duration: 90min - (Time Left: 87min)
+                        {{ data.exam_time }} - (Time Left: 87min)
                     </span>
                 </div>
             </div>
             <div 
                 class="w-full h-fit bg-white shadow-md rounded-md border-[1px] border-gray-200 mt-3">
                 <form
-                    name=""
+                    name="exam"
                     method="POST"
                     enctype="multipart/form-data"
                     @submit.prevent="getData"
                     class="p-3 w-full flex flex-col gap-3 ">
                     <div 
-                        v-for="(ques, idx) in questions"
+                        v-for="(ques, idx) in data.questions"
                         :key="idx"
                         class="w-full p-3 rounded-md bg-gray-100">
                         <div 
@@ -138,11 +140,24 @@ import {
 import { 
     Confirm 
 } from '@/utils/dialog';
-definePageMeta({
-  layout: 'student',
-  colorMode: 'light',
-  
+/**
+ * Begin::Set event trigger to parent component
+ */
+const emits = defineEmits<{
+    (event: 'toggle', state: boolean): void;
+    (event: 'update:data'): void;
+}>();
+
+const props = withDefaults(defineProps<{
+    examId: number | null,
+    open: boolean | null
+}>(),{
+    examId: null,
+    open: null
 });
+/**
+ * End::Set event trigger to parent component
+ */
 
 
 /**
@@ -159,7 +174,7 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
 /**
  * Begin::Declare variable section
  */
-const router = useRouter();
+const data: Ref<any> = ref<any>({});
 const linksItem = [
     {
         label: 'Students'
@@ -168,8 +183,7 @@ const linksItem = [
         label: 'Student Exam',
     },
     {
-        label: 'Exam',
-        to: '/students/student_exam/exam'
+        label: 'Exam'
     }
 ];
 const questions: any = [
@@ -263,30 +277,38 @@ const questions: any = [
 /**
  * End::Declare variable section
  */
+const fetchData = async (): Promise<void> => {
+    const result: any = await api.get(`exam/student/${props.examId}`, false) as any;
+    if(!result.error)
+    {
+        data.value = result.data as object;
+        console.log(data.value)
+    }
+}
 
- const getData = async (event: Event): Promise<void> => {
+const getData = async (event: Event): Promise<void> => {
     const formData: object = context.getDataForm(event as SubmitEvent) as object;
     console.log(formData)
-    const result: ResponseStatus = await api.post('', true, formData) as ResponseStatus;
+    const result: ResponseStatus = await api.post(`exam/student/${ props.examId }`, true, formData) as ResponseStatus;
 
     if(!result.error)
     {
         (event.target as HTMLFormElement).reset();
     }
-    
+
+    emits('update:data');
 } 
 
 /**
  * Begin::Some logical
  */
-const backPrevious = (): void => {
-    if (window.history.length > 1) {
-        router.back();
-    } else {
-        router.push('/');
-    }
-};
+
 /**
  * End::Some Logical
  */
+onMounted(async (): Promise<void> => {
+    if(props.examId){
+        await fetchData();
+    }
+})
 </script>
