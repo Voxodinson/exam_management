@@ -506,26 +506,22 @@ const fetchOption = async (): Promise<void> => {
                     { 
                         name: '',
                         is_correct: false, 
-                        name_kh: 'w',
-                        description: 'we'
+                        name_kh: ''
                     },
                     { 
                         name: '',
                         is_correct: false, 
-                        name_kh: 'w',
-                        description: 'we'
+                        name_kh: ''
                     },
                     { 
                         name: '',
                         is_correct: false, 
-                        name_kh: 'w',
-                        description: 'we'
+                        name_kh: ''
                     },
                     { 
                         name: '',
                         is_correct: false, 
-                        name_kh: 'w',
-                        description: 'we'
+                        name_kh: ''
                     }
                 ]
             });
@@ -539,14 +535,12 @@ const fetchOption = async (): Promise<void> => {
                     { 
                         name: '',
                         is_correct: false, 
-                        name_kh: 'w',
-                        description: 'we' 
+                        name_kh: ''
                     },
                     { 
                         name: '',
                         is_correct: false, 
-                        name_kh: 'w',
-                        description: 'we' 
+                        name_kh: ''
                     }
                 ]
             });

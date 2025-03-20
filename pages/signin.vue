@@ -18,9 +18,9 @@
                 class="panel-login p-6 rounded-md z-10  py-10 flex flex-col w-[80%] overflow-hidden relative justify-center gap-3 bg-white"
                 @submit.prevent="getData">
                     <img 
-                    :src="Technology" 
-                    alt=""
-                    class="w-[350px] h-[350px] opacity-20 absolute bottom-[10px] right-[10px]">
+                        :src="Technology" 
+                        alt=""
+                        class="w-[350px] h-[350px] opacity-20 absolute bottom-[10px] right-[10px]">
                 <h4
                     class="text-[2rem] text-sky-300 text-center font-normal ">
                     Welcome Back

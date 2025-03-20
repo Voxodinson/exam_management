@@ -375,7 +375,7 @@ const toggleShowQuestion = (idx: number): void => {
 /**
  * Begin::Fetch data section
  */
- const fetchData = async (current_page: number = 1, search: string = ''): Promise<void> => {
+const fetchData = async (current_page: number = 1, search: string = ''): Promise<void> => {
     const per_page: number = 10;
     let url: string = `exam/publish?per_page=${per_page}&page_no=${current_page}&department_id=${filters.value.deprtment_id}`;
     if(search)
