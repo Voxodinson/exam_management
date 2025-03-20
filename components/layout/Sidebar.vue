@@ -1,6 +1,6 @@
 <template>
     <div 
-        class="  transition-all h-[calc(100vh-50px)] bg-white duration-200 ease-in-out border-r-[1px] border-gray-200"
+        class=" relative  transition-all h-[calc(100vh-50px)] bg-white duration-200 ease-in-out border-r-[1px] border-gray-200"
         :class="{
             'w-[25%]': !expand,
             'w-[57px]': expand
@@ -41,15 +41,15 @@
                 class-name=""
                 :class-title="!expand ? '' : 'hidden'"/>
             <Menu
-                icon="carbon:result"
-                title="Results"
-                path="/result_list"
-                class-name=""
-                :class-title="!expand ? '' : 'hidden'"/>
-            <Menu
                 icon="material-symbols:checklist"
                 title="Publish Exam"
                 path="/publish_exam"
+                class-name=""
+                :class-title="!expand ? '' : 'hidden'"/>
+            <Menu
+                icon="carbon:result"
+                title="Results"
+                path="/result_list"
                 class-name=""
                 :class-title="!expand ? '' : 'hidden'"/>
             <Section
@@ -98,6 +98,19 @@
                     class-name=""
                     :class-title="!expand ? '' : 'hidden'"/>
             </AccordionMenu>
+            <UButton
+                icon="lucide:log-out"
+                color="white"
+                class="absolute border-none text-white bottom-2 py-2 w-[calc(100%-16px)] bg-[#3A6D8C] hover:bg-[#638ca5]  transition"
+                @click="() => {
+                    logout();
+                }">
+                <span
+                    v-if="!expand ? 'hidden' : ''"
+                    class="pl-2">
+                    Sign Out
+                </span>
+            </UButton>
         </div>
     </div>
 </template>
@@ -120,6 +133,7 @@ import {
     type Router,
     useRouter
 } from "vue-router";
+
 /**
  * Begin::Set event trigger to parent component
  */
@@ -160,9 +174,9 @@ const toggleSidebar = (value: boolean): void => {
 }
 
 const logout = (): void => {
-    Confirm('messages.Do you want to log out now?', (): void => {
+    Confirm('Do you want to log out now?', (): void => {
         logUserOut();
-        router.push('/login');
+        router.push('/choose_signin');
     });
 }
 /**
