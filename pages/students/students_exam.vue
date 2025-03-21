@@ -52,7 +52,7 @@
                                 </h3>
                                 <span
                                     class="text-blue-500 text-[.8rem] capitalize">
-                                    {{ exam.department_name || "------"}} / {{ exam.class_name || "------"}} / {{exam.class_code  || "------"}}
+                                    {{ exam.department_name || "------"}} / {{ exam.major_name || "------"}} / {{exam.class_name  || "------"}}
                                 </span>
                             </div>
                             <UButton

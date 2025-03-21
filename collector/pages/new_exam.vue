@@ -185,7 +185,7 @@
                 class="mt-2 flex flex-col gap-3 bg-gray-100 rounded-md overflow-hidden p-2">
                 <UFormGroup
                     class="w-full"
-                    :label="`${item.type} (Question ${ index +1 })`"
+                    :label="`Question ${ index +1 }`"
                     name="">
                     <UTextarea 
                         color="white" 
@@ -262,8 +262,7 @@
                     v-for="(ans, idx) in item.qcm_answers"
                     :key="idx"
                     class="flex items-center gap-2 ">
-                    <UCheckbox 
-                        v-if="item.type === 'Multiple Choice'"
+                    <UCheckbox
                         :ui="{
                             base: 'w-5 h-5'
                         }"
@@ -271,14 +270,7 @@
                             ans.is_correct = true as boolean;
                         }"
                         v-model="ans.is_correct"/>
-                    <URadio
-                        v-if="item.type === 'Cloed Question'"
-                        @update:model-value="() => {
-                            ans.is_correct = true as boolean;
-                        }"
-                        v-model="ans.is_correct"/>
                     <UInput
-                        v-if="item.type != 'Answer Question'"
                         type="text"
                         color="white"
                         variant="outline"
@@ -307,7 +299,7 @@
                 </div>
                 <div class="flex gap-3">
                     <UTooltip 
-                        text="Add New Mutiple Question"
+                        text="Add New Question"
                         :popper="{ offsetDistance: 12 }">
                         <UButton
                             icon="tabler:checkbox"
@@ -316,21 +308,7 @@
                             variant="soft" 
                             :padded="false"
                             @click="()=>{
-                                addNewQuestion('multiple_choice');
-                            }"
-                            class="text-blue-400 text-[2rem] w-[50px] h-[50px] flex items-center justify-center bg-blue-100 hover:text-white hover:bg-blue-300 p-1 transition"/>
-                    </UTooltip>
-                    <UTooltip 
-                        text="Add New Closed Question"
-                        :popper="{ offsetDistance: 12 }">
-                        <UButton
-                            icon="ic:sharp-radio-button-checked"
-                            size="sm"
-                            color="black"
-                            variant="soft" 
-                            :padded="false"
-                            @click="()=>{
-                                addNewQuestion('cloed_question')
+                                addNewQuestion();
                             }"
                             class="text-blue-400 text-[2rem] w-[50px] h-[50px] flex items-center justify-center bg-blue-100 hover:text-white hover:bg-blue-300 p-1 transition"/>
                     </UTooltip>
@@ -389,7 +367,6 @@ interface IAnswer {
 }
 interface IQuestion {
     question: string;
-    type: string,
     mark: number; 
     qcm_answers: IAnswer[] | any;
 }
@@ -495,59 +472,12 @@ const fetchOption = async (): Promise<void> => {
 /**
  * Begin::Some logical section
  */
- const addNewQuestion = (type: string): void => {
-    switch (type) {
-        case 'multiple_choice':
-            questions.value.push({
-                type: 'Multiple Choice',
-                question: '',
-                mark: 0,
-                qcm_answers: [
-                    { 
-                        name: '',
-                        is_correct: false, 
-                        name_kh: ''
-                    },
-                    { 
-                        name: '',
-                        is_correct: false, 
-                        name_kh: ''
-                    },
-                    { 
-                        name: '',
-                        is_correct: false, 
-                        name_kh: ''
-                    },
-                    { 
-                        name: '',
-                        is_correct: false, 
-                        name_kh: ''
-                    }
-                ]
-            });
-            break;
-        case 'cloed_question':
-            questions.value.push({
-                type: 'Cloed Question',
-                question: '',
-                mark: 0,
-                qcm_answers: [
-                    { 
-                        name: '',
-                        is_correct: false, 
-                        name_kh: ''
-                    },
-                    { 
-                        name: '',
-                        is_correct: false, 
-                        name_kh: ''
-                    }
-                ]
-            });
-            break;
-        default:
-            console.error('Unsupported question type');
-    }
+ const addNewQuestion = (): void => {
+    questions.value.push({
+        question: '',
+        mark: 0,
+        qcm_answers: []
+    });
 };
 
 const deleteQuestion = (idx: number, item: any): void => {

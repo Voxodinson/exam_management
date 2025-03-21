@@ -13,11 +13,15 @@
             method="POST"
             enctype="multipart/form-data"
             @submit.prevent="getData"
-            class="bg-white w-1/2 border-[1px] relative border-gray-[1px] overflow-hidden rounded-md p-6">
+            class="bg-white w-[60%] border-[1px] relative border-gray-[1px] overflow-hidden rounded-md p-6">
             <img 
                 :src="Technology" 
                 alt=""
                 class="w-[400px] h-[400px] opacity-20 absolute bottom-10 -right-[30px]">
+            <img 
+                :src="Technology" 
+                alt=""
+                class="w-[200px] h-[200px] opacity-20 absolute top-[300px] left-[30px]">
             <div 
                 class="w-full flex items-center justify-center">
                 <h3
@@ -223,7 +227,7 @@
                 </div>        
             </div>
             <div
-                class="flex items-center justify-end mt-6">
+                class="flex items-center flex-col justify-center mt-6">
                 <UButton
                     type="submit"
                     size="md"
@@ -231,7 +235,16 @@
                     label="Register Now"
                     variant="soft" 
                     :padded="false"
-                    class="bg-blue-400 text-white hover:bg-blue-300 py-2 px-4 transition"/>
+                    class="bg-blue-400 w-full flex items-center justify-center text-white hover:bg-blue-300 py-2 px-4 transition"/>
+                <span
+                    class="text-[.8rem] w-full mt-3 font-normal text-center z-10">
+                    Already have an account? 
+                    <ULink
+                        to="/student_signin"
+                        class=" hover:text-blue-500 transition underline cursor-pointer">
+                        Login Now
+                    </ULink>
+                </span>
             </div>
         </form>
     </div>

@@ -6,6 +6,7 @@ import Platform from './platform_image.png';
 import Technology from "./technology.png";
 import Check from './check.png';
 import NoDataFound from './no_data.png';
+import Failed from './cross.png';
 export
 {
     AddImage,
@@ -15,5 +16,6 @@ export
     Platform,
     Technology,
     Check,
-    NoDataFound
+    NoDataFound,
+    Failed
 };

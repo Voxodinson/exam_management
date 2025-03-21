@@ -35,85 +35,77 @@
                     class="w-full flex flex-col gap-1 h-fit">
                     <h3
                         class="font-semibold capitalize text-[1.5rem] text-gray-600">
-                        Web Development Final Exam
+                        {{ data.name }}
                     </h3>
                     <span
                         class="text-blue-500 capitalize">
-                        Computer science / M6 - 306 - 25Gen
+                        {{ data.department_name || "------"}} / {{ data.class_name || "------"}} / {{data.class_code  || "------"}}
                     </span>
                     <span
                         class="text-gray-500 capitalize block">
-                        {{ data.exam_time }} - (Time Left: 87min)
+                        {{ data.exam_time }}
                     </span>
                 </div>
             </div>
             <div 
-                class="w-full h-fit bg-white shadow-md rounded-md border-[1px] border-gray-200 mt-3">
-                <form
-                    name="exam"
-                    method="POST"
-                    enctype="multipart/form-data"
-                    @submit.prevent="getData"
-                    class="p-3 w-full flex flex-col gap-3 ">
+                class="w-full h-fit p-3 gap-3 flex flex-col bg-white shadow-md rounded-md border-[1px] border-gray-200 mt-3">
+                <div 
+                    v-for="(ques, idx) in data.questions"
+                    :key="idx"
+                    class="w-full p-3 rounded-md bg-gray-100">
                     <div 
-                        v-for="(ques, idx) in data.questions"
-                        :key="idx"
-                        class="w-full p-3 rounded-md bg-gray-100">
-                        <div 
-                            class="w-full flex gap-2">
-                            <span
-                                class="font-semibold">{{ idx+1 }}. </span>
-                            <p
-                                class="text-gray-600 font-medium">
-                                {{ ques.question }}
-                            </p>
-                        </div>
-                        <div 
-                            class="w-full mt-3 pl-5 flex flex-col gap-3">
-                            <div
-                                v-for="(ans, idx) in ques.answers"
-                                :key="idx"
-                                class="flex gap-3 items-center">
-                                <UCheckbox
-                                    v-if="ques.question_type === 'multiple_choice'"
-                                    :ui="{
-                                        base: 'w-5 h-5'
-                                    }"
-                                    @update:model-value="()=>{
-                                        ans.checked = true as boolean;
-                                    }"/>
-                                <URadio
-                                    v-if="ques.question_type === 'closed_question'"
-                                    v-model="ans.is_correct"
-                                    :name="ques.question_type" />
-                                
-                                <div 
-                                    class="w-full p-3 rounded-md bg-white border-[1px] border-gray-200">
-                                    <p>{{ ans.answer }}</p>
-                                </div>
+                        class="w-full flex gap-2">
+                        <span
+                            class="font-semibold">{{ idx+1 }}. </span>
+                        <p
+                            class="text-gray-600 font-medium">
+                            {{ ques.question }}
+                        </p>
+                    </div>
+                    <div 
+                        class="w-full mt-3 pl-5 flex flex-col gap-3">
+                        <div
+                            v-for="(ans, idx) in ques.qcm_answers"
+                            :key="idx"
+                            class="flex gap-3 items-center">
+                            <UCheckbox
+                                :ui="{ base: 'w-5 h-5' }"
+                                @update:model-value="(checked) => {
+                                    if (ans.id && ans.question_id) {
+                                        handleCheckboxUpdate(ans, checked);
+                                    }
+                                }"
+                            />
+                            <div 
+                                class="w-full p-3 rounded-md bg-white border-[1px] border-gray-200">
+                                <p>{{ ans.name }}</p>
                             </div>
-                            <UTextarea 
-                                v-if="ques.question_type === 'answer_the_question'"
-                                color="white" 
-                                placeholder="Enter your answer here..."
-                                name="" 
-                                role="input"
-                                resize
-                                class="w-full"/>
                         </div>
+                        <UTextarea 
+                            v-if="ques.question_type === 'answer_the_question'"
+                            color="white" 
+                            placeholder="Enter your answer here..."
+                            name="" 
+                            role="input"
+                            resize
+                            class="w-full"/>
                     </div>
-                    <div 
-                        class="w-full rounded-md bg-[#3A6D8C] flex items-center justify-end p-3">
-                        <UButton
-                            type="submit"
-                            size="md"
-                            color="black"
-                            label="Submit Now"
-                            variant="soft" 
-                            :padded="false"
-                            class="bg-white p-2 cursor-pointer transition"/>
-                    </div>
-                </form>
+                </div>
+                <div 
+                    class="w-full rounded-md bg-[#3A6D8C] flex items-center justify-end p-3">
+                    <UButton
+                        size="md"
+                        color="black"
+                        label="Submit Now"
+                        variant="soft" 
+                        :padded="false"
+                        @click="() => {
+                            Confirm('You are about to submit the answers', async (): Promise<void> => {
+                                await studentSubmit();
+                            })
+                        }"
+                        class="bg-white p-2 cursor-pointer transition"/>
+                </div>
             </div>
         </div>
     </div>
@@ -128,18 +120,24 @@ import {
     GetDataContext,
     GetDataNormalForm
 } from "@/composable/dataHandler";
-import type {
-    ResponseStatus
-} from "@/models/type";
 import { 
     Technology
 } from '@/assets/images';
-import { 
-    useRouter 
-} from 'vue-router';
+import type { 
+    ResponseStatus 
+} from "@/models/type";
 import { 
     Confirm 
-} from '@/utils/dialog';
+} from "@/utils/dialog";
+interface Answer {
+    question_id: number | null;
+    selected_answer_id: number | null;
+}
+
+interface StudentAnswer {
+    answers: Answer[];
+}
+
 /**
  * Begin::Set event trigger to parent component
  */
@@ -164,7 +162,6 @@ const props = withDefaults(defineProps<{
  * Begin::Declare variables object section
  */
 const api: ContextAPI = new ContextAPI(new SimpleAPI());
-const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
 /**
  * End::Declare variables object section
  */
@@ -175,6 +172,10 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
  * Begin::Declare variable section
  */
 const data: Ref<any> = ref<any>({});
+const studentAnswer: Ref<StudentAnswer> = ref<StudentAnswer>({
+    "answers": []
+});
+
 const linksItem = [
     {
         label: 'Students'
@@ -186,94 +187,7 @@ const linksItem = [
         label: 'Exam'
     }
 ];
-const questions: any = [
-    {
-        "question": "Who built Angkor Wat?",
-        "question_type": "multiple_choice",
-        "point": 10,
-        "answers": [
-            {
-                "is_correct": false,
-                "answer": "Jayavarman II"
-            },
-            {
-                "is_correct": true,
-                "answer": "Suryavarman II"
-            },
-            {
-                "is_correct": false,
-                "answer": " Indravarman I"
-            },
-            {
-                "is_correct": false,
-                "answer": "Jayavarman VII"
-            }
-        ]
-    },
-    {
-        "question": "What is 2 + 2?",
-        "question_type": "closed_question",
-        "point": 10,
-        "answers": [
-            {
-                "is_correct": true,
-                "answer": 4
-            },
-            {
-                "is_correct": false,
-                "answer": 100
-            }
-        ]
-    },
-    {
-        "question": "Explain about what is Fullstack developer?",
-        "question_type": "answer_the_question",
-        "point": 10,
-    },
-    {
-        "question": "Who built Angkor Wat?",
-        "question_type": "multiple_choice",
-        "point": 10,
-        "answers": [
-            {
-                "is_correct": false,
-                "answer": "Jayavarman II"
-            },
-            {
-                "is_correct": true,
-                "answer": "Suryavarman II"
-            },
-            {
-                "is_correct": false,
-                "answer": " Indravarman I"
-            },
-            {
-                "is_correct": false,
-                "answer": "Jayavarman VII"
-            }
-        ]
-    },
-    {
-        "question": "What is 2 + 2?",
-        "question_type": "closed_question",
-        "point": 10,
-        "answers": [
-            {
-                "is_correct": true,
-                "answer": 4
-            },
-            {
-                "is_correct": false,
-                "answer": 100
-            }
-        ]
-    },
-    {
-        "question": "Explain about what is Fullstack developer?",
-        "question_type": "answer_the_question",
-        "point": 10,
-    },
-]
+
 /**
  * End::Declare variable section
  */
@@ -286,22 +200,42 @@ const fetchData = async (): Promise<void> => {
     }
 }
 
-const getData = async (event: Event): Promise<void> => {
-    const formData: object = context.getDataForm(event as SubmitEvent) as object;
-    console.log(formData)
-    const result: ResponseStatus = await api.post(`exam/student/${ props.examId }`, true, formData) as ResponseStatus;
-
-    if(!result.error)
-    {
-        (event.target as HTMLFormElement).reset();
+const studentSubmit = async (): Promise<void> => {
+    const url: string = `exam/student/submit/${props.examId}`
+    const result: ResponseStatus = await api.post(url, true, studentAnswer.value) as ResponseStatus;
+    console.log(studentAnswer.value)
+    if(!result.error){ 
+        emits('update:data');
+        emits('toggle', false);
     }
-
-    emits('update:data');
-} 
+}
 
 /**
  * Begin::Some logical
  */
+
+ const handleCheckboxUpdate = (answer: any, checked: boolean) => {
+    const index = studentAnswer.value.answers.findIndex(
+        (item) => item.selected_answer_id === Number(answer.id)
+    );
+
+    if (checked) {
+        // Add item if checked and not already in the array
+        if (index === -1) {
+            studentAnswer.value.answers.push({
+                question_id: Number(answer.question_id),
+                selected_answer_id: Number(answer.id)
+            });
+        }
+    } else {
+        // Remove item if unchecked
+        if (index !== -1) {
+            studentAnswer.value.answers.splice(index, 1);
+        }
+    }
+
+    console.log(studentAnswer.value.answers);
+};
 
 /**
  * End::Some Logical
