@@ -202,8 +202,12 @@
                                 :label="isShowQuestion[idx] ? 'Close question' : 'Show question'"
                                 color="white"
                                 size="xs"
-                                @click="(): void => {
+                                @click="async (): Promise<void> => {
                                     toggleShowQuestion(idx);
+                                    examId = Number(exam.id);
+                                    if(examId != null){
+                                        fetchOnePublicExam();
+                                    }
                                 }"
                                 class="border-none border-[1px] text-[.8rem] hover:bg-gray-200 hover:border-gray-200"/>
                         </div>
@@ -236,7 +240,12 @@
                     </div>
                     <div
                         v-if="isShowQuestion[idx]" 
-                        class="w-full bg-gray-100 mt-3 flex flex-col gap-3 rounded-md p-3">
+                            class="w-full bg-gray-100 mt-3 flex flex-col gap-3 rounded-md p-3">
+                        <div
+                            v-if="isLoading"
+                            class="">
+                            <ChildTable/>
+                        </div>
                         <div class="w-full flex items-center justify-between">
                             <h3
                                 class="text-[1rem] font-semibold">
@@ -250,8 +259,21 @@
                                 }"/>
                         </div>
                         <div 
-                            v-for="(question, idx) in exam.questions"
+                            v-if="!onePublishExamData?.questions?.length"
+                            class="w-full flex gap-3 flex-col items-center mt-10 justify-center">
+                            <img 
+                                :src="NoDataFound" 
+                                alt="no data image"
+                                class="w-[50px] opacity-30">
+                            <span
+                                class="text-gray-400 text-[.8rem]">
+                                Ops...! Publish question exam not available
+                            </span>
+                        </div>
+                        <div 
+                            v-for="(question, idx) in onePublishExamData.questions"
                             class="w-full flex-col gap-2 bg-white p-3 rounded-md">
+                            
                             <div 
                                 class="w-full">
                                 <p
@@ -264,8 +286,12 @@
                                 <div 
                                     class="px-4 flex flex-col gap-3">
                                     <p
-                                        v-for="(answer, idx) in question.answers">
-                                        {{ idx+1 }}. {{ answer.option_id }} = {{ answer.text }}
+                                        v-for="(answer, idx) in question.qcm_answers"
+                                        :class="answer.is_correct ? 'text-blue-400' : 'text-gray-400'">
+                                        <span class="text-black">
+                                            {{ idx+1 }}
+                                        </span>
+                                        . {{ answer.option_id }} {{ answer.name }}
                                     </p>
                                 </div>
                                 <div 
@@ -311,8 +337,8 @@ import {
     SelectMenu 
 } from "@/components/ui";
 import { 
-    Confirm 
-} from "@/utils/dialog";
+    ChildTable 
+} from "@/components/loading";
 import { 
     PublishExam
 } from "@/collector/pages";
@@ -336,6 +362,7 @@ definePageMeta({
  */
 const dataOptions: Ref<Options> = ref<Options>({});
 const data: Ref<any> = ref<any>({});
+const onePublishExamData: Ref<any> = ref<any>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
 const publishId: Ref<number | null> = ref<number | null>(null);
 const filters: Ref<Items> = ref<Items>({
@@ -344,6 +371,8 @@ const filters: Ref<Items> = ref<Items>({
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const openCreate: Ref<boolean> = ref<boolean>(false);
 const isShowQuestion = ref<{ [key: number]: boolean }>({});
+const examId: Ref<number | null> = ref<number | null>(null);
+const isLoading: Ref<boolean> = ref<boolean>(false);
 const linksItem = [
   {
       label: 'Exam Mangement'
@@ -366,8 +395,16 @@ const toggleCreate = (value: boolean): void => {
     openCreate.value = value as boolean;
 }
 const toggleShowQuestion = (idx: number): void => {
-    isShowQuestion.value[idx] = !isShowQuestion.value[idx];
+    const isCurrentlyOpen = isShowQuestion.value[idx];
+    Object.keys(isShowQuestion.value).forEach(key => {
+        isShowQuestion.value[Number(key)] = false;
+    });
+    if (!isCurrentlyOpen) {
+        isShowQuestion.value[idx] = true;
+    }
 };
+
+
 /**
  * End::Some logical in this component
  */
@@ -386,9 +423,28 @@ const fetchData = async (current_page: number = 1, search: string = ''): Promise
     if(!result.error)
     {
         data.value = result as any;
-        console.log(data.value)
     }
 }
+
+const fetchOnePublicExam = async (): Promise<void> => {
+    isLoading.value = Boolean(true);
+
+    try {
+        let url: string = `exam/${examId.value}`;
+        const result: ResponseStatus = await api.get(url) as ResponseStatus;
+
+        if (!result.error) {
+            onePublishExamData.value = result.data as any;
+        }
+    } 
+    catch (error) 
+    {
+        console.error("Error fetching exam data:", error);
+    } finally {
+        isLoading.value = Boolean(false);
+    }
+};
+
 
 const fetchOption = async (): Promise<void> => {
     const options: ResponseStatus = await api.get("") as ResponseStatus;
@@ -423,5 +479,8 @@ const filterData = async (current_page: number = 1): Promise<void> => {
 
 onMounted(async (): Promise<void> => {
     await fetchData();
+    if(examId.value != null){
+        await fetchOnePublicExam();
+    }
 });
 </script>

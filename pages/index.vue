@@ -28,10 +28,18 @@
                     </span>
                 </div>
                 <div 
-                    class="h-full w-fit flex gap-2">
+                    class="h-full w-fit flex gap-2"
+                    v-for="(exam, idx) in data"
+                    :key="idx"
+                    @click="() => {
+                        examId = Number(exam.id);
+                        if(examId){
+                            toggleInfoModal(true);
+                        }
+                    }">
                     <div 
                         class="h-full bg-white border-[1px] border-gray-200 w-[250px] rounded-md flex items-center justify-center p-2 text-wrap text-center hover:bg-gray-200 transition cursor-pointer">
-                        IT Y3 Final Exam
+                        {{ exam.name }}
                     </div>
                 </div>
             </div>
@@ -91,6 +99,10 @@
     <NewExamModal
         :open="isOpenCreateModal"
         @toggle="toggleCreateModal"/>
+    <ExamInfoModal 
+        :exam-id="examId"
+        :open="isOpenExamInfoModal"
+        @toggle="toggleInfoModal"/>
 </template>
 
 <script setup lang="ts">
@@ -113,6 +125,9 @@ import {
 import { 
     UserImage 
 } from "@/assets/images";
+import { 
+    ExamInfoModal 
+} from "@/modal";
 definePageMeta({
     colorMode: 'light'
 });
@@ -129,14 +144,15 @@ definePageMeta({
  * Begin::Declare variable section
  */
 const dataOptions: Ref<Options> = ref<Options>({});
-const data: Ref<object> = ref<object>({});
+const data: Ref<any> = ref<any>({});
 const isOpenCreateModal: Ref<boolean> = ref<boolean>(false);
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
 const filters: Ref<Items> = ref<Items>({
     status_id: '',
     warehouse_id: ''
 });
-const isOpenFilter: Ref<boolean> = ref<boolean>(false);
+const isOpenExamInfoModal: Ref<boolean> = ref<boolean>(false);
+const examId: Ref<number | null> = ref<number | null>(null);
 const linksItem = [
     {
         label: 'Main Menu'
@@ -172,11 +188,11 @@ const columns: Ref<Column[]> = ref<Column[]>([
 /**
  * Begin::Some logical in this component
  */
- const toggle = (): void => {
-    isOpenFilter.value = !isOpenFilter.value as boolean;
-}
 const toggleCreateModal = (value: boolean) => {
     isOpenCreateModal.value = value as boolean;
+}
+ const toggleInfoModal = (value: boolean) => {
+    isOpenExamInfoModal.value = value as boolean;
 }
 
 /**
@@ -187,15 +203,11 @@ const toggleCreateModal = (value: boolean) => {
  * Begin::Fetch data section
  */
  const fetchData = async (current_page: number = 1,per_page: number = 10, search: string = ''): Promise<void> => {
-    let url: string = `student?per_page=${per_page}&page_no=${current_page}&department_id=${filters.value.department_id}&major_id=${filters.value.major_id}&class_id=${filters.value.class_id}&nationality_id=${filters.value.nationality_id}&shift_id=${filters.value.shift_id}`;
-    if(search)
-    {
-        url += `&search=${search}`;
-    }
+    let url: string = `exam?per_page=${per_page}&page_no=${current_page}`;
     const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
     if(!result.error)
     {
-        data.value = result as object;
+        data.value = result.data as object;
     }
 }
 
@@ -229,7 +241,6 @@ const filterData = async (current_page: number = 1): Promise<void> => {
 /**
  * End::Fetch data section
  */
-
 onMounted(async (): Promise<void> => {
     await fetchData();
 });

@@ -43,7 +43,7 @@
                         </span>
                         <span
                             class=" capitalize">
-                            {{ data.name}}
+                            {{ data.name }}
                         </span>
                     </li>
                     <li>

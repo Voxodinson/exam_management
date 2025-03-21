@@ -7,7 +7,7 @@
             class="object-cover w-full h-full opacity-90"
             loading="lazy" />
     </div>
-[    <div
+    <div
         class="flex h-full w-full absolute top-0 left-0 justify-center items-center shadow-sm overflow-hidden">
         <div
             class="form-submit w-1/2 flex items-center justify-center">
@@ -15,12 +15,12 @@
                 name="signin"
                 method="POST"
                 enctype="multipart/form-data"
-                class="panel-login p-6 rounded-md z-10  py-10 flex flex-col w-[80%] overflow-hidden relative justify-center gap-3 bg-white"
+                class="panel-login p-6 rounded-md z-10  pt-10 flex flex-col w-[80%] overflow-hidden relative justify-center gap-3 bg-white"
                 @submit.prevent="getData">
                 <img 
                     :src="Technology" 
                     alt=""
-                    class="w-[350px] h-[350px] opacity-20 absolute bottom-[10px] right-[10px]">
+                    class="w-[350px] h-[350px] opacity-20 z-0 absolute bottom-[10px] right-[10px]">
                 <h4
                     class="text-[2rem] text-sky-300 text-center font-normal ">
                     Welcome Back
@@ -92,6 +92,15 @@
                     class="flex items-center bg-gradient-to-r z-10 from-sky-400 to-blue-600 hover:bg-gradient-to-r hover:from-sky-300 hover:to-blue-500 transition justify-center mt-3"
                     label="Student Login"
                     square/>
+                <span
+                    class="text-[.8rem] mt-3 font-normal text-center z-10">
+                    Dont have an account? 
+                    <ULink
+                        to="/student_register"
+                        class=" hover:text-blue-500 transition underline cursor-pointer">
+                        Register Now
+                    </ULink>
+                </span>
             </form>
         </div>
     </div>
