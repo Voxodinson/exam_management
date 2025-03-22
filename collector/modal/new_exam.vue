@@ -84,7 +84,7 @@
                                 color="white"
                                 variant="outline"
                                 size="md"
-                                name="passing_mark"
+                                name="pass_mark"
                                 role="input"
                                 class="w-full"
                                 placeholder="Enter passing mark..."
@@ -114,9 +114,9 @@
                     <UFormGroup
                         class="w-[calc(99%/3)]"
                         label="Status"
-                        name="name">
+                        name="status">
                         <SelectMenu
-                            name=""
+                            name="status"
                             :options="[
                                 {
                                     label: 'Pending',
@@ -142,6 +142,7 @@
                             class="w-full"/>
                     </UFormGroup>
                     <UFormGroup
+                        v-if="isPublishing === 'publishing'"
                         class="w-[calc(99%/3)]"
                         label="Exam Time (Mins)"
                         name="">

@@ -116,10 +116,6 @@ import {
     ContextAPI,
     SimpleAPI
 } from "@/composable/apiHandler";
-import {
-    GetDataContext,
-    GetDataNormalForm
-} from "@/composable/dataHandler";
 import { 
     Technology
 } from '@/assets/images';

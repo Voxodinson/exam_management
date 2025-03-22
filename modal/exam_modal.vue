@@ -50,6 +50,19 @@
                         <span
                             class="font-meduim flex items-center gap-3">
                             <UIcon
+                                name="material-symbols:code-blocks-outline-rounded"
+                                class="w-6 h-6 text-yellow-400"/>
+                            Mark :
+                        </span>
+                        <span
+                            class=" capitalize">
+                            {{ Math.floor(data.pass_mark) }}/{{ Math.floor(data.total_mark) }} Points
+                        </span>
+                    </li>
+                    <li>
+                        <span
+                            class="font-meduim flex items-center gap-3">
+                            <UIcon
                                 name="icon-park-twotone:writing-fluently"
                                 class="w-6 h-6 text-blue-400"/>
                             Exam Subject :

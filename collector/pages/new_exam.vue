@@ -67,7 +67,7 @@
                             role="input"
                             class="w-full"
                             placeholder="Enter total mark..."
-                            v-model="calculateMark.total"
+                            v-model="calculateMark.total_mark"
                             disabled/>
                         <UInput
                             type="text"
@@ -79,7 +79,7 @@
                             class="w-full"
                             placeholder="Enter passing mark..."
                             @update:model-value="(value: number): void => {
-                                calculateMark.passing = Number(value);
+                                calculateMark.pass_mark = Number(value);
                             }"
                             :model-value="calculateMark.passing"/>
                     </div>
@@ -88,7 +88,7 @@
             <div 
                 class="w-full flex gap-2  mt-2 rounded-md">
                 <UFormGroup
-                    class="w-[calc(99%/3)]"
+                    class="w-[calc(99%/2)]"
                     label="Exam"
                     name="name">
                     <UInput
@@ -102,11 +102,11 @@
                         placeholder="Enter exam here..."/>
                 </UFormGroup>
                 <UFormGroup
-                    class="w-[calc(99%/3)] z-30"
+                    class="w-[calc(99%/2)] z-30"
                     label="Status"
-                    name="name">
+                    name="status">
                     <SelectMenu
-                        name=""
+                        name="status"
                         :options="[
                             {
                                 label: 'Pending',
@@ -131,8 +131,30 @@
                         placeholder="Please select status"
                         class="w-full"/>
                 </UFormGroup>
+            </div>
+            <UDivider 
+                v-if="isPublishing === 'publishing'"
+                label="Please select the class relevant to this exam." 
+                class="w-full text-yellow-500 text-[.8rem] mt-6"/>
+            <div 
+                v-if="isPublishing === 'publishing'"
+                class="w-full flex flex-wrap gap-2 items-start mt-3 bg-yellow-100 justify-start border-[1px] border-yellow-400 border-dotted p-2 rounded-md">
                 <UFormGroup
-                    class="w-[calc(99%/3)]"
+                    class="w-[calc(99%/2)] z-20"
+                    label="Class"
+                    name="class_id">
+                    <SelectMenu
+                        name="class_id"
+                        :options="dataOptions.class"
+                        option-attribute="name"
+                        value-attribute="id"
+                        id-attribute="id"
+                        placeholder="Please select class"
+                        class="w-full"/>
+                </UFormGroup>
+                <UFormGroup
+                    v-if="isPublishing === 'publishing'"
+                    class="w-[calc(99%/2)] z-20"
                     label="Exam Time (Mins)"
                     name="">
                     <UInput
@@ -144,27 +166,6 @@
                         role="input"
                         class="w-full"
                         placeholder="Enter exam duration in (minutes)..."/>
-                </UFormGroup>
-            </div>
-            <UDivider 
-                v-if="isPublishing === 'publishing'"
-                label="Please select the class relevant to this exam." 
-                class="w-full text-yellow-500 text-[.8rem] mt-6"/>
-            <div 
-                v-if="isPublishing === 'publishing'"
-                class="w-full flex flex-col items-start mt-3 bg-yellow-100 justify-start border-[1px] border-yellow-400 border-dotted p-2 rounded-md">
-                <UFormGroup
-                    class="w-full z-20"
-                    label="Class"
-                    name="class_id">
-                    <SelectMenu
-                        name="class_id"
-                        :options="dataOptions.class"
-                        option-attribute="name"
-                        value-attribute="id"
-                        id-attribute="id"
-                        placeholder="Please select class"
-                        class="w-full"/>
                 </UFormGroup>
                 <span
                     class="text-[.8rem] mt-2">Note: After you select the status as "Publishing" make sure to assign it to the appropriate "Class". This exam will be <span class="text-yellow-500 italic uppercase">publishing</span>  after it is successfully created.</span>
@@ -405,8 +406,8 @@ const questions: Ref<IQuestion[]> = ref<IQuestion[]>([]);
 const isPublishing: Ref<string> = ref<string>('');
 const dataOptions: Ref<Options> = ref<Options>({});
 const calculateMark: Ref<Items> = ref<Items>({
-    total: 0,
-    passing: 0
+    total_mark: 0,
+    pass_mark: 0
 })
 /**
  *End::Declare variable in this section 
@@ -418,7 +419,8 @@ const calculateMark: Ref<Items> = ref<Items>({
  const getData = async (event: Event): Promise<void> => {
     const formData: any = context.getDataForm(event as SubmitEvent) as any;
     formData.questions = questions.value;
-    console.log(formData)
+    formData.total_mark = Number(calculateMark.value.total_mark);
+    formData.total_mark = Number(calculateMark.value.pass_mark);
     if(props.examId != null)
     {
         await api.update(`exam/${props.examId}`, true, formData) as ResponseStatus;
