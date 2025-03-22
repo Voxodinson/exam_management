@@ -56,7 +56,7 @@
                                 </span>
                             </div>
                             <UButton
-                                class="px-4 py-2 rounded-full bg-blue-500 text-white text-[.8rem]"
+                                class="px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-400 text-white text-[.8rem]"
                                 @click="() => {
                                     if(exam.id){
                                         examId = Number(exam.id);

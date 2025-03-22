@@ -8,7 +8,7 @@
                 class="flex flex-col border-[1px] relative border-gray-200 rounded-md p-3 overflow-hidden">
                 <h3
                     class="font-semibold capitalize text-[1.2rem] text-gray-600">
-                    {{ exam.exam.id }}
+                    {{ exam.exam.name }}
                 </h3>
                 <span
                     class="text-blue-500 text-[.8rem] capitalize">

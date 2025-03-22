@@ -17,97 +17,60 @@
                 class="bg-[#3A6D8C] w-[70px] hover:bg-gray-200 text-white hover:text-black p-1 transition"/>
         </UTooltip>
     </div>
-    <form 
-        name="brand"
-        method="POST"
-        enctype="multipart/form-data"
-        @submit.prevent="getData"
-        class="p-2 rounded-md">
-        <div class="p-2 bg-white flex gap-3 flex-wrap rounded-md">
-            <UFormGroup
-                class="w-[calc(98%/2)]"
-                label="Exam"
-                name="">
-                <SelectMenu
-                    name=""
-                    :options="[]"
-                    value-attribute="id"
-                    option-attribute="name"
-                    id-attribute="id"
-                    placeholder="please select exam"
-                    class="w-full"/>
-            </UFormGroup>
-            <UFormGroup
-                class="w-[calc(99.5%/2)]"
-                label="Study Infomation (Class / Years / Shift)"
-                name="">
-                <div 
-                    class="w-full flex gap-3">
+    <div class="w-full p-2">
+        <form
+            name=""
+            method="POST"
+            enctype="multipart/form-data"
+            @submit.prevent="getData"
+            class=" w-full bg-white rounded-md p-2">
+            <div 
+                class="flex flex-wrap w-full gap-3 pb-4">
+                <UFormGroup
+                    class="w-full"
+                    label="Exam"
+                    name="">
                     <SelectMenu
                         name=""
-                        :options="[]"
-                        option-attribute="name"
+                        :options="dataOptions.exam"
                         value-attribute="id"
-                        placeholder="Department"
-                        required
-                        class="w-[calc(97%/3)]"/>
+                        option-attribute="name"
+                        id-attribute="id"
+                        placeholder="Please select exam"
+                        @update:model-value="(value: any) => {
+                            examId = Number(value.id);
+                        }"
+                        class="w-full"/>
+                </UFormGroup>
+                <UFormGroup
+                    class="w-[calc(99%/2)]"
+                    label="Class"
+                    name="class_id">
                     <SelectMenu
-                        name=""
-                        :options="[]"
-                        option-attribute="name"
+                        name="class_id"
+                        :options="dataOptions.class"
                         value-attribute="id"
-                        placeholder="Class"
-                        required
-                        class="w-[calc(97%/3)]"/>
-                    <SelectMenu
-                        name=""
-                        :options="[]"
                         option-attribute="name"
-                        value-attribute="id"
-                        placeholder="Room"
-                        required
-                        class="w-[calc(97%/3)]"/>
-                </div>
-            </UFormGroup>
-            <UFormGroup
-                class="w-[calc(99.5%/2)]"
-                label="Exam Durations"
-                name="email">
-                <UInput
-                    type="text"
-                    color="white"
-                    variant="outline"
-                    size="md"
-                    name="email"
-                    role="input"
-                    placeholder="enter exam duration here..."/>
-            </UFormGroup>
-            <UFormGroup
-                class="w-[calc(98%/2)]"
-                label="Status"
-                name="">
-                <SelectMenu
-                    name=""
-                    :options="[]"
-                    value-attribute="id"
-                    option-attribute="name"
-                    id-attribute="id"
-                    placeholder="please select status"
-                    class="w-full"/>
-            </UFormGroup>
-            <UFormGroup
-                class="w-full"
-                label="Description"
-                name="">
-                <UTextarea 
-                    color="white" 
-                    placeholder="Enter description here..."
-                    name="" 
-                    role="input"
-                    class="w-full"/>
-            </UFormGroup>
-            <div
-                class="w-full gap-3 flex items-center justify-end">
+                        id-attribute="id"
+                        placeholder="Please select class"
+                        class="w-full"/>
+                </UFormGroup>
+                <UFormGroup
+                    class="w-[calc(98.8%/2)]"
+                    label="Exam Time (Mins)"
+                    name="exam_time">
+                    <UInput
+                        type="text"
+                        color="white"
+                        variant="outline"
+                        size="md"
+                        name="exam_time"
+                        role="input"
+                        class="w-full"
+                        placeholder="Enter exam duration in (minutes)..."/>
+                </UFormGroup>
+            </div>
+            <div class="flex gap-2 p-2 border-t-[1px] border-gray-200 items-end justify-end">
                 <UButton
                     type="button"
                     size="sm"
@@ -118,18 +81,18 @@
                     @click="() => {
                         emits('toggle', false);
                     }"
-                    class="bg-red-500 text-white hover:bg-red-300 p-1 transition"/>
+                    class="bg-red-500 px-4 py-2 text-white hover:bg-red-300  transition"/>
                 <UButton
                     type="submit"
                     size="sm"
                     color="black"
-                    label="Publish Now"
+                    label="Publish Exam"
                     variant="soft" 
                     :padded="false"
-                    class="bg-blue-400 text-white hover:bg-blue-300 p-1 transition"/>
+                    class="bg-blue-400 px-4 py-2 text-white hover:bg-blue-300 transition"/>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -143,23 +106,26 @@ import {
 } from "@/composable/dataHandler";
 import type {
     ResponseStatus,
-    Items
+    Options
 } from "@/models/type";
 import { 
-    SelectMenu 
+    SelectMenu
 } from "@/components/ui";
+
 /**
  * Begin::Set event trigger to parent component
  */
- const emits = defineEmits<{
+const emits = defineEmits<{
     (event: 'toggle', state: boolean): void;
     (event: 'update:data'): void;
 }>();
 
 const props = withDefaults(defineProps<{
-    publishId: number | null
+    open: boolean,
+    id: number | null
 }>(),{
-    publishId: null
+    open: false, 
+    id: null
 });
 /**
  * End::Set event trigger to parent component
@@ -175,46 +141,48 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
  */
 
 /**
+ *Begin::Declare variable in this section 
+ */
+const examId: Ref<number | null> = ref<number | null>(null);
+const dataOptions: Ref<Options> = ref<Options>({});
+/**
+ *End::Declare variable in this section 
+ */ 
+
+/**
  * Begin::Fetch data section
  */
-const getData = async (event: Event): Promise<void> => {
-    const formData: object = context.getDataForm(event as SubmitEvent) as object;
-    if(props.publishId != null)
-    {
-        await api.update(`brand/${props.publishId}`, true, formData) as ResponseStatus;
-    }
-    else
-    {
-        const result: ResponseStatus = await api.post('brand', true, formData) as ResponseStatus;
+ const getData = async (event: Event): Promise<void> => {
+    const formData: any = context.getDataForm(event as SubmitEvent) as any;
 
-        if(!result.error)
-        {
-            emits('toggle', false);
-            (event.target as HTMLFormElement).reset();
-        }
+    const result: ResponseStatus = await api.update(`exam/assign/${examId.value}`, true, formData) as ResponseStatus;
+    if(!result.error)
+    {
+        emits('toggle', false);
+        (event.target as HTMLFormElement).reset();
     }
+
     emits('update:data');
 }
 
-const setData = async (): Promise<void> => {
-    const result: ResponseStatus = await api.get(`brand/${props.publishId}`, false) as ResponseStatus;
-    if(!result.error)
+const fetchOption = async (): Promise<void> => {
+    const options: ResponseStatus = await api.get("") as ResponseStatus;
+    if(!options.error)
     {
-        let timeout: NodeJS.Timeout = setTimeout((): void => {
-            const form: HTMLFormElement = document.forms.namedItem('brand') as HTMLFormElement;
-            context.setData(form, result.data as Items);
-            clearTimeout(timeout);
-        },0);
+        dataOptions.value = options.data as unknown as Options;
     }
-}
-
+};
 /**
  * End::Fetch data section
  */
 
+/**
+ * Begin::Some logical section
+ */
+
+/**
+ * End::Some logical section
+ */
 onMounted(async (): Promise<void> => {
-    if(props.publishId){
-        // await setData();
-    }
 })
 </script>

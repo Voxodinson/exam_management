@@ -1,6 +1,8 @@
 <template>
     <template v-if="openCreate">
         <PublishExam
+            :id="publishId"
+            :open="onePublishExamData"
             :publish-id="publishId"
             @toggle="toggleCreate"
             @update:data="fetchData"/>
@@ -146,7 +148,7 @@
                             <span>
                                 (
                                 <span class="text-blue-400">
-                                    {{ exam.duration_minutes || 0}}
+                                    {{ exam.exam_time || 0}}
                                 </span> 
                                 ) - {{ exam.exam_time }}
                             </span>
@@ -168,14 +170,14 @@
                         <div 
                             class="*:text-[.9rem] border-r-[1px] flex justify-center flex-col border-gray-200">
                             <span>
-                                Total marks: &ensp; {{ exam.total_marks }} pts
+                                Total marks: &ensp; {{ exam.total_mark }} pts
                             </span>
                             <span
                                 class="block">
                                 Passing marks: &ensp;
                                 <span
                                     class="text-blue-400">
-                                    {{ exam.passing_marks }} pts
+                                    {{ exam.pass_mark }} pts
                                 </span>
                             </span>
                         </div>
@@ -185,7 +187,7 @@
                                 Created by:
                                 <span
                                     class="text-blue-400">
-                                    {{ exam.create_uid }}
+                                    {{ exam.created_by }}
                                 </span>
                             </span>
                         </div>
@@ -219,16 +221,16 @@
                             </span>
                             <span
                                 class="text-blue-400 capitalize">
-                                {{ exam.department_id }}
+                                {{ exam.department_name }}
                                 -
                                 <span
                                     class="text-blue-400">
-                                    {{ exam.class_id }}
+                                    {{ exam.major_name }}
                                 </span>
                                 -
                                 <span
                                     class="text-blue-400">
-                                    {{ exam.major_id }}
+                                    {{ exam.class_name }}
                                 </span>
                                 -
                                 <span
@@ -360,7 +362,6 @@ definePageMeta({
 /**
  * Begin::Declare variable section
  */
-const dataOptions: Ref<Options> = ref<Options>({});
 const data: Ref<any> = ref<any>({});
 const onePublishExamData: Ref<any> = ref<any>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
@@ -396,9 +397,11 @@ const toggleCreate = (value: boolean): void => {
 }
 const toggleShowQuestion = (idx: number): void => {
     const isCurrentlyOpen = isShowQuestion.value[idx];
+
     Object.keys(isShowQuestion.value).forEach(key => {
         isShowQuestion.value[Number(key)] = false;
     });
+    
     if (!isCurrentlyOpen) {
         isShowQuestion.value[idx] = true;
     }
@@ -442,15 +445,6 @@ const fetchOnePublicExam = async (): Promise<void> => {
         console.error("Error fetching exam data:", error);
     } finally {
         isLoading.value = Boolean(false);
-    }
-};
-
-
-const fetchOption = async (): Promise<void> => {
-    const options: ResponseStatus = await api.get("") as ResponseStatus;
-    if(!options.error)
-    {
-        dataOptions.value = options.data as unknown as Options;
     }
 };
 

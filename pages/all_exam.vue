@@ -70,25 +70,7 @@
                     class="flex w-fit flex-wrap gap-2">
                     <SelectMenu
                         name=""
-                        :options="[]"
-                        value-attribute="id"
-                        option-attribute="name"
-                        id-attribute="id"
-                        placeholder="Select a exam"
-                        class="w-[250px]"
-                        @update:model-value="async (value: Items): Promise<void> => {
-                            if(value?.id){
-                                filters.exam_id = Number(value.id);
-                            }
-                            else{
-                                filters.exam_id = '';
-                            }
-                            await fetchData(Number($route.query.page_no) || 1);
-                        }"
-                        :model-value="filters.exam_id"/>
-                    <SelectMenu
-                        name=""
-                        :options="[]"
+                        :options="dataOptions.department"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
@@ -106,7 +88,7 @@
                         :model-value="filters.deprtment_id"/>
                     <SelectMenu
                         name=""
-                        :options="[]"
+                        :options="dataOptions.class"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
@@ -124,18 +106,18 @@
                         :model-value="filters.major_id"/>
                     <SelectMenu
                         name=""
-                        :options="[]"
+                        :options="dataOptions.major"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
-                        placeholder="Select a shift"
+                        placeholder="Select a major"
                         class="w-[250px]"
                         @update:model-value="async (value: Items): Promise<void> => {
                             if(value?.id){
-                                filters.shift_id = Number(value.id);
+                                filters.major_id = Number(value.id);
                             }
                             else{
-                                filters.shift_id = '';
+                                filters.major_id = '';
                             }
                             await fetchData(Number($route.query.page_no) || 1);
                         }"
@@ -172,11 +154,11 @@
                         </td>
                         <td>
                             <span
-                                class=" capitalize">{{ data.department_id }}</span> -
+                                class=" capitalize">{{ data.department_name }}</span> -
                             <span
-                                class=" capitalize">{{ data.major_id }}</span> -
+                                class=" capitalize">{{ data.major_name }}</span> -
                             <span
-                                class=" capitalize">{{ data.class_id }}</span>
+                                class=" capitalize">{{ data.class_name }}</span>
                         </td>
                         <td>
                             <div
@@ -322,7 +304,7 @@ const filters: Ref<Items> = ref<Items>({
     exam_id: '',
     department_id: '',
     class_id: '',
-    shift_id: '',
+    major_id: '',
 });
 const isOpenFilter: Ref<boolean> = ref<boolean>(true);
 const isOpenPublishExam: Ref<boolean> = ref<boolean>(false);
@@ -394,7 +376,7 @@ const fetchData = async (current_page: number = 1, per_page: number = 10, search
 }
 
 const fetchOption = async (): Promise<void> => {
-    const options: ResponseStatus = await api.get("") as ResponseStatus;
+    const options: ResponseStatus = await api.get("setting/filter/exam") as ResponseStatus;
     if(!options.error)
     {
         dataOptions.value = options.data as unknown as Options;
@@ -428,5 +410,6 @@ watch((): boolean =>
 
 onMounted(async (): Promise<void> => {
     await fetchData();
+    await fetchOption();
 });
 </script>

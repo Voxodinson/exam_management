@@ -51,13 +51,16 @@
                 <UFormGroup
                     class="w-full"
                     label="Exam Time (Mins)"
-                    name="exam_time">
+                    name="">
                     <UInput
-                        type="text"
+                        type="number"
                         color="white"
                         variant="outline"
                         size="md"
-                        name="exam_time"
+                        name=""
+                        @update:model-value="(value: number) => {
+                            exam_time = Number(value);
+                        }"
                         role="input"
                         class="w-full"
                         placeholder="Enter exam duration in (minutes)..."/>
@@ -129,6 +132,7 @@ const props = withDefaults(defineProps<{
  */
 const api: ContextAPI = new ContextAPI(new SimpleAPI());
 const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
+const exam_time: Ref<number> = ref<number>(0);
 /**
  * End::Declare variables object section
  */
@@ -146,7 +150,7 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
  */
  const getData = async (event: Event): Promise<void> => {
     const formData: any = context.getDataForm(event as SubmitEvent) as any;
-
+    formData.exam_time = Number(exam_time.value);
     const result: ResponseStatus = await api.update(`exam/assign/${props.id}`, true, formData) as ResponseStatus;
     if(!result.error)
     {

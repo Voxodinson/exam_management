@@ -95,26 +95,26 @@
                 <UFormGroup
                     class="w-[calc(99%/2)]"
                     label="Password"
-                    name="">
+                    name="password">
                     <UInput
                         type="text"
                         color="white"
                         variant="outline"
                         size="md"
-                        name=""
+                        name="password"
                         role="input"
                         placeholder="enter password here..."/>
                 </UFormGroup>
                 <UFormGroup
                     class="w-[calc(98%/2)]"
                     label="Confirm Password"
-                    name="">
+                    name="confirmation_password">
                     <UInput
                         type="text"
                         color="white"
                         variant="outline"
                         size="md"
-                        name=""
+                        name="confirmation_password"
                         role="input"
                         placeholder="enter confirm password here..."/>
                 </UFormGroup>
@@ -225,15 +225,16 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
     emits('update:data');
 }
 
-const fetchOption = async (): Promise<void> => {
-    const options: ResponseStatus = await api.get("setting/filter/user/list", false) as ResponseStatus;
-    if(!options.error)
-    {
-        dataOptions.value = options.data as unknown as Options;
-    }
-};
+// const fetchOption = async (): Promise<void> => {
+//     const options: ResponseStatus = await api.get("setting/filter/user/list", false) as ResponseStatus;
+//     if(!options.error)
+//     {
+//         dataOptions.value = options.data as unknown as Options;
+//     }
+// };
 const setData = async (): Promise<void> => {
     const result: ResponseStatus = await api.get(`user/${props.userId}`, false) as ResponseStatus;
+    console.log(result)
     if(!result.error)
     {
         let timeout: NodeJS.Timeout = setTimeout((): void => {
@@ -248,8 +249,8 @@ const setData = async (): Promise<void> => {
  * End::Fetch data section
  */
 onMounted(async (): Promise<void> => {
-    await fetchOption();
-    if(props.userId)
+    // await fetchOption();
+    if(props.userId != null)
     {
         await setData();
     }
