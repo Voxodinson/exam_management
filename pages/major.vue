@@ -131,15 +131,15 @@
                     <tr 
                         class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
                         <td>
-                            <span>
-                                {{ data.department_name || '-----' }}
-                            </span>
-                        </td>
-                        <td>
                             <span>{{ data.name || '-----' }}</span>
                         </td>
                         <td>
                             <span>{{ data.name_kh || '-----' }}</span>
+                        </td>
+                        <td>
+                            <span>
+                                {{ data.department_name || '-----' }}
+                            </span>
                         </td>
                         <td>
                             <span 
@@ -242,7 +242,7 @@ definePageMeta({
 const dataOptions: Ref<Options> = ref<Options>({});
 const data: Ref<object> = ref<object>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
-const isOpenFilter: Ref<boolean> = ref<boolean>(true);
+const isOpenFilter: Ref<boolean> = ref<boolean>(false);
 const filters: Ref<Items> = ref<Items>({
     department_id: '',
     major_id: ''
@@ -260,13 +260,13 @@ const linksItem = [
 ];
 const columns: Ref<Column[]> = ref<Column[]>([
     {
-        title:'Department',
-    },
-    {
         title: 'Major Name (EN)'
     },
     {
         title: "Major Name (KH)"
+    },
+    {
+        title:'Department',
     },
     {
         title: "Description"
@@ -303,7 +303,7 @@ const toggleFilter = (): void => {
  * Begin::Fetch data section
  */
  const fetchData = async (current_page: number = 1,per_page: number = 10, search: string = ''): Promise<void> => {
-    let url: string = `major?per_page=${per_page}&page_no=${current_page}&department_id=${filters.value.department_id}&major_id=${filters.value.major_id}`;
+    let url: string = `major?per_page=${per_page}&page_no=${current_page}&department_id=${filters.value.department_id}`;
     if(search)
     {
         url += `&search=${search}`;

@@ -12,7 +12,8 @@ export const useAuthStore = defineStore('auth',{
     state: () => ({
         authenticated: false,
         messages: '',
-        username: ''
+        username: '',
+        status: ''
     }),
     actions: {
         async authenticateUser({
@@ -24,12 +25,12 @@ export const useAuthStore = defineStore('auth',{
         const data: any = await $fetch(`${base_url}admin/v1/web/auth/login`,{
             method: 'POST',
             headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-            username,
-            password
+                body: JSON.stringify({
+                username,
+                password
             })
         });
 
@@ -38,7 +39,8 @@ export const useAuthStore = defineStore('auth',{
             const token: any = useCookie('token');
             token.value = data?.data?.token;
             this.username = data?.data?.user_name;
-            this.messages = 'Login '+data?.message;
+            this.messages = data?.message;
+            this.status = data?.status;
             this.authenticated = true;
 
             /**

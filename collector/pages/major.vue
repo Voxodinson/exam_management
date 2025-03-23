@@ -48,7 +48,7 @@
                     size="md"
                     name="name"
                     role="input"
-                    minlength="3"
+                    minlength="2"
                     maxlength="100"
                     placeholder="enter major name as English language here..."/>
             </UFormGroup>
@@ -70,6 +70,7 @@
                 label="Description"
                 name="description">
                 <UTextarea 
+                    type="text"
                     color="white" 
                     placeholder="Enter description here..."
                     name="description" 

@@ -18,7 +18,7 @@
         </UTooltip>
     </div>
         <div 
-            class="w-full h-fit flex gap-3 pb-6 items-center justify-center p-2 bg-white rounded-md">
+            class="w-full h-fit flex gap-3 pb-6 items-center justify-center p-2 bg-white">
             <div 
                 class=" flex flex-col gap-3 p-3 border-[1px] border-gray-200 bg-gray-50 items-center w-full justify-center h-fit rounded-md">
                 <div class="w-[250px] h-[250px] rounded-full border-[1px] border-gray-200 overflow-hidden relative group">
@@ -37,7 +37,7 @@
                     </h3>
                     <p
                         class="text-gray-400">
-                        {{ data.department_name }} - {{ data.major_name }} - {{ data.class_name }} - {{ data.shift_name }}
+                        {{ data.department_name }} - {{ data.major_name }} - {{ data.class_name }} ({{ data.class_room }}) - {{ data.shift_name }}
                     </p>
                 </div>
                 <ul
@@ -124,7 +124,7 @@
                             Bio :
                         </span>
                         <span>
-                            {{ data.address ? data.address : '- - - - - - - - - - - - - - -' }}
+                            {{ data.bio ? data.bio : '- - - - - - - - - - - - - - -' }}
                         </span>
                     </li>
                     <li>
@@ -136,7 +136,7 @@
                             Address :
                         </span>
                         <span>
-                            {{ data.bio ? data.bio : '- - - - - - - - - - - - - - -' }}
+                            {{ data.address ? data.address : '- - - - - - - - - - - - - - -' }}
                         </span>
                     </li>
                     <li
@@ -156,7 +156,7 @@
                             Study Information :
                         </span>
                         <span>
-                            {{ data.department_name }} - {{ data.major_name }} - {{ data.class_name }} - {{ data.shift_name }}
+                            {{ data.department_name }} - {{ data.major_name }} - {{ data.class_name }} ({{ data.class_room }}) - {{ data.shift_name }}
                         </span>
                     </li>
                     <li

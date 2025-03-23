@@ -173,7 +173,11 @@
                                 Major: <span class="text-blue-400">{{ data.major_name || '-----'}}</span>
                             </span>
                             <span class="block text-[.9rem]">
-                                Shift: <span class="text-blue-400">{{ data.shift || '-----' }}</span>
+                                Shift: 
+                                <span class="text-blue-400">
+                                    {{ data.shift_name || '-----' }}
+                                    ( <span class="text-[.8rem] text-black">{{ data.start_time }} - {{ data.end_time }}</span> )
+                                </span>
                             </span>
                         </td>
                         <td>
@@ -286,7 +290,7 @@ definePageMeta({
 const dataOptions: Ref<Options> = ref<Options>({});
 const data: Ref<object> = ref<object>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
-const isOpenFilter: Ref<boolean> = ref<boolean>(true);
+const isOpenFilter: Ref<boolean> = ref<boolean>(false);
 const filters: Ref<Items> = ref<Items>({
     department_id: '',
     major_id: ''

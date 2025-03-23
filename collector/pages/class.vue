@@ -53,10 +53,10 @@
             <UFormGroup
                 class="w-[calc(97%/3)]"
                 label="Shift Time"
-                name="">
+                name="shift_id">
                 <SelectMenu
-                    name=""
-                    :options="[]"
+                    name="shift_id"
+                    :options="dataOptions.shift"
                     value-attribute="id"
                     option-attribute="name"
                     id-attribute="id"

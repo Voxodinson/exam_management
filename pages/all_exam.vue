@@ -232,7 +232,14 @@
                                             iconClass: 'text-red-500',
                                             label: 'Delete',
                                             icon: 'i-heroicons-trash-20-solid',
-                                            click: () => {}
+                                            click: () => {
+                                                Confirm(`Are you sure to delete exam ( ${ data.name } ) ?`,async (): Promise<void> => {
+                                                    const result = await api.delete(`exam/${data.id}`, true, {}) as ResponseStatus;
+                                                    if (!result.error) {
+                                                        await fetchData();
+                                                    }
+                                                })
+                                            }
                                         }
                                     ]
                                 ]" 
@@ -282,6 +289,9 @@ import {
 import { 
     PublishExam 
 } from '@/collector/modal';
+import { 
+    Confirm 
+} from '@/utils/dialog';
 definePageMeta({
     colorMode: 'light'
 });

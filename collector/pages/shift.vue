@@ -25,7 +25,7 @@
         class="p-2 rounded-md">
         <div class="p-2 bg-white flex gap-3 flex-wrap rounded-md">
             <UFormGroup
-                class="w-[calc(97%/3)]"
+                class="w-[calc(98%/2)]"
                 label="Shift Name"
                 name="name">
                 <UInput
@@ -40,7 +40,22 @@
                     placeholder="enter shift name here..."/>
             </UFormGroup>
             <UFormGroup
-                class="w-[calc(97%/3)]"
+                class="w-[calc(99%/2)]"
+                label="Shift Name (KH)"
+                name="name_kh">
+                <UInput
+                    type="text"
+                    color="white"
+                    variant="outline"
+                    size="md"
+                    name="name_kh"
+                    role="input"
+                    minlength="3"
+                    maxlength="100"
+                    placeholder="enter shift name here..."/>
+            </UFormGroup>
+            <UFormGroup
+                class="w-[calc(98%/2)]"
                 label="Start Time"
                 name="start_time">
                 <UInput
@@ -53,7 +68,7 @@
                     placeholder="enter start time here..."/>
             </UFormGroup>
             <UFormGroup
-                class="w-[calc(99%/3)]"
+                class="w-[calc(99%/2)]"
                 label="End Time"
                 name="end_time">
                 <UInput
@@ -70,6 +85,7 @@
                 label="Description"
                 name="description">
                 <UTextarea 
+                    type="text"
                     color="white" 
                     placeholder="Enter description here..."
                     name="description" 
@@ -156,7 +172,6 @@ const getData = async (event: Event): Promise<void> => {
     else
     {
         const result: ResponseStatus = await api.post('shift/time', true, formData) as ResponseStatus;
-
         if(!result.error)
         {
             emits('toggle', false);
