@@ -9,7 +9,7 @@ export default defineNuxtRouteMiddleware((to) => {
         authenticated.value = true;
     }
 
-    if (token.value && (to.name === "signin" || to.name === "student_signin" || to.name === "signin_choose")) {
+    if (token.value && (to.name === "signin" || to.name === "student_signin" || to.name === "signin_choose" || to.name === "student_register")) {
         return navigateTo("/");
     }
 
