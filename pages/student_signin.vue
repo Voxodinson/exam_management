@@ -30,8 +30,10 @@
                 </h4>
                 <div
                     v-if="messages" 
-                    class="w-full p-3 border-[1px] rounded-md border-red-300">
-                    <p class="text-[1rem] font-thine  text-red-500">
+                    :class="status === 'OK' ? 'text-green-500 bg-green-100 border-green-300' : 'text-red-500 bg-red-100 border-red-300'"
+                    class="w-full p-3 border-[1px] rounded-md">
+                    <p 
+                        class="text-[1rem] font-thine">
                         {{ messages }}
                     </p>
                 </div>
@@ -167,7 +169,8 @@ const {
 } = useAuthStore();
 const {
     authenticated,
-    messages 
+    messages,
+    status
 } = storeToRefs(useAuthStore());
 const router = useRouter();
 const show: Ref<boolean> = ref<boolean>(false);
@@ -188,7 +191,10 @@ const login = async (): Promise<void> => {
     await authenticateUser(user.value);
     if(authenticated)
     {
-        router.push('/students/students_exam');
+        setTimeout((): void => {
+            router.push('/students/students_exam');
+            messages.value = '';
+        }, 500)
     }
 }
 /**

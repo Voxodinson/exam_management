@@ -81,7 +81,7 @@
                             @update:model-value="(value: number): void => {
                                 calculateMark.pass_mark = Number(value);
                             }"
-                            :model-value="calculateMark.passing"/>
+                            :model-value="calculateMark.pass_mark"/>
                     </div>
                 </UFormGroup>
             </div>
@@ -218,11 +218,11 @@
                                 role="input"
                                 class="w-[100px]"
                                 @update:model-value="(value: number) => {
-                                    item.mark = Number(value);
-                                    calculateMark.total = questions.reduce((sum: any, q: any) => sum + (q.mark || 0), 0);
-                                    calculateMark.passing = Number(calculateMark.total) / Number(2);
+                                    item.score = Number(value);
+                                    calculateMark.total_mark = questions.reduce((sum: any, q: any) => sum + (q.mark || 0), 0);
+                                    calculateMark.pass_mark = Number(calculateMark.total_mark) / Number(2);
                                 }"  
-                                :model-value="item.mark"/>
+                                :model-value="item.score"/>
                         </div>
                     </div>
                     <div 
@@ -368,7 +368,7 @@ interface IAnswer {
 }
 interface IQuestion {
     question: string;
-    mark: number; 
+    score: number; 
     qcm_answers: IAnswer[] | any;
 }
 
@@ -477,7 +477,7 @@ const fetchOption = async (): Promise<void> => {
  const addNewQuestion = (): void => {
     questions.value.push({
         question: '',
-        mark: 0,
+        score: 0,
         qcm_answers: []
     });
 };

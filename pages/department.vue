@@ -64,7 +64,7 @@
                     <tr 
                         class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
                         <td
-                            class="w-[200px]">
+                            class="w-fit">
                             <span>
                                 {{ data.name || '-----' }}
                             </span>
@@ -73,7 +73,25 @@
                             <span>{{ data.name_kh || '-----' }}</span>
                         </td>
                         <td
-                            class="w-[250px]">
+                            class="">
+                            <div class="w-fit flex flex-col">
+                                <span class="w-fit text-nowrap text-[.8rem]">
+                                    Email: {{ data.email }}
+                                </span>
+                                <span class="text-[.8rem]">
+                                    Phone: {{ data.phone_number }}
+                                </span>
+                            </div>
+                        </td>
+                        <td
+                            class="]">
+                            <span
+                                class="text-[.8rem]">
+                                {{ data.description || '-----'}}
+                            </span>
+                        </td>
+                        <td
+                            class="">
                             <span
                                 class="text-[.8rem]">
                                 {{ data.description || '-----'}}
@@ -112,7 +130,7 @@
                                         class: 'text-red-500',
                                         click: async (): Promise<void> => {
                                             Confirm(`Do you want to delete ${data.name} department?`, async (): Promise<void> => {
-                                                const result = await api.update(`department/${data.id}`, true, {}) as ResponseStatus;
+                                                const result = await api.delete(`department/${data.id}`, true, {}) as ResponseStatus;
                                                 if (!result.error) {
                                                     await fetchData();
                                                 }
@@ -173,7 +191,7 @@ definePageMeta({
 const dataOptions: Ref<Options> = ref<Options>({});
 const data: Ref<object> = ref<object>({});
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
-const isOpenFilter: Ref<boolean> = ref<boolean>(true);
+const isOpenFilter: Ref<boolean> = ref<boolean>(false);
 const filters: Ref<Items> = ref<Items>({
     department_id: '',
 });
@@ -190,13 +208,19 @@ const linksItem = [
 ];
 const columns: Ref<Column[]> = ref<Column[]>([
     {
-        title:'Department name (en)',
+        title:'Department name',
     },
     {
-        title: 'department name (kh)'
+        title: 'department name'
+    },
+    {
+        title: 'Contact Info'
     },
     {
         title: "description"
+    },
+    {
+        title: 'Location'
     },
     {
         title: "create by"

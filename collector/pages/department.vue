@@ -53,13 +53,54 @@
                     placeholder="enter department name as Khmer language here..."/>
             </UFormGroup>
             <UFormGroup
-                class="w-full"
+                class="w-[calc(99%/2)]"
+                label="Department Phone"
+                name="phone_number">
+                <UInput
+                    type="text"
+                    color="white"
+                    variant="outline"
+                    size="md"
+                    name="phone_number"
+                    role="input"
+                    minlength="3"
+                    maxlength="100"
+                    placeholder="enter department contact phone here..."/>
+            </UFormGroup>
+            <UFormGroup
+                class="w-[calc(98.7%/2)]"
+                label="Department Email"
+                name="email">
+                <UInput
+                    type="text"
+                    color="white"
+                    variant="outline"
+                    size="md"
+                    name="email"
+                    role="input"
+                    placeholder="enter department contact email here..."/>
+            </UFormGroup>
+            <UFormGroup
+                class="w-[calc(99%/2)]"
                 label="Description"
                 name="description">
                 <UTextarea 
+                    type="text"
                     color="white" 
                     placeholder="Enter description here..."
                     name="description" 
+                    role="input"
+                    class="w-full"/>
+            </UFormGroup>
+            <UFormGroup
+                class="w-[calc(98%/2)]"
+                label="Addess"
+                name="location">
+                <UTextarea 
+                    type="text"
+                    color="white" 
+                    placeholder="Enter address here..."
+                    name="location" 
                     role="input"
                     class="w-full"/>
             </UFormGroup>

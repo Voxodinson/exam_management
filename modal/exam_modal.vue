@@ -50,8 +50,8 @@
                         <span
                             class="font-meduim flex items-center gap-3">
                             <UIcon
-                                name="material-symbols:code-blocks-outline-rounded"
-                                class="w-6 h-6 text-yellow-400"/>
+                                name="material-symbols:bookmarks-outline"
+                                class="w-6 h-6 text-blue-400"/>
                             Mark :
                         </span>
                         <span
@@ -140,7 +140,7 @@
                         class="w-full">
                         <p
                             class="w-full flex justify-between items-center">
-                            <span>{{ idx+1 }}. {{ question.question }} - <span>{{ question.mark || 0 }} pt</span></span>
+                            <span>{{ idx+1 }}. {{ question.question }} - <span>{{ question.score || 0 }} pt</span></span>
                             <span class=" capitalize text-[.9rem] text-blue-400">
                                 {{ question.question_type }}
                             </span>
@@ -275,6 +275,12 @@ watch(
     () => [props.open, props.examId], async ([newOpen, newExamId]) => {
         if (newOpen || newExamId) {
             await fetchData();
+        }
+        else
+        {
+            setTimeout(() => {
+                viewQuestion.value = Boolean(false);
+            }, 500)
         }
     },
     { immediate: true }
