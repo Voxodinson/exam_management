@@ -279,7 +279,7 @@ definePageMeta({
 });
 
 useSeoMeta({
-  title: 'Login'
+    title: 'Login'
 });
 /**
  * Begin::Set event trigger to parent component
@@ -295,7 +295,7 @@ useSeoMeta({
 const dataOptions: Ref<Options> = ref<Options>({});
 const api: ContextAPI = new ContextAPI(new SimpleAPI());
 const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
-
+const base_url: string = (import.meta.env.VITE_BASE_URL as ImportMetaEnv)+'admin/v1/en/';
 const countries: Ref<Items[]> = ref<Items[]>([
     { id: 1, value: 'Afghanistan' },
     { id: 2, value: 'Albania' },
@@ -455,17 +455,25 @@ const countries: Ref<Items[]> = ref<Items[]>([
 }
 
 const fetchOption = async (): Promise<void> => {
-    const options: ResponseStatus = await api.get("setting/filter/student", false) as ResponseStatus;
-    if(!options.error)
-    {
-        dataOptions.value = options.data as unknown as Options;
+    try {
+        const { data, error } = await useFetch<any>(base_url + 'setting/option/student/public');
+
+        if (error.value) {
+            throw new Error(error.value.message);
+        }
+
+        dataOptions.value = data.value.data as unknown as Options;
+        console.log(dataOptions.value);
+    } catch (err) {
+        console.error("Error fetching data:", err);
     }
 };
+
 
 /**
  * End::Fetch data section
  */
 onMounted(async (): Promise<void> => {
-    //await fetchOption();
+    await fetchOption();
 })
 </script>
