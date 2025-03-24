@@ -240,7 +240,7 @@
                     class="text-[.8rem] w-full mt-3 font-normal text-center z-10">
                     Already have an account? 
                     <ULink
-                        to="/student_signin"
+                        to="/signin"
                         class=" hover:text-blue-500 transition underline cursor-pointer">
                         Login Now
                     </ULink>

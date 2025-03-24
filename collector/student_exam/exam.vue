@@ -131,6 +131,9 @@ interface Answer {
 }
 
 interface StudentAnswer {
+    end_time: string,
+    start_time: string,
+    total_time_spent: string,
     answers: Answer[];
 }
 
@@ -169,6 +172,9 @@ const api: ContextAPI = new ContextAPI(new SimpleAPI());
  */
 const data: Ref<any> = ref<any>({});
 const studentAnswer: Ref<StudentAnswer> = ref<StudentAnswer>({
+    'start_time': '',
+    'end_time': '',
+    'total_time_spent': '',
     "answers": []
 });
 
@@ -236,6 +242,29 @@ const studentSubmit = async (): Promise<void> => {
 /**
  * End::Some Logical
  */
+ import { ref, onMounted, onUnmounted } from 'vue';
+onMounted(() => {
+    const startTime = performance.now(); // Start time using high resolution timer
+    studentAnswer.value.start_time = new Date().toISOString().slice(0, 19).replace('T', ' '); // ISO format without milliseconds
+
+    const interval = setInterval(() => {
+        const elapsedTime = performance.now() - startTime; // Calculate elapsed time in milliseconds
+
+        const hours = Math.floor(elapsedTime / 3600000);
+        const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+        const seconds = Math.floor((elapsedTime % 60000) / 1000);
+
+        studentAnswer.value.total_time_spent = `${hours}h ${minutes}m ${seconds}s`;
+    }, 1000); // Update every second
+
+    // Optionally, stop the interval after some time or when the component is unmounted
+    onUnmounted(() => {
+        clearInterval(interval); // Clear the interval when the component is unmounted
+    });
+});
+
+
+
 onMounted(async (): Promise<void> => {
     if(props.examId){
         await fetchData();

@@ -22,10 +22,10 @@
                     alt=""
                     class="w-[350px] h-[350px] opacity-20 z-0 absolute bottom-[10px] right-[10px]">
                 <h4
-                    class="text-[2rem] text-sky-300 text-center font-normal ">
+                    class="text-[3rem] text-sky-300 text-center font-normal ">
                     Welcome Back
-                    <p class="text-center text-[.9rem] text-gray-400 font-thin">
-                        You are about to login as admin account.
+                    <p class="text-center text-[.9rem] text-gray-400 font-meduim">
+                        Please login into your account!
                     </p>
                 </h4>
                 <div
@@ -97,18 +97,23 @@
                     type="submit"
                     size="md"
                     class="flex items-center bg-gradient-to-r z-10 from-sky-400 to-blue-600 hover:bg-gradient-to-r hover:from-sky-300 hover:to-blue-500 transition justify-center mt-3"
-                    label="Admin Login"
+                    label="Login Now"
                     square/>
+                <span
+                    class="text-[.8rem] text-center z-20">
+                    Don't have an account?
+                    <ULink
+                        to="/student_register"
+                        class="underline hover:text-blue-500">
+                        Register an student account
+                    </ULink>
+                </span>
             </form>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import {
-    Validation,
-    Context
-} from "@/composable/validateHandler/";
 import {
     GetDataContext,
     GetDataNormalForm
@@ -118,11 +123,14 @@ import {
 } from 'pinia';
 import {
     useAuthStore
-} from '@/store/auth_admin';
+} from '@/store/auth';
 import { 
     BackgroundLogin,
     Technology
 } from "@/assets/images";
+import { 
+    Success 
+} from "@/utils/dialog";
 definePageMeta({
     layout: 'login',
     colorMode: 'light'
@@ -181,24 +189,18 @@ const login = async (): Promise<void> => {
     const authStore = useAuthStore();
 
     await authStore.authenticateUser(user.value);
-    
-    if (authStore.authenticated) {
-        authStore.messages = 'Logging in successfully...';
 
-        setTimeout(() => {
+    if (authStore.authenticated) {
+        if (authStore.account_type === 'student') {
+            router.push('/students/students_exam');
+            Success(`Logged in as ${authStore.account_type} successfully!`);
+        } else if (authStore.account_type === 'admin') {
             router.push('/');
-            authStore.messages = ''; 
-        }, 1000);
-    } else {
-        if (authStore.messages === 'failed') {
-            authStore.messages = 'Your account type is not authorized to login as admin.';
-        } 
-        else if (authStore.messages === 'Invalid credentials') 
-        {
-            authStore.messages = 'Authentication failed, please try again.';
+            Success(`Logged in as ${authStore.account_type} successfully!`);
         }
     }
-}
+};
+
 
 /**
  * End::Some logical in this component
