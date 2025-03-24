@@ -15,28 +15,33 @@
                 name="signin"
                 method="POST"
                 enctype="multipart/form-data"
-                class="panel-login p-6 rounded-md z-10  py-10 flex flex-col w-[80%] overflow-hidden relative justify-center gap-3 bg-white"
+                class="panel-login p-6 rounded-md z-10  pt-10 flex flex-col w-[80%] overflow-hidden relative justify-center gap-3 bg-white"
                 @submit.prevent="getData">
-                    <img 
-                        :src="Technology" 
-                        alt=""
-                        class="w-[350px] h-[350px] opacity-20 absolute bottom-[10px] right-[10px]">
+                <img 
+                    :src="Technology" 
+                    alt=""
+                    class="w-[350px] h-[350px] opacity-20 z-0 absolute bottom-[10px] right-[10px]">
                 <h4
                     class="text-[2rem] text-sky-300 text-center font-normal ">
                     Welcome Back
                     <p class="text-center text-[.9rem] text-gray-400 font-thin">
-                        You are about to login ass admin account
+                        You are about to login as admin account.
                     </p>
                 </h4>
                 <div
-                    v-if="messages" 
-                    :class="status === 'OK' ? 'text-green-500 bg-green-100 border-green-300' : 'text-red-500 bg-red-100 border-red-300'"
+                    v-if="messages"
+                    :class="(messages === 'failed' || messages === 'Your account type is not authorized to login as admin.' || messages === 'Authentication failed, please try again.') 
+                        ? 'text-red-500 bg-red-100 border-red-300' 
+                        : (messages === 'Logging in successfully...' || messages === 'Logging out successfully...') 
+                        ? 'text-green-500 bg-green-100 border-green-300' 
+                        : ''"
                     class="w-full p-3 border-[1px] rounded-md">
-                    <p 
-                        class="text-[1rem] font-thine">
+                    <p class="text-[1rem] font-thin">
                         {{ messages }}
                     </p>
                 </div>
+
+
                 <UFormGroup
                     class="w-full mt-6"
                     label="Username"
@@ -84,7 +89,7 @@
                     </UButton>
                 </UFormGroup>
                 <UDivider
-                    label="Login Into Your Admin Account"
+                    label="Login Into Your Student Account"
                     :ui="{ label: 'text-gray-500 dark:text-white-400' }"
                     class="mt-6"
                     />
@@ -113,7 +118,7 @@ import {
 } from 'pinia';
 import {
     useAuthStore
-} from '@/store/auth';
+} from '@/store/auth_admin';
 import { 
     BackgroundLogin,
     Technology
@@ -133,7 +138,7 @@ useSeoMeta({
 interface User
 {
   username: string,
-  password: string
+  password: string,
 }
 /**
  * End::Declare interface section
@@ -152,15 +157,10 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
  */
 const user: Ref<User> = ref<User>({
     username: '',
-    password: ''
+    password: '',
 });
-const { 
-    authenticateUser 
-} = useAuthStore();
 const {
-    authenticated,
-    messages,
-    status
+    messages
 } = storeToRefs(useAuthStore());
 const router = useRouter();
 const show: Ref<boolean> = ref<boolean>(false);
@@ -178,15 +178,28 @@ const getData = (event: Event): void => {
 }
 
 const login = async (): Promise<void> => {
-    await authenticateUser(user.value);
-    if(authenticated)
-    {
-        setTimeout((): void => {
+    const authStore = useAuthStore();
+
+    await authStore.authenticateUser(user.value);
+    
+    if (authStore.authenticated) {
+        authStore.messages = 'Logging in successfully...';
+
+        setTimeout(() => {
             router.push('/');
-            messages.value = '';
-        }, 500)
+            authStore.messages = ''; 
+        }, 1000);
+    } else {
+        if (authStore.messages === 'failed') {
+            authStore.messages = 'Your account type is not authorized to login as admin.';
+        } 
+        else if (authStore.messages === 'Invalid credentials') 
+        {
+            authStore.messages = 'Authentication failed, please try again.';
+        }
     }
 }
+
 /**
  * End::Some logical in this component
  */

@@ -36,12 +36,7 @@
                     name="class_id">
                     <SelectMenu
                         name="class_id"
-                        :options="[
-                            {
-                                id: 1,
-                                name: 'Roote'
-                            }
-                        ]"
+                        :options="dataOptions.class"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
@@ -102,7 +97,8 @@ import {
     GetDataNormalForm
 } from "@/composable/dataHandler";
 import type {
-    ResponseStatus
+    ResponseStatus,
+    Options
 } from "@/models/type";
 import { 
     SelectMenu
@@ -133,6 +129,7 @@ const props = withDefaults(defineProps<{
 const api: ContextAPI = new ContextAPI(new SimpleAPI());
 const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
 const exam_time: Ref<number> = ref<number>(0);
+const dataOptions: Ref<Options> = ref<Options>({});
 /**
  * End::Declare variables object section
  */
@@ -161,6 +158,13 @@ const exam_time: Ref<number> = ref<number>(0);
     emits('update:data');
 }
 
+const fetchOption = async (): Promise<void> => {
+    const options: ResponseStatus = await api.get("setting/filter/exam", false) as ResponseStatus;
+    if(!options.error)
+    {
+        dataOptions.value = options.data as unknown as Options;
+    }
+};
 /**
  * End::Fetch data section
  */
@@ -173,5 +177,6 @@ const exam_time: Ref<number> = ref<number>(0);
  * End::Some logical section
  */
 onMounted(async (): Promise<void> => {
+    await fetchOption();
 })
 </script>

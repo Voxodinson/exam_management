@@ -29,14 +29,19 @@
                     </p>
                 </h4>
                 <div
-                    v-if="messages" 
-                    :class="status === 'OK' ? 'text-green-500 bg-green-100 border-green-300' : 'text-red-500 bg-red-100 border-red-300'"
+                    v-if="messages"
+                    :class="(messages === 'Your account type is not authorized to log in.' || messages === 'Authentication failed, please try again.') 
+                        ? 'text-red-500 bg-red-100 border-red-300' 
+                        : (messages === 'Logging in successfully...' || messages === 'Logging out successfully...') 
+                        ? 'text-green-500 bg-green-100 border-green-300' 
+                        : ''"
                     class="w-full p-3 border-[1px] rounded-md">
-                    <p 
-                        class="text-[1rem] font-thine">
+                    <p class="text-[1rem] font-thin">
                         {{ messages }}
                     </p>
                 </div>
+
+
                 <UFormGroup
                     class="w-full mt-6"
                     label="Username"
@@ -142,7 +147,8 @@ useSeoMeta({
 interface User
 {
   username: string,
-  password: string
+  password: string,
+  account_type: string
 }
 /**
  * End::Declare interface section
@@ -162,15 +168,11 @@ const validate: Context = new Context(new Validation());
  */
 const user: Ref<User> = ref<User>({
     username: '',
-    password: ''
+    password: '',
+    account_type: ''
 });
-const { 
-    authenticateUser 
-} = useAuthStore();
 const {
-    authenticated,
-    messages,
-    status
+    messages
 } = storeToRefs(useAuthStore());
 const router = useRouter();
 const show: Ref<boolean> = ref<boolean>(false);
@@ -188,15 +190,28 @@ const getData = (event: Event): void => {
 }
 
 const login = async (): Promise<void> => {
-    await authenticateUser(user.value);
-    if(authenticated)
-    {
-        setTimeout((): void => {
+    const authStore = useAuthStore();
+
+    await authStore.authenticateUser(user.value);
+    
+    if (authStore.authenticated) {
+        authStore.messages = 'Logging in successfully...';
+
+        setTimeout(() => {
             router.push('/students/students_exam');
-            messages.value = '';
-        }, 500)
+            authStore.messages = ''; 
+        }, 1000);
+    } else {
+        if (authStore.messages === 'Your account type is not authorized to login as student.') {
+            authStore.messages = 'Your account type is not authorized to login as student.';
+        } 
+        else if (authStore.messages === 'Invalid credentials') 
+        {
+            authStore.messages = 'Authentication failed, please try again.';
+        }
     }
 }
+
 /**
  * End::Some logical in this component
  */

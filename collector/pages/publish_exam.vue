@@ -166,7 +166,7 @@ const dataOptions: Ref<Options> = ref<Options>({});
 }
 
 const fetchOption = async (): Promise<void> => {
-    const options: ResponseStatus = await api.get("") as ResponseStatus;
+    const options: ResponseStatus = await api.get("setting/option/exam/public") as ResponseStatus;
     if(!options.error)
     {
         dataOptions.value = options.data as unknown as Options;
@@ -184,5 +184,6 @@ const fetchOption = async (): Promise<void> => {
  * End::Some logical section
  */
 onMounted(async (): Promise<void> => {
+    await fetchOption();
 })
 </script>

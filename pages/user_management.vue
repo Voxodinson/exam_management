@@ -353,7 +353,7 @@ const dropDownItems = (data: Items): any => [
             icon: 'material-symbols:delete-outline',
             click: async (): Promise<void> => {
                 Confirm('Do you want to delete user account?', async (): Promise<void> => {
-                    const result = await api.update(``, true, {}) as ResponseStatus;
+                    const result = await api.update(`user/${data.id}`, true, {}) as ResponseStatus;
                     if(result){
                         await fetchData();
                     }

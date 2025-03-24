@@ -487,7 +487,7 @@ const selectGender: Ref<string> = ref<string>('');
 /**
  * Begin::Fetch data section
  */
- const getData = async (event: Event): Promise<void> => {
+const getData = async (event: Event): Promise<void> => {
     const formData: any = context.getDataFormFileBase64(event as SubmitEvent) as any;
     console.log(formData);
     formData.gender = selectGender.value as string;

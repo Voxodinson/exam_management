@@ -32,20 +32,22 @@ export const useAuthStore = defineStore('auth', {
                     this.username = data?.data?.user_name;
                     this.status = data?.status;
                     this.account_type = data?.data?.account_type;
-                    this.authenticated = true;
 
-                    if (this.account_type !== 'student') {
+                    // Check if the account type is 'admin'
+                    if (this.account_type !== 'Admin') {
                         this.authenticated = false;
                         this.messages = 'Your account type is not authorized to log in.';
                         token.value = null;
-                        return;
+                        return; // Early return to prevent further code execution
                     }
-                    
+
+                    this.authenticated = true;
                     localStorage.setItem('username', this.username);
                     this.messages = 'Logged in successfully';
+
                     setTimeout(() => {
-                        this.messages = ''
-                    }, 3000)
+                        this.messages = '';
+                    }, 3000);
                 } else {
                     this.authenticated = false;
                     this.messages = 'Invalid credentials, please try again.';
