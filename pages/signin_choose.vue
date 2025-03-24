@@ -1,6 +1,6 @@
 <template>
     <div
-        class="w-full h-[100vh] bg-white flex items-center justify-center">
+        class="w-full h-[100vh] bg-gray-200 flex items-center justify-center">
         <div 
             class="w-fit flex flex-col items-center gap-3">
             <div class="flex flex-col items-center justify-center">
@@ -19,11 +19,6 @@
             </div>
             <div 
                 class="w-full flex justify-center items-center gap-3 pt-6 border-t-[1px] border-gray-200">
-                <NuxtLink 
-                    to="/student_signin"
-                    class="px-10 py-1 rounded-md bg-[#3A6D8C] text-[.9rem] text-white">
-                    Student Login
-                </NuxtLink>
                 <NuxtLink 
                     to="/signin"
                     class="px-10 py-1 rounded-md bg-[#3A6D8C] text-[.9rem] text-white">

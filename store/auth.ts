@@ -1,5 +1,9 @@
-import { defineStore } from 'pinia';
-
+import { 
+    defineStore 
+} from 'pinia';
+import { 
+    Success 
+} from '@/utils/dialog';
 interface UserPayloadInterface {
     username: string;
     password: string;
@@ -11,7 +15,8 @@ export const useAuthStore = defineStore('auth', {
         messages: '',
         username: '',
         status: '',
-        account_type: ''
+        account_type: '',
+        auth_id: ''
     }),
     actions: {
         async authenticateUser({ username, password }: UserPayloadInterface) {
@@ -32,24 +37,24 @@ export const useAuthStore = defineStore('auth', {
                     this.username = data?.data?.user_name;
                     this.status = data?.status;
                     this.account_type = data?.data?.account_type;
-                    this.authenticated = true;
+                    this.auth_id = data?.data?.student?.id;
 
-                    if (this.account_type !== 'student') {
-                        this.authenticated = false;
+                    localStorage.setItem('auth_id', this.auth_id);
+                    localStorage.setItem('username', this.username);
+
+                    this.authenticated = this.account_type === 'student' || this.account_type === 'admin';
+
+                    if (!this.authenticated) {
                         this.messages = 'Your account type is not authorized to log in.';
                         token.value = null;
+                        localStorage.removeItem('auth_id');
                         return;
                     }
-                    
-                    localStorage.setItem('username', this.username);
-                    this.messages = 'Logged in successfully';
-                    setTimeout(() => {
-                        this.messages = ''
-                    }, 3000)
                 } else {
                     this.authenticated = false;
                     this.messages = 'Invalid credentials, please try again.';
                 }
+                
             } catch (error) {
                 this.authenticated = false;
                 this.messages = 'Authentication failed, please try again.';
@@ -61,7 +66,8 @@ export const useAuthStore = defineStore('auth', {
             this.authenticated = false;
             token.value = null;
             localStorage.removeItem('username');
-            this.messages = 'Logging out successfully...';
+            localStorage.removeItem('auth_id');
+            Success('Logout successfully!');
         }
     }
 });

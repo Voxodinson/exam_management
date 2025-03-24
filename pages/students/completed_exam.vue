@@ -52,7 +52,6 @@ import {
     SimpleAPI
 } from "@/composable/apiHandler";
 import type {
-    Options,
     ResponseStatus
 } from "@/models/type";
 
@@ -72,7 +71,6 @@ definePageMeta({
 /**
  * Begin::Declare variable section
  */
-const dataOptions: Ref<Options> = ref<Options>({});
 const data: Ref<any> = ref<any>({});
 /**
  * End::Declare variable section
@@ -89,22 +87,15 @@ const data: Ref<any> = ref<any>({});
 /**
  * Begin::Fetch data section
  */
- const fetchData = async (current_page: number = 1,per_page: number = 10): Promise<void> => {
-    const result: ResponseStatus = await api.get(`exam/studentExam/test/1`, false) as ResponseStatus;
+ const fetchData = async (): Promise<void> => {
+    let authId = localStorage.getItem('auth_id');
+    const result: ResponseStatus = await api.get(`exam/studentExam/test/${authId}`, false) as ResponseStatus;
     if(!result.error)
     {
         data.value = result as object;
-        console.log(data.value)
+        console.log(authId)
     }
 }
-
-const fetchOption = async (): Promise<void> => {
-    const options: ResponseStatus = await api.get("") as ResponseStatus;
-    if(!options.error)
-    {
-        dataOptions.value = options.data as unknown as Options;
-    }
-};
 /**
  * End::Fetch data section
  */
