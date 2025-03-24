@@ -156,13 +156,13 @@
                     v-if="isPublishing === 'publishing'"
                     class="w-[calc(99%/2)] z-20"
                     label="Exam Time (Mins)"
-                    name="">
+                    name="exam_time">
                     <UInput
                         type="text"
                         color="white"
                         variant="outline"
                         size="md"
-                        name=""
+                        name="exam_time"
                         role="input"
                         class="w-full"
                         placeholder="Enter exam duration in (minutes)..."/>
@@ -219,7 +219,7 @@
                                 class="w-[100px]"
                                 @update:model-value="(value: number) => {
                                     item.score = Number(value);
-                                    calculateMark.total_mark = questions.reduce((sum: any, q: any) => sum + (q.mark || 0), 0);
+                                    calculateMark.total_mark = questions.reduce((sum: any, q: any) => sum + (q.score || 0), 0);
                                     calculateMark.pass_mark = Number(calculateMark.total_mark) / Number(2);
                                 }"  
                                 :model-value="item.score"/>
@@ -420,7 +420,7 @@ const calculateMark: Ref<Items> = ref<Items>({
     const formData: any = context.getDataForm(event as SubmitEvent) as any;
     formData.questions = questions.value;
     formData.total_mark = Number(calculateMark.value.total_mark);
-    formData.total_mark = Number(calculateMark.value.pass_mark);
+    formData.pass_mark = Number(calculateMark.value.pass_mark);
     if(props.examId != null)
     {
         await api.update(`exam/${props.examId}`, true, formData) as ResponseStatus;

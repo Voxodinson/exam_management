@@ -38,11 +38,11 @@
                         :options="[
                             {
                                 id: 1,
-                                name: 'admin'
+                                name: 'Admin'
                             },
                             {
                                 id: 2,
-                                name: 'user'
+                                name: 'User'
                             }
                         ]"
                         option-attribute="name"

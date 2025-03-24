@@ -153,17 +153,25 @@
                                 ) - {{ exam.exam_time }}
                             </span>
                         </div>
-                        <span
+                        <UButton
                             :class="{
-                                ' text-white border-blue-200 bg-blue-400': exam.status === 'publishing',
+                                ' text-white border-blue-200 bg-blue-400 hover:bg-blue-300': exam.status === 'publishing',
                                 'text-white bg-yellow-400 border-yellow-400': exam.status === 'pending',
+                            }"
+                            @click="() => {
+                                Confirm(`Are you sure to unpublishing exam ( ${ exam.name } ) ?`, async (): Promise<void> => {
+                                    const result = await api.update(`exam/unassign/${ exam.id }`, true, {}) as ResponseStatus;
+                                    if (!result.error) {
+                                        await fetchData();
+                                    }
+                                })
                             }"
                             class="uppercase w-[120px] rounded-full py-1 px-2 border-[1px] text-[.8rem] flex items-center justify-between gap-3">
                             {{ exam.status }}
                             <UIcon 
                                 name="ic:sharp-circle" 
                                 class="w-3 h-3 animate-ping text-white"/>
-                        </span>
+                        </UButton>
                     </div>
                     <div 
                         class="w-full grid grid-cols-4 pt-2">
@@ -193,13 +201,6 @@
                         </div>
                         <div 
                             class="*:text-[.9rem] border-r-[1px] border-gray-200 flex items-center flex-col gap-2 justify-center">
-                            <span class="text-center">
-                                Total question:
-                                <span
-                                    class="text-blue-400">
-                                    <!-- {{ exam.questions.length || 0 }} -->
-                                </span>
-                            </span>
                             <UButton
                                 :label="isShowQuestion[idx] ? 'Close question' : 'Show question'"
                                 color="white"
@@ -347,6 +348,9 @@ import {
 import { 
     NoDataFound 
 } from "@/assets/images";
+import { 
+    Confirm 
+} from "@/utils/dialog";
 definePageMeta({
     colorMode: 'light'
 });
@@ -458,15 +462,6 @@ const searchData = async (value: string): Promise<void> => {
     }, 250);
 }
 
-const filterData = async (current_page: number = 1): Promise<void> => {
-    const per_page: number = 10;
-    const url: string = `package?per_page=${per_page}&page_no=${current_page}&status_id=${filters.value.status_id}&warehouse_id=${filters.value.status_id}`;
-    const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
-    if(!result.error)
-    {
-        data.value = result as any;
-    }
-}
 /**
  * End::Fetch data section
  */

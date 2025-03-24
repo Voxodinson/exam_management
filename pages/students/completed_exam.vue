@@ -5,6 +5,7 @@
             class="w-[60%]  flex flex-col gap-3 p-3 py-6">
             <div 
                 v-for="(exam, idx) in data.data"
+                :key="idx"
                 class="flex flex-col border-[1px] relative border-gray-200 rounded-md p-3 overflow-hidden">
                 <h3
                     class="font-semibold capitalize text-[1.2rem] text-gray-600">
@@ -17,7 +18,7 @@
                 
                 <span 
                     class="text-gray-500 text-[1.5rem] mt-3">
-                    {{ exam.score }}/100 
+                    {{ exam.score }}/{{ exam.exam.total_mark}}
                     <span
                         class="text-[.8rem] text-blue-400"> {{ exam.percentage }}%</span>
                 </span>
@@ -29,12 +30,12 @@
                 <img 
                     :src="Check" 
                     alt="icon"
-                    v-if="exam.score >  100/2"
+                    v-if="exam.score > Number(exam.exam.pass_mark)"
                     class="w-[220px] absolute -top-6 opacity-20 -z-10 right-0">
                 <img 
                     :src="Failed" 
                     alt="icon"
-                    v-if="exam.score < 100/2"
+                    v-if="exam.score < Number(exam.exam.pass_mark)"
                     class="w-[220px] absolute -top-6 opacity-20 -z-10 right-0">
             </div>
         </div>
@@ -89,7 +90,7 @@ const data: Ref<any> = ref<any>({});
  * Begin::Fetch data section
  */
  const fetchData = async (current_page: number = 1,per_page: number = 10): Promise<void> => {
-    const result: ResponseStatus = await api.get(`exam/studentExam/test?current_page=${current_page}&per_page=${per_page}`, false) as ResponseStatus;
+    const result: ResponseStatus = await api.get(`exam/studentExam/test/1`, false) as ResponseStatus;
     if(!result.error)
     {
         data.value = result as object;
