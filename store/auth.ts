@@ -4,6 +4,7 @@ import {
 import { 
     Success 
 } from '@/utils/dialog';
+import {Error} from '@/utils/dialog';
 interface UserPayloadInterface {
     username: string;
     password: string;
@@ -52,12 +53,12 @@ export const useAuthStore = defineStore('auth', {
                     }
                 } else {
                     this.authenticated = false;
-                    this.messages = 'Invalid credentials, please try again.';
+                    Error('Invalid credentials, please try again.');
                 }
                 
             } catch (error) {
                 this.authenticated = false;
-                this.messages = 'Authentication failed, please try again.';
+                Error('Authentication failed, please try again.');
             }
         },
 

@@ -25,7 +25,7 @@
         <div class="w-full h-fit max-h-[80vh] overflow-auto p-2">
             <Table
                 :columns="columns"
-                :data="[]"
+                :data="data"
                 is-custom
                 v-slot="{ data }"
                 @update:data="async (current_page: number): Promise<void> => {
@@ -33,64 +33,54 @@
                 }">
                 <tr 
                     class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
-                    <td
-                        class="w-[300px]">
+                    <td>
+                        <span class="capitalize">
+                            {{ data.student_name }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="capitalize">
+                            {{ data.code }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="text-[1.2rem]">
+                            {{ data.score }}/{{ data.total_score}}
+                            <span class="text-blue-500 text-[.9rem]">{{ data.percentage }}%</span>
+                        </span>
+                    </td>
+                    <td>
                         <span class="block text-[.9rem]">
-                            Dept: <span class="text-blue-400">{{ data.department_name }}</span>
+                            Start Time: <span class="text-blue-400">{{ data.start_time }}</span>
                         </span>
                         <span class="block text-[.9rem]">
-                            Class: <span class="text-blue-400">{{ data.class }}</span>
+                            End Time: <span class="text-blue-400">{{ data.end_time }}</span>
                         </span>
                         <span class="block text-[.9rem]">
-                            Shift: <span class="text-blue-400">{{ data.shift }}</span>
+                            Time Spend: <span class="text-blue-400">{{ data.total_time_spent }}</span>
                         </span>
                     </td>
                     <td>
-                        <span>
-                            {{ data.exam }}
-                        </span>
-                    </td>
-                    <td>
-                        <span>
-                            {{ data.total_students }}
-                        </span>
-                    </td>
-                    <td>
-                        <span>
-                            {{ data.total_submited }}
-                        </span>
-                    </td>
-                    <td>
-                        <span>{{ data.total_score }}</span>
-                    </td>
-                    <td>
-                        
-                    <UDropdown 
-                        :items="[
-                            [{
-                                label: 'View Information',
-                                iconClass: 'text-blue-400',
-                                class: 'text-blue-400',
-                                icon: 'material-symbols:folder-eye-outline',
-                            }], 
-                            [{
-                                label: 'Delete',
-                                icon: 'i-heroicons-trash-20-solid',
-                                iconClass: 'text-red-400',
-                                class: 'text-red-400',
-                                click: () => {
-                                    Confirm('Are you sure to delete exam..?', async (): Promise<void> => {
-                                        const result = await api.update(``, true, {}) as ResponseStatus;
-                                        
-                                    });
-                                }
-                            }]
-                        ]" 
-                        :popper="{ placement: 'bottom-start' }">
-                        <UButton 
-                            color="white"
-                            trailing-icon="mdi:dots-vertical" />
-                    </UDropdown>
+                        <UDropdown 
+                            :items="[
+                                [{
+                                    label: 'Delete',
+                                    icon: 'i-heroicons-trash-20-solid',
+                                    iconClass: 'text-red-400',
+                                    class: 'text-red-400',
+                                    click: () => {
+                                        Confirm('Are you sure to delete exam..?', async (): Promise<void> => {
+                                            const result = await api.update(``, true, {}) as ResponseStatus;
+                                            
+                                        });
+                                    }
+                                }]
+                            ]" 
+                            :popper="{ placement: 'bottom-start' }">
+                            <UButton 
+                                color="white"
+                                trailing-icon="mdi:dots-vertical" />
+                        </UDropdown>
                     </td>
                 </tr>
             </Table>
@@ -126,9 +116,11 @@ const emits = defineEmits<{
 }>();
 
 const props = withDefaults(defineProps<{
-    open: boolean
+    open: boolean,
+    examId: number | null
 }>(),{
-    open: false
+    open: false,
+    examIdclassId: null
 });
 /**
  * End::Set event trigger to parent component
@@ -147,22 +139,21 @@ const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
  *Begin::Declare variable in this section 
  */ 
 const data: Ref<object> = ref<object>({});
-const viewQuestion: Ref<boolean> = ref<boolean>(false);
 const columns: Ref<Column[]> = ref<Column[]>([
     {
-        title:'Department / Class / shift',
+        title:'Student Name',
+    },
+    {
+        title:'Student Code',
     },
     {
         title: "exam"
     },
     {
-        title: 'Total Students'
+        title: 'Score'
     },
     {
-        title: 'Total Submited'
-    },
-    {
-        title: 'Total Score (%)'
+        title: 'Time Summary'
     },
     {
         title:'Action'
@@ -175,14 +166,25 @@ const columns: Ref<Column[]> = ref<Column[]>([
 /**
  * Begin::Fetch data section
  */
+const fetchData = async (search: string = ''): Promise<void> => {
+    let url: string = `exam/student/result/exam/${props.examId}`;
+    if(search)
+    {
+        url += `&search=${search}`;
+    }
+    const result: any = await api.get(url) as any;
+    if(!result.error)
+    {
+        data.value = result as any;
+        console.log(data.value)
+    }
+}
 
 
 /**
  * End::Fetch data section
  */
-const toggleViewQuestion = (): void => {
-    viewQuestion.value = !viewQuestion.value as boolean;
-}
+
 /**
  * Begin::Some logical section
  */
@@ -191,6 +193,15 @@ const toggleViewQuestion = (): void => {
 /**
  * End::Some logical section
  */
+
+watch((): boolean => props.open, async (value: boolean): Promise<void> => {
+    if(value)
+    {
+        await fetchData();
+    }
+});
+
 onMounted(async (): Promise<void> => {
+    await fetchData();
 })
 </script>

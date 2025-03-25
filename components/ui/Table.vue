@@ -44,7 +44,20 @@
                     v-if="!Array.from(data?.data || [])[0]">
                     <td
                         colspan="100%"
-                        class="text-center py-2 font-semibold text-lg text-gray-400">No Data!!!</td>
+                        class="text-center py-2 font-semibold text-lg  border-gray-200 border-[1px] text-gray-400">
+                        <div 
+                            v-if="data.total === Number(0)"
+                            class="w-full flex gap-3 flex-col items-center mt-10 justify-center">
+                            <img 
+                                :src="NoDataFound" 
+                                alt="no data image"
+                                class="w-[50px] opacity-30">
+                            <span
+                                class="text-gray-400 text-[.8rem]">
+                                Ops...! Data not available
+                            </span>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -74,7 +87,20 @@
                     v-if="!Array.from(data?.data || [])[0]">
                     <td
                         colspan="100%"
-                        class="text-center py-2 font-semibold text-lg  border-gray-200 border-[1px] text-gray-400">No Data!!!</td>
+                        class="text-center py-2 font-semibold text-lg  border-gray-200 border-[1px] text-gray-400">
+                        <div 
+                            v-if="data.total === Number(0)"
+                            class="w-full flex gap-3 flex-col items-center mt-10 justify-center">
+                            <img 
+                                :src="NoDataFound" 
+                                alt="no data image"
+                                class="w-[50px] opacity-30">
+                            <span
+                                class="text-gray-400 text-[.8rem]">
+                                Ops...! Data not available
+                            </span>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -124,7 +150,9 @@ import type {
     Column,
     DataChild
 } from '@/models/type';
-
+import {
+    NoDataFound 
+} from '@/assets/images';
 defineProps({
     columns: {
         type: Array as PropType<Column[]>,

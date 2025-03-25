@@ -49,7 +49,7 @@
                     class="flex w-fit flex-wrap gap-2">
                     <SelectMenu
                         name=""
-                        :options="[]"
+                        :options="dataOptions.exam"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
@@ -67,7 +67,7 @@
                         :model-value="filters.exam_id"/>
                     <SelectMenu
                         name=""
-                        :options="[]"
+                        :options="dataOptions.department"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
@@ -78,14 +78,14 @@
                                 filters.department_id = Number(value.id);
                             }
                             else{
-                                filters.deprtment_id = '';
+                                filters.department_id = '';
                             }
                             await fetchData(Number($route.query.page_no) || 1);
                         }"
-                        :model-value="filters.deprtment_id"/>
+                        :model-value="filters.department_id"/>
                     <SelectMenu
                         name=""
-                        :options="[]"
+                        :options="dataOptions.class"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
@@ -100,25 +100,25 @@
                             }
                             await fetchData(Number($route.query.page_no) || 1);
                         }"
-                        :model-value="filters.major_id"/>
+                        :model-value="filters.class_id"/>
                     <SelectMenu
                         name=""
-                        :options="[]"
+                        :options="dataOptions.major"
                         value-attribute="id"
                         option-attribute="name"
                         id-attribute="id"
-                        placeholder="Select a shift"
+                        placeholder="Select a major"
                         class="w-[250px]"
                         @update:model-value="async (value: Items): Promise<void> => {
                             if(value?.id){
-                                filters.shift_id = Number(value.id);
+                                filters.major_id = Number(value.id);
                             }
                             else{
-                                filters.shift_id = '';
+                                filters.major_id = '';
                             }
                             await fetchData(Number($route.query.page_no) || 1);
                         }"
-                        :model-value="filters.shift_id"/>
+                        :model-value="filters.major_id"/>
                     <UTooltip 
                         text="Sort by Letter"
                         :popper="{ offsetDistance: 12 }">
@@ -152,83 +152,101 @@
             class="w-full bg-white rounded-md overflow-hidden">
             <Table
                 :columns="columns"
-                :data="datas"
+                :data="data"
                 is-custom
-                v-slot="{ data }"
-                @update:data="async (current_page: number): Promise<void> => {
-                    
-                }">
+                v-slot="{ data }">
                 <tr 
                     class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
-                    <td
-                        class="w-[300px]">
+                    <td>
                         <span class="block text-[.9rem]">
                             Dept: <span class="text-blue-400">{{ data.department_name }}</span>
                         </span>
                         <span class="block text-[.9rem]">
-                            Class: <span class="text-blue-400">{{ data.class }}</span>
+                            Class: <span class="text-blue-400">{{ data.class_name }}</span>
                         </span>
                         <span class="block text-[.9rem]">
-                            Shift: <span class="text-blue-400">{{ data.shift }}</span>
+                            Major: <span class="text-blue-400">{{ data.major_name }}</span>
                         </span>
                     </td>
                     <td>
                         <span>
-                            {{ data.exam }}
+                            {{ data.exam_name }}
                         </span>
                     </td>
                     <td>
-                        <span>
-                            {{ data.total_students }}
+                        <span
+                            class="flex items-center gap-3 w-[100px] justify-between px-4 rounded-md border-[1px] border-gray-200">
+                            {{ data.total_students }} 
+                            <UIcon 
+                                :name="data.total_students <= 1 ? 'material-symbols:person' : 'ic:baseline-groups'" 
+                                class="w-5 h-5 text-blue-400"/>
                         </span>
                     </td>
                     <td>
-                        <span>
-                            {{ data.total_submited }}
+                        <span class="block text-[.9rem]">
+                            Exam Time: <span class="text-blue-400">{{ data.exam_time }}</span>
+                        </span>
+                        <span class="block text-[.9rem]">
+                            Total Score: <span class="text-blue-400">{{ data.total_mark }}</span>
+                        </span>
+                        <span class="block text-[.9rem]">
+                            Pass_mark: <span class="text-blue-400">{{ data.pass_mark }}</span>
                         </span>
                     </td>
                     <td>
-                        <span>{{ data.total_score }}</span>
+                        <span class="block text-[.9rem]">
+                            All Scores: <span class="text-blue-400">{{ data.total_score_class }}</span>
+                        </span>
+                        <span class="block text-[.9rem]">
+                            Students Score: <span class="text-blue-400">{{ data.total_score_student }}</span>
+                        </span>
+                        <span class="block text-[.9rem]">
+                            Percentage: <span class="text-blue-400">{{ data.percentage }}%</span>
+                        </span>
                     </td>
                     <td>
-                        
-                    <UDropdown 
-                        :items="[
-                            [{
-                                label: 'View Information',
-                                iconClass: 'text-blue-400',
-                                class: 'text-blue-400',
-                                icon: 'material-symbols:folder-eye-outline',
-                                click: () => {
-                                    toggleClassResultModal(true);
-                                }
-                            }], 
-                            [{
-                                label: 'Delete',
-                                icon: 'i-heroicons-trash-20-solid',
-                                iconClass: 'text-red-400',
-                                class: 'text-red-400',
-                                click: () => {
-                                    Confirm('Are you sure to delete exam..?', async (): Promise<void> => {
-                                        const result = await api.update(``, true, {}) as ResponseStatus;
-                                        if(result){
-                                            await fetchData();
+                        <div 
+                            class="uppercase w-[140px] rounded-full py-1 px-2 border-[1px] text-[.8rem] flex items-center justify-between gap-3"
+                            :class="[
+                                data.status == 1 ? 'bg-green-400 text-white' : '',
+                                data.status == 2 ? 'bg-blue-400 text-white' : '',
+                                data.status == 3 ? 'bg-yellow-400 text-white' : '',
+                                data.status == 4 ? 'bg-red-400 text-white' : '',
+                            ]">
+                            {{ data.message }}
+                            <UIcon 
+                                name="ic:sharp-circle" 
+                                class="w-3 h-3 animate-ping text-white"/>
+                    </div>
+                    </td>
+                    <td>
+                        <UDropdown 
+                            :items="[
+                                [{
+                                    label: 'View Information',
+                                    iconClass: 'text-blue-400',
+                                    class: 'text-blue-400',
+                                    icon: 'material-symbols:folder-eye-outline',
+                                    click: () => {
+                                        examId = Number(data.exam_id);
+                                        if(examId != null){
+                                            toggleClassResultModal(true);
                                         }
-                                    });
-                                }
-                            }]
-                        ]" 
-                        :popper="{ placement: 'bottom-start' }">
-                        <UButton 
-                            color="white"
-                            trailing-icon="mdi:dots-vertical" />
-                    </UDropdown>
+                                    }
+                                }]
+                            ]" 
+                            :popper="{ placement: 'bottom-start' }">
+                            <UButton 
+                                color="white"
+                                trailing-icon="mdi:dots-vertical" />
+                        </UDropdown>
                     </td>
                 </tr>
             </Table>
         </div>
     </div>
     <ClassResultInfo
+        :exam-id="examId"
         :open="openResultModal"
         @toggle="toggleClassResultModal"/>
 </template>
@@ -252,9 +270,6 @@ import type {
 import { 
     ClassResultInfo 
 } from '@/modal';
-import { 
-    Confirm 
-} from '@/utils/dialog';
 definePageMeta({
     colorMode: 'light'
 });
@@ -278,10 +293,10 @@ const filters: Ref<Items> = ref<Items>({
     exam_id: '',
     department_id: '',
     class_id: '',
-    shift: '',
+    major_id: '',
 });
 const openResultModal: Ref<boolean> = ref<boolean>(false);
-const majorId: Ref<number | null> = ref<number | null>(null);
+const examId: Ref<number | null> = ref<number | null>(null);
 const linksItem = [
     {
         label: 'School Mangements'
@@ -299,37 +314,22 @@ const columns: Ref<Column[]> = ref<Column[]>([
         title: "exam"
     },
     {
-        title: 'Total Students'
+        title: 'Total Students Submited'
     },
     {
-        title: 'Total Submited'
+        title: 'Exam Summary'
     },
     {
-        title: 'Total Score (%)'
+        title: 'Total Summary'
+    },
+    {
+        'title': 'Status'
     },
     {
         title:'Action'
     }
  ])
- const datas = {
-    status: 'ok',
-    data: [
-        {
-            "department_name": "Information Technology",
-            "class": "Class Name",
-            "shift": "Shift Name",
-            "exam": "Exam Name",
-            "total_students": 100,
-            "total_submited": 99,
-            "total_score": 9900,
-        }
 
-    ],
-    page_no: 1,
-    per_page: 10,
-    total: 10,
-    total_page: 10
- };
 /**
  * End::Declare variable section
  */ 
@@ -350,9 +350,9 @@ const toggleFilter = (): void => {
 /**
  * Begin::Fetch data section
  */
- const fetchData = async (current_page: number = 1, search: string = ''): Promise<void> => {
+const fetchData = async (current_page: number = 1, search: string = ''): Promise<void> => {
     const per_page: number = 10;
-    let url: string = `purchase?per_page=${per_page}&page_no=${current_page}&exam_id=${filters.value.exam_id}&department_id=${filters.value.department_id}&class_id=${filters.value.class_id}&shift_id=${filters.value.shift_id}`;
+    let url: string = `exam/student/results/exams?per_page=${per_page}&page_no=${current_page}&exam_id=${filters.value.exam_id}&department_id=${filters.value.department_id}&class_id=${filters.value.class_id}&major_id=${filters.value.major_id}`;
     if(search)
     {
         url += `&search=${search}`;
@@ -365,7 +365,7 @@ const toggleFilter = (): void => {
 }
 
 const fetchOption = async (): Promise<void> => {
-    const options: ResponseStatus = await api.get("") as ResponseStatus;
+    const options: ResponseStatus = await api.get("setting/option/exam/result") as ResponseStatus;
     if(!options.error)
     {
         dataOptions.value = options.data as unknown as Options;
@@ -379,29 +379,22 @@ const searchData = async (value: string): Promise<void> => {
     }
     timeout.value = setTimeout(async (): Promise<void> => {
         await fetchData(1, value);
-    }, 250);
+    }, 200);
 }
 
-const filterData = async (current_page: number = 1): Promise<void> => {
-    const per_page: number = 10;
-    const url: string = `package?per_page=${per_page}&page_no=${current_page}&status_id=${filters.value.status_id}&warehouse_id=${filters.value.warehouse_id}`;
-    const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
-    if(!result.error)
-    {
-        data.value = result as object;
-    }
-}
 /**
  * End::Fetch data section
  */
-//  watch((): boolean => openCreate.value, async (value: boolean): Promise<void> => {
-//     if(!value)
-//     {
-//         majorId.value = null;
-//     }
-// });
+
+watch((): boolean => openResultModal.value, async (value: boolean): Promise<void> => {
+    if(!value)
+    {
+        examId.value = null;
+    }
+});
 
 onMounted(async (): Promise<void> => {
-    // await fetchData();
+    await fetchData();
+    await fetchOption();
 });
 </script>
