@@ -7,6 +7,7 @@ import Technology from "./technology.png";
 import Check from './check.png';
 import NoDataFound from './no_data.png';
 import Failed from './cross.png';
+import WhiteTechBG from './white_tech_bg.jpg';
 export
 {
     AddImage,
@@ -17,5 +18,6 @@ export
     Technology,
     Check,
     NoDataFound,
-    Failed
+    Failed,
+    WhiteTechBG
 };

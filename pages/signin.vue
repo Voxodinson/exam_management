@@ -2,46 +2,32 @@
     <div
         class="h-[100vh] w-full">
         <img
-            :src="BackgroundLogin"
+            :src="WhiteTechBG"
             alt="Logo"
             class="object-cover w-full h-full opacity-90"
             loading="lazy" />
     </div>
     <div
-        class="flex h-full w-full absolute top-0 left-0 justify-center items-center shadow-sm overflow-hidden">
+        class="flex h-full w-1/2 absolute top-0 right-0 ">
         <div
-            class="form-submit w-1/2 flex items-center justify-center">
+            class="h-[100vh] w-full flex items-center justify-center bg-white relative overflow-hidden">
+            <img 
+                :src="Technology" 
+                alt="image"
+                class="w-[400px] h-[400px] opacity-[0.15] z-0 absolute bottom-[10px] right-[10px]">
             <form
                 name="signin"
                 method="POST"
                 enctype="multipart/form-data"
-                class="panel-login p-6 rounded-md z-10  pt-10 flex flex-col w-[80%] overflow-hidden relative justify-center gap-3 bg-white"
+                class=" p-6 rounded-md z-10 h-full pt-10 flex flex-col w-[70%]  justify-center gap-3"
                 @submit.prevent="getData">
-                <img 
-                    :src="Technology" 
-                    alt=""
-                    class="w-[350px] h-[350px] opacity-20 z-0 absolute bottom-[10px] right-[10px]">
                 <h4
-                    class="text-[3rem] text-sky-300 text-center font-normal ">
+                    class="text-[3rem] text-sky-400 text-center font-normal ">
                     Welcome Back
                     <p class="text-center text-[.9rem] text-gray-400 font-meduim">
                         Please login into your account!
                     </p>
                 </h4>
-                <div
-                    v-if="messages"
-                    :class="(messages === 'failed' || messages === 'Your account type is not authorized to login as admin.' || messages === 'Authentication failed, please try again.') 
-                        ? 'text-red-500 bg-red-100 border-red-300' 
-                        : (messages === 'Logging in successfully...' || messages === 'Logging out successfully...') 
-                        ? 'text-green-500 bg-green-100 border-green-300' 
-                        : ''"
-                    class="w-full p-3 border-[1px] rounded-md">
-                    <p class="text-[1rem] font-thin">
-                        {{ messages }}
-                    </p>
-                </div>
-
-
                 <UFormGroup
                     class="w-full mt-6"
                     label="Username"
@@ -126,7 +112,8 @@ import {
 } from '@/store/auth';
 import { 
     BackgroundLogin,
-    Technology
+    Technology,
+    WhiteTechBG
 } from "@/assets/images";
 import { 
     Success 
@@ -200,8 +187,6 @@ const login = async (): Promise<void> => {
         }
     }
 };
-
-
 /**
  * End::Some logical in this component
  */

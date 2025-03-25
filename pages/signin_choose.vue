@@ -1,6 +1,13 @@
 <template>
+    <div 
+        class="w-full h-[100vh] relative">
+        <img 
+            :src="WhiteTechBG" 
+            alt="background image"
+            class="w-full h-full object-cover">
+    </div>
     <div
-        class="w-full h-[100vh] bg-gray-200 flex items-center justify-center">
+        class="w-full absolute bottom-[20vh] left-0  flex items-end justify-center">
         <div 
             class="w-fit flex flex-col items-center gap-3">
             <div class="flex flex-col items-center justify-center">
@@ -22,7 +29,7 @@
                 <NuxtLink 
                     to="/signin"
                     class="px-10 py-1 rounded-md bg-[#3A6D8C] text-[.9rem] text-white">
-                    Admin Login
+                    Login
                 </NuxtLink>
             </div>
         </div>
@@ -30,6 +37,9 @@
 </template>
 
 <script lang="ts" setup>
+import { 
+    WhiteTechBG 
+} from '@/assets/images';
 definePageMeta({
   layout: 'login',
   colorMode: 'light'
