@@ -7,11 +7,12 @@
         :ui="{
             trigger: 'rounded-3xl  overflow-hidden',
             background: 'bg-white',
+            width: 'w-fit min-w-[200px]'
         }">
         <div
             class="bg-white flex gap-x-2  rounded-md items-start">
             <UAvatar
-                src=""
+                :src="profile"
                 alt="user"
                 size="md"/>
         </div>
@@ -41,6 +42,7 @@ import {
  */
 const {
     authenticated,
+    profile,
     username } = storeToRefs(useAuthStore());
 const { logUserOut } = useAuthStore();
 const router: Router = useRouter();
@@ -74,7 +76,7 @@ const items: Ref<DropdownItem[][]> = computed(() => [
 const logout = (): void => {
     Confirm('Do you want to log out now?', (): void => {
         logUserOut();
-        router.push('/choose_signin');
+        router.push('/signin_choose');
     });
 }
 

@@ -2,7 +2,19 @@
     <div
         class="w-full h-fit flex items-center justify-center">
         <div 
-            class="w-[60%]  flex flex-col gap-3 p-3 py-6">
+            class="w-[60%] flex flex-col gap-3 p-3 py-6">
+            <div 
+                v-if="data.data?.length === 0"
+                class="flex gap-3 flex-col items-center mt-10 justify-center">
+                <img 
+                    :src="NoDataFound" 
+                    alt="no data image"
+                    class="w-[50px] opacity-30">
+                <span
+                    class="text-gray-400 text-[.8rem]">
+                    Ops...! Publish exam not available
+                </span>
+            </div>
             <div 
                 v-for="(exam, idx) in data.data"
                 :key="idx"
@@ -18,13 +30,14 @@
                 
                 <span 
                     class="text-gray-500 text-[1.5rem] mt-3">
-                    {{ exam.score }}/{{ exam.exam.total_mark}}
+                    {{ exam.score }}/{{ Math.floor(exam.exam.total_mark)}}
                     <span
                         class="text-[.8rem] text-blue-400"> {{ exam.percentage }}%</span>
                 </span>
                 <span
                     class="text-gray-500 border-t-[1px] border-gray-200 pt-3 text-[.8rem] mt-3 capitalize">
                     Exam Time: {{ exam.exam.exam_time }} &ensp; - &ensp;
+                    Time Spent: {{ exam.total_time_spent }} &ensp; - &ensp;
                     Submited: {{ exam.submitted_at }}
                 </span>
                 <img 
@@ -54,7 +67,9 @@ import {
 import type {
     ResponseStatus
 } from "@/models/type";
-
+import { 
+    NoDataFound 
+} from '@/assets/images';
 definePageMeta({
     layout: 'student',
     colorMode: 'light'
