@@ -3,7 +3,7 @@
         class="custom-modal p-3 overflow-hidden"
         :model-value="open"
         :ui="{
-            width: 'w-full sm:max-w-[90%]',
+            width: 'w-full sm:max-w-[95%]',
             overlay: {
                 background: 'bg-gray-950/75'
             }
@@ -147,9 +147,6 @@ const columns: Ref<Column[]> = ref<Column[]>([
         title:'Student Code',
     },
     {
-        title: "exam"
-    },
-    {
         title: 'Score'
     },
     {
@@ -201,7 +198,4 @@ watch((): boolean => props.open, async (value: boolean): Promise<void> => {
     }
 });
 
-onMounted(async (): Promise<void> => {
-    await fetchData();
-})
 </script>

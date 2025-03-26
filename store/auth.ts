@@ -17,7 +17,8 @@ export const useAuthStore = defineStore('auth', {
         username: '',
         status: '',
         account_type: '',
-        auth_id: ''
+        auth_id: '',
+        profile: ''
     }),
     actions: {
         async authenticateUser({ username, password }: UserPayloadInterface) {
@@ -39,6 +40,7 @@ export const useAuthStore = defineStore('auth', {
                     this.status = data?.status;
                     this.account_type = data?.data?.account_type;
                     this.auth_id = data?.data?.student?.id;
+                    this.profile = data?.data?.profile;
 
                     localStorage.setItem('auth_id', this.auth_id);
                     localStorage.setItem('username', this.username);

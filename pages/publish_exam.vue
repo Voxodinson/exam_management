@@ -146,11 +146,10 @@
                         <div 
                             class="flex items-center gap-3 py-1 px-4 border-[1px] border-gray-200 bg-white shadow-sm *:text-[.9rem] rounded-full">
                             <span>
-                                (
                                 <span class="text-blue-400">
-                                    {{ exam.exam_time || 0}}
-                                </span> 
-                                ) - {{ exam.exam_time }}
+                                    {{ Math.floor(exam.exam_time ) || 0}}
+                                </span>
+                                mn
                             </span>
                         </div>
                         <UButton
@@ -373,7 +372,7 @@ const publishId: Ref<number | null> = ref<number | null>(null);
 const filters: Ref<Items> = ref<Items>({
     department_id: '',
 });
-const isOpenFilter: Ref<boolean> = ref<boolean>(true);
+const isOpenFilter: Ref<boolean> = ref<boolean>(false);
 const openCreate: Ref<boolean> = ref<boolean>(false);
 const isShowQuestion = ref<{ [key: number]: boolean }>({});
 const examId: Ref<number | null> = ref<number | null>(null);

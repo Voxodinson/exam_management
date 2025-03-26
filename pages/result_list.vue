@@ -184,13 +184,13 @@
                     </td>
                     <td>
                         <span class="block text-[.9rem]">
-                            Exam Time: <span class="text-blue-400">{{ data.exam_time }}</span>
+                            Exam Time: <span class="text-blue-400">{{ Math.floor(data.exam_time) }}</span>
                         </span>
                         <span class="block text-[.9rem]">
-                            Total Score: <span class="text-blue-400">{{ data.total_mark }}</span>
+                            Total Score: <span class="text-blue-400">{{ Math.floor(data.total_mark) }}</span>
                         </span>
                         <span class="block text-[.9rem]">
-                            Pass_mark: <span class="text-blue-400">{{ data.pass_mark }}</span>
+                            Pass_mark: <span class="text-blue-400">{{ Math.floor(data.pass_mark) }}</span>
                         </span>
                     </td>
                     <td>

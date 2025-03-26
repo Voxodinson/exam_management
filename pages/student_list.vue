@@ -335,7 +335,7 @@ const filters: Ref<Items> = ref<Items>({
     major_id: '',
     nationality: ''
 });
-const isOpenFilter: Ref<boolean> = ref<boolean>(true);
+const isOpenFilter: Ref<boolean> = ref<boolean>(false);
 const openCreate: Ref<boolean> = ref<boolean>(false);
 const openDetails: Ref<boolean> = ref<boolean>(false);
 const studentId: Ref<number | null> = ref<number | null>(null);

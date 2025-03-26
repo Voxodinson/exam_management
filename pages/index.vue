@@ -56,40 +56,94 @@
                 </div>
                 <Table
                     :columns="columns"
-                    :data="data"
+                    :data="dataResult"
                     is-custom
-                    v-slot="{ data, index }"
-                    @update:data="async (current_page: number): Promise<void> => {
-                        
-                    }">
+                    v-slot="{ data }">
                     <tr 
                         class="*:px-2.5 *:py-1.5 hover:bg-gray-100 cursor-pointer">
                         <td>
-                            <span>{{ index +1 }}</span>
-                        </td>
-                        <td>
-                            <div 
-                                class="w-[60px] h-[60px] overflow-hidden rounded-full border-[1px] border-gray-200">
-                                <img 
-                                    :src="data.img_link_url || UserImage" 
-                                    alt=""
-                                    class="w-full h-full object-cover hover:scale-110 transition">
-                            </div>
-                        </td>
-                        <td>
-                            <span class="text-blue-500">{{ data.code }}</span>
-                        </td>
-                        <td>
-                            <span>{{ data.first_name }} {{ data.last_name }}</span>
-                        </td>
-                        <td>
-                            <span
-                                class="text-[.9rem]">
-                                {{ data.department_name }} - {{ data.class_name }} - {{ data.major_name }}
+                            <span class="block text-[.9rem]">
+                                Dept: <span class="text-blue-400">{{ data.department_name }}</span>
+                            </span>
+                            <span class="block text-[.9rem]">
+                                Class: <span class="text-blue-400">{{ data.class_name }}</span>
+                            </span>
+                            <span class="block text-[.9rem]">
+                                Major: <span class="text-blue-400">{{ data.major_name }}</span>
                             </span>
                         </td>
                         <td>
-                            <span class="text-blue-500">{{ data.point || 100}} pt</span>
+                            <span>
+                                {{ data.exam_name }}
+                            </span>
+                        </td>
+                        <td>
+                            <span
+                                class="flex items-center gap-3 w-[100px] justify-between px-4 rounded-md border-[1px] border-gray-200">
+                                {{ data.total_students }} 
+                                <UIcon 
+                                    :name="data.total_students <= 1 ? 'material-symbols:person' : 'ic:baseline-groups'" 
+                                    class="w-5 h-5 text-blue-400"/>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="block text-[.9rem]">
+                                Exam Time: <span class="text-blue-400">{{ Math.floor(data.exam_time) }}</span>
+                            </span>
+                            <span class="block text-[.9rem]">
+                                Total Score: <span class="text-blue-400">{{ Math.floor(data.total_mark) }}</span>
+                            </span>
+                            <span class="block text-[.9rem]">
+                                Pass_mark: <span class="text-blue-400">{{ Math.floor(data.pass_mark) }}</span>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="block text-[.9rem]">
+                                All Scores: <span class="text-blue-400">{{ data.total_score_class }}</span>
+                            </span>
+                            <span class="block text-[.9rem]">
+                                Students Score: <span class="text-blue-400">{{ data.total_score_student }}</span>
+                            </span>
+                            <span class="block text-[.9rem]">
+                                Percentage: <span class="text-blue-400">{{ data.percentage }}%</span>
+                            </span>
+                        </td>
+                        <td>
+                            <div 
+                                class="uppercase w-[140px] rounded-full py-1 px-2 border-[1px] text-[.8rem] flex items-center justify-between gap-3"
+                                :class="[
+                                    data.status == 1 ? 'bg-green-400 text-white' : '',
+                                    data.status == 2 ? 'bg-blue-400 text-white' : '',
+                                    data.status == 3 ? 'bg-yellow-400 text-white' : '',
+                                    data.status == 4 ? 'bg-red-400 text-white' : '',
+                                ]">
+                                {{ data.message }}
+                                <UIcon 
+                                    name="ic:sharp-circle" 
+                                    class="w-3 h-3 animate-ping text-white"/>
+                        </div>
+                        </td>
+                        <td>
+                            <UDropdown 
+                                :items="[
+                                    [{
+                                        label: 'View Information',
+                                        iconClass: 'text-blue-400',
+                                        class: 'text-blue-400',
+                                        icon: 'material-symbols:folder-eye-outline',
+                                        click: () => {
+                                            examId = Number(data.exam_id);
+                                            if(examId != null){
+                                                toggleClassResultModal(true);
+                                            }
+                                        }
+                                    }]
+                                ]" 
+                                :popper="{ placement: 'bottom-start' }">
+                                <UButton 
+                                    color="white"
+                                    trailing-icon="mdi:dots-vertical" />
+                            </UDropdown>
                         </td>
                     </tr>
                 </Table>
@@ -97,12 +151,17 @@
         </div>
     </div>
     <NewExamModal
+        @update:data="fetchData"
         :open="isOpenCreateModal"
         @toggle="toggleCreateModal"/>
     <ExamInfoModal 
         :exam-id="examId"
         :open="isOpenExamInfoModal"
         @toggle="toggleInfoModal"/>
+    <ClassResultInfo
+        :exam-id="examId"
+        :open="openResultModal"
+        @toggle="toggleClassResultModal"/>
 </template>
 
 <script setup lang="ts">
@@ -123,8 +182,8 @@ import {
     NewExamModal 
 } from "@/collector/modal";
 import { 
-    UserImage 
-} from "@/assets/images";
+    ClassResultInfo 
+} from "@/modal";
 import { 
     ExamInfoModal 
 } from "@/modal";
@@ -143,8 +202,8 @@ definePageMeta({
 /**
  * Begin::Declare variable section
  */
-const dataOptions: Ref<Options> = ref<Options>({});
 const data: Ref<any> = ref<any>({});
+const dataResult: Ref<object> = ref<object>({});
 const isOpenCreateModal: Ref<boolean> = ref<boolean>(false);
 const timeout: Ref<NodeJS.Timeout | null> = ref<NodeJS.Timeout | null>(null);
 const filters: Ref<Items> = ref<Items>({
@@ -153,6 +212,7 @@ const filters: Ref<Items> = ref<Items>({
 });
 const isOpenExamInfoModal: Ref<boolean> = ref<boolean>(false);
 const examId: Ref<number | null> = ref<number | null>(null);
+const openResultModal: Ref<boolean> = ref<boolean>(false);
 const linksItem = [
     {
         label: 'Main Menu'
@@ -163,22 +223,25 @@ const linksItem = [
 ];
 const columns: Ref<Column[]> = ref<Column[]>([
     {
-        title: 'no'        
+        title:'Department / Class / shift',
     },
     {
-        title: 'Profile'
+        title: "exam"
     },
     {
-        title: 'Code'
+        title: 'Total Students Submited'
     },
     {
-        title:'Name',
+        title: 'Exam Summary'
     },
     {
-        title:'Department / Class / Major',
+        title: 'Total Summary'
     },
     {
-        title:'Total Point',
+        'title': 'Status'
+    },
+    {
+        title:'Action'
     }
  ])
 /**
@@ -194,7 +257,9 @@ const toggleCreateModal = (value: boolean) => {
  const toggleInfoModal = (value: boolean) => {
     isOpenExamInfoModal.value = value as boolean;
 }
-
+const toggleClassResultModal = (value: boolean) => {
+    openResultModal.value = value as boolean;
+}
 /**
  * End::Some logical in this component
  */
@@ -202,8 +267,8 @@ const toggleCreateModal = (value: boolean) => {
 /**
  * Begin::Fetch data section
  */
- const fetchData = async (current_page: number = 1,per_page: number = 10, search: string = ''): Promise<void> => {
-    let url: string = `exam?per_page=${per_page}&page_no=${current_page}`;
+const fetchData = async (): Promise<void> => {
+    let url: string = `exam`;
     const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
     if(!result.error)
     {
@@ -211,37 +276,26 @@ const toggleCreateModal = (value: boolean) => {
     }
 }
 
-const fetchOption = async (): Promise<void> => {
-    const options: ResponseStatus = await api.get("") as ResponseStatus;
-    if(!options.error)
-    {
-        dataOptions.value = options.data as unknown as Options;
-    }
-};
-
-const searchData = async (value: string): Promise<void> => {
-    if(timeout.value)
-    {
-        clearTimeout(timeout.value);
-    }
-    timeout.value = setTimeout(async (): Promise<void> => {
-        await fetchData(1,10, value);
-    }, 250);
-}
-
-const filterData = async (current_page: number = 1): Promise<void> => {
-    const per_page: number = 10;
-    const url: string = `package?per_page=${per_page}&page_no=${current_page}&status_id=${filters.value.status_id}&warehouse_id=${filters.value.warehouse_id}`;
-    const result: ResponseStatus = await api.get(url, false) as ResponseStatus;
+const fetchDataResult = async (): Promise<void> => {
+    let url: string = `exam/student/results/exams`;
+    const result: ResponseStatus = await api.get(url) as ResponseStatus;
     if(!result.error)
     {
-        data.value = result as object;
+        dataResult.value = result as object;
+        console.log(dataResult.value)
     }
 }
+watch((): boolean => isOpenExamInfoModal.value || openResultModal.value, async (value: boolean): Promise<void> => {
+    if(!value)
+    {
+        examId.value = null;
+    }
+});
 /**
  * End::Fetch data section
  */
 onMounted(async (): Promise<void> => {
     await fetchData();
+    await fetchDataResult();
 });
 </script>

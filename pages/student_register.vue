@@ -1,138 +1,63 @@
 <template>
-    <div
-        class="h-[100vh] w-full">
-        <img
-            :src="BackgroundLogin"
-            alt="Logo"
-            class="object-cover w-full h-full opacity-90"
-            loading="lazy" />
-    </div>
-    <div class="w-full h-[100vh] overflow-auto absolute top-0 right-0 flex items-center justify-center"> 
-        <form
-            name="user"
-            method="POST"
-            enctype="multipart/form-data"
-            @submit.prevent="getData"
-            class="bg-white w-[60%] border-[1px] relative border-gray-[1px] overflow-hidden rounded-md p-6">
-            <img 
-                :src="Technology" 
-                alt=""
-                class="w-[400px] h-[400px] opacity-20 absolute bottom-10 -right-[30px]">
-            <img 
-                :src="Technology" 
-                alt=""
-                class="w-[200px] h-[200px] opacity-20 absolute top-[300px] left-[30px]">
-            <div 
-                class="w-full flex items-center justify-center">
-                <h3
-                    class="font-semibold capitalize text-[1.2rem]">
-                    Student Register
-                </h3>
-            </div>
-            <div class="w-full mt-6 flex items-center justify-center flex-col gap-3 flex-wrap">
-                <div class="w-full flex gap-3">
-                    <div class="w-[150px] h-[150px] rounded-md overflow-hidden border-[1px] border-gray-200">
-                        <ChoosePhoto
-                            name="photo"/>
-                    </div>
-                    <div class="w-[calc(100%-150px)] flex flex-wrap gap-3">
-                        <UFormGroup
-                            class="w-[calc(97%/2)]"
-                            label="Department"
-                            name="department_id">
-                            <SelectMenu
-                                name="department_id"
-                                :options="dataOptions.department"
-                                option-attribute="name"
-                                value-attribute="id"
-                                id-attribute="id"
-                                placeholder="Select department"/>
-                        </UFormGroup>
-                        <UFormGroup
-                            class="w-[calc(98%/2)]"
-                            label="Major"
-                            name="major_id">
-                            <SelectMenu
-                                name="major_id"
-                                :options="dataOptions.major"
-                                option-attribute="name"
-                                value-attribute="id"
-                                id-attribute="id"
-                                placeholder="Select major"/>
-                        </UFormGroup>
-                        <UFormGroup
-                            class="w-[calc(97%/2)]"
-                            label="Year"
-                            name="year">
-                            <SelectMenu
-                                name="year_id"
-                                :options="[
-                                    {
-                                        id: 1,
-                                        year: '1'
-                                    },
-                                    {
-                                        id: 2,
-                                        year: '2'
-                                    },
-                                    {
-                                        id: 3,
-                                        year: '3'
-                                    },
-                                    {
-                                        id: 4,
-                                        year: '5'
-                                    },
-                                ]"
-                                option-attribute="year"
-                                value-attribute="year"
-                                id-attribute="id"
-                                placeholder="Year"
-                                required/>
-                        </UFormGroup>
-                        <UFormGroup
-                            class="w-[calc(98%/2)]"
-                            label="Class"
-                            name="class_id">
-                            <SelectMenu
-                                name="class_id"
-                                :options="dataOptions.class"
-                                option-attribute="name"
-                                value-attribute="id"
-                                id-attribute="id"
-                                placeholder="Select class"/>
-                        </UFormGroup>
-                        <UFormGroup
-                            class="w-[calc(97%/2)]"
-                            label="Shift"
-                            name="shift_id">
-                            <SelectMenu
-                                name="shift_id"
-                                :options="[]"
-                                option-attribute="name"
-                                value-attribute="id"
-                                id-attribute="id"
-                                placeholder="Select study time"/>
-                        </UFormGroup>
-                        <UFormGroup
-                            class="w-[calc(98%/2)]"
-                            label="Nationality"
-                            name="nationality">
-                            <SelectMenu
-                                name="nationality"
-                                :options="countries"
-                                option-attribute="value"
-                                value-attribute="id"
-                                id-attribute="id"
-                                placeholder="Select nationality"/>
-                        </UFormGroup>
-                    </div>
+    <form
+        name="student"
+        method="POST"
+        enctype="multipart/form-data"
+        @submit.prevent="getData"
+        class="rounded-md space-y-4 h-[100vh] p-4">
+       
+        <div 
+            class="w-full p-4 rounded-md border-[1px] bg-gray-50 border-gray-200"> 
+            <h3
+                class="text-center text-[1.5rem] font-normal uppercase">Student Register</h3>
+            <div class="w-full flex gap-3 flex-wrap mt-6">
+                <div class="w-[200px] bg-white h-[210px] border-[1px] border-gray-200 rounded-md overflow-hidden">
+                    <ChoosePhoto
+                        name="photo"/>
                 </div>
-                <div class="w-full flex gap-3 flex-wrap">
-                    
+                <div class="w-[calc(99%-200px)] flex gap-3 flex-wrap">
                     <UFormGroup
-                        class="w-[calc(98%/2)]"
-                        label="Lastname"
+                        class="w-[calc(98%/3)]"
+                        label="Department"
+                        name="department_id">
+                        <SelectMenu
+                            name="department_id"
+                            :options="dataOptions.department"
+                            option-attribute="name"
+                            value-attribute="id"
+                            id-attribute="id"
+                            placeholder="Please select department"
+                            required/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(97.5%/3)]"
+                        label="Major"
+                        name="major_id">
+                        <SelectMenu
+                            name="major_id"
+                            :options="dataOptions.major"
+                            option-attribute="name"
+                            value-attribute="id"
+                            id-attribute="id"
+                            placeholder="Please select major"
+                            required/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(97.5%/3)]"
+                        label="Nationality"
+                        name="nationality">
+                        <SelectMenu
+                            name="nationality"
+                            :options="countries"
+                            option-attribute="value"
+                            value-attribute="value"
+                            id-attribute="id"
+                            placeholder="Please select nationality"
+                            required/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(98%/3)]"
+                        label="First Name"
                         name="first_name">
                         <UInput
                             type="text"
@@ -141,11 +66,11 @@
                             size="md"
                             name="first_name"
                             role="input"
-                            placeholder="enter firstname here..."/>
+                            placeholder="enter student first name here..."/>
                     </UFormGroup>
                     <UFormGroup
-                        class="w-[calc(98%/2)]"
-                        label="Lastname"
+                        class="w-[calc(97.5%/3)]"
+                        label="Last Name"
                         name="last_name">
                         <UInput
                             type="text"
@@ -154,10 +79,36 @@
                             size="md"
                             name="last_name"
                             role="input"
-                            placeholder="enter lastname here..."/>
+                            placeholder="enter student last name here..."/>
                     </UFormGroup>
                     <UFormGroup
-                        class="w-[calc(98%/2)]"
+                        class="w-[calc(97.5%/3)]"
+                        label="Student Name (KH)"
+                        name="name_kh">
+                        <UInput
+                            type="text"
+                            color="white"
+                            variant="outline"
+                            size="md"
+                            name="name_kh"
+                            role="input"
+                            placeholder="enter student name here..."/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(98%/3)]"
+                        label="Date of Birth"
+                        name="dob">
+                        <UInput
+                            type="text"
+                            color="white"
+                            variant="outline"
+                            size="md"
+                            name="dob"
+                            role="input"
+                            placeholder="enter date of birth here..."/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(97.5%/3)]"
                         label="Phone"
                         name="phone">
                         <UInput
@@ -170,7 +121,7 @@
                             placeholder="enter phone here..."/>
                     </UFormGroup>
                     <UFormGroup
-                        class="w-[calc(98%/2)]"
+                        class="w-[calc(97.5%/3)]"
                         label="Email"
                         name="email">
                         <UInput
@@ -182,12 +133,93 @@
                             role="input"
                             placeholder="enter email here..."/>
                     </UFormGroup>
-                    <UDivider 
-                        label="Login Information"
-                        class="mt-3 text-green-400" />
                     <UFormGroup
-                        class="w-full"
-                        label="Username"
+                        class="w-[calc(97.5%/3)]"
+                        label="Choose Gender"
+                        name="">
+                        <div 
+                            class="flex gap-3 items-center">
+                            <URadio 
+                                v-model="selectGender" 
+                                value="male" 
+                                label="Male"/>
+                            <URadio 
+                                v-model="selectGender" 
+                                value="female" 
+                                label="Female" />
+                        </div>
+                    </UFormGroup>
+                </div>      
+                <UFormGroup
+                    class="w-full"
+                    label="Study Infomation (Class / Years / Shift)"
+                    name="">
+                    <div 
+                        class="w-full flex gap-3">
+                        <SelectMenu
+                            name="class_id"
+                            :options="dataOptions.class"
+                            option-attribute="name"
+                            value-attribute="id"
+                            id-attribute="id"
+                            placeholder="Please select class"
+                            required
+                            class="w-[calc(98%/3)]"/>
+                        <SelectMenu
+                            name="year_id"
+                            :options="[
+                                {
+                                    id: 1,
+                                    year: '1'
+                                },
+                                {
+                                    id: 2,
+                                    year: '2'
+                                },
+                                {
+                                    id: 3,
+                                    year: '3'
+                                },
+                                {
+                                    id: 4,
+                                    year: '5'
+                                },
+                            ]"
+                            option-attribute="year"
+                            value-attribute="year"
+                            id-attribute="id"
+                            placeholder="Year"
+                            required
+                            class="w-[calc(97%/3)]"/>
+                        <SelectMenu
+                            name="shift_id"
+                            :options="dataOptions.shift"
+                            option-attribute="name"
+                            value-attribute="id"
+                            placeholder="Shift"
+                            id-attribute="id"
+                            class="w-[calc(98%/3)]"/>
+                    </div>
+                </UFormGroup>  
+                <UFormGroup
+                    class="w-[99.5%] mt-3"
+                    label="Address"
+                    name="address">
+                    <UTextarea 
+                        color="white" 
+                        placeholder="Enter address..."
+                        name="address"
+                        role="input"/>
+                </UFormGroup>
+                <div 
+                    class="w-full pt-2 font-semibold">
+                    <UDivider label="Login Account" />
+                </div>
+                <div 
+                    class="w-full flex flex-wrap gap-2 p-2 rounded-md bg-gray-100">
+                    <UFormGroup
+                        class="w-[calc(99%/2)]"
+                        label="Username / Gmail"
                         name="user_name">
                         <UInput
                             type="text"
@@ -196,58 +228,44 @@
                             size="md"
                             name="email"
                             role="input"
+                            placeholder="enter username / gmail here..."/>
+                    </UFormGroup>
+                    <UFormGroup
+                        class="w-[calc(99%/2)]"
+                        label="Password"
+                        name="password">
+                        <UInput
+                            type="text"
+                            color="white"
+                            variant="outline"
+                            size="md"
+                            name="password"
+                            role="input"
                             placeholder="enter email here..."/>
                     </UFormGroup>
-                    <UFormGroup
-                        class="w-[calc(98%/2)]"
-                        label="Password"
-                        name="">
-                        <UInput
-                            type="text"
-                            color="white"
-                            variant="outline"
-                            size="md"
-                            name=""
-                            role="input"
-                            placeholder="enter password here..."/>
-                    </UFormGroup>
-                    <UFormGroup
-                        class="w-[calc(98%/2)]"
-                        label="Confirm Password"
-                        name="">
-                        <UInput
-                            type="text"
-                            color="white"
-                            variant="outline"
-                            size="md"
-                            name=""
-                            role="input"
-                            placeholder="enter confirm password here..."/>
-                    </UFormGroup>
-                </div>        
+                </div>
             </div>
             <div
-                class="flex items-center flex-col justify-center mt-6">
-                <UButton
-                    type="submit"
-                    size="md"
-                    color="black"
-                    label="Register Now"
-                    variant="soft" 
-                    :padded="false"
-                    class="bg-blue-400 w-full flex items-center justify-center text-white hover:bg-blue-300 py-2 px-4 transition"/>
-                <span
-                    class="text-[.8rem] w-full mt-3 font-normal text-center z-10">
-                    Already have an account? 
+                class="flex items-center justify-end mt-3">
+                <div
+                    class="flex items-center gap-x-2">
                     <ULink
                         to="/signin"
-                        class=" hover:text-blue-500 transition underline cursor-pointer">
-                        Login Now
+                        class="bg-red-500 text-white hover:bg-red-300 rounded-md p-1.5 transition">
+                        Cancel
                     </ULink>
-                </span>
+                    <UButton
+                        type="submit"
+                        size="sm"
+                        color="black"
+                        label="Create Now"
+                        variant="soft" 
+                        :padded="false"
+                        class="bg-blue-400 text-white hover:bg-blue-300 p-2 transition"/>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </template>
 
 <script setup lang="ts">
@@ -265,37 +283,37 @@ import type {
     Items
 } from "@/models/type";
 import { 
-    BackgroundLogin,
-    Technology 
-} from "@/assets/images";
-import { 
     SelectMenu,
     ChoosePhoto
 } from "@/components/ui";
-
 definePageMeta({
     layout: 'login',
     colorMode: 'light'
 });
 
 useSeoMeta({
-    title: 'Login'
+  title: 'Login'
 });
 /**
  * Begin::Set event trigger to parent component
  */
+ const emits = defineEmits<{
+    (event: 'toggle', state: boolean): void;
+    (event: 'update:data'): void;
+}>();
 
+const props = withDefaults(defineProps<{
+    studentId: number | null,
+}>(),{
+    studentId: null,
+});
 /**
  * End::Set event trigger to parent component
  */
 
 /**
- * Begin::Declare variables object section
- */
-const dataOptions: Ref<Options> = ref<Options>({});
-const api: ContextAPI = new ContextAPI(new SimpleAPI());
-const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
-const base_url: string = (import.meta.env.VITE_BASE_URL as ImportMetaEnv)+'admin/v1/en/';
+ *Begin::Declare variable section  
+ */ 
 const countries: Ref<Items[]> = ref<Items[]>([
     { id: 1, value: 'Afghanistan' },
     { id: 2, value: 'Albania' },
@@ -437,6 +455,17 @@ const countries: Ref<Items[]> = ref<Items[]>([
     { id: 138, value: 'Zambia' },
     { id: 139, value: 'Zimbabwe' }
 ]);
+
+/**
+ * End::Declare variable section
+ */
+/**
+ * Begin::Declare variables object section
+ */
+const dataOptions: Ref<Options> = ref<Options>({});
+const api: ContextAPI = new ContextAPI(new SimpleAPI());
+const context: GetDataContext = new GetDataContext(new GetDataNormalForm());
+const selectGender: Ref<string> = ref<string>('');
 /**
  * End::Declare variables object section
  */
@@ -444,36 +473,57 @@ const countries: Ref<Items[]> = ref<Items[]>([
 /**
  * Begin::Fetch data section
  */
- const getData = async (event: Event): Promise<void> => {
-    const formData: object = context.getDataFormFileBase64(event as SubmitEvent) as object;
-    console.log(formData)
-    const result: ResponseStatus = await api.post('student', true, formData) as ResponseStatus;
-    if(!result.error)
+const getData = async (event: Event): Promise<void> => {
+    const formData: any = context.getDataFormFileBase64(event as SubmitEvent) as any;
+    console.log(formData);
+    formData.gender = selectGender.value as string;
+    if(props.studentId != null)
     {
-        (event.target as HTMLFormElement).reset();
+        await api.update(`student/${props.studentId}`, true, formData) as ResponseStatus;
     }
+    else
+    {
+        const result: ResponseStatus = await api.post('student/public/register', true, formData) as ResponseStatus;
+        if(!result.error)
+        {
+            emits('toggle', false);
+            (event.target as HTMLFormElement).reset();
+        }
+    }
+     emits('update:data');
 }
 
 const fetchOption = async (): Promise<void> => {
-    try {
-        const { data, error } = await useFetch<any>(base_url + 'setting/option/student/public');
-
-        if (error.value) {
-            throw new Error(error.value.message);
-        }
-
-        dataOptions.value = data.value.data as unknown as Options;
-        console.log(dataOptions.value);
-    } catch (err) {
-        console.error("Error fetching data:", err);
+    const options: ResponseStatus = await api.get("setting/option/student/public", false) as ResponseStatus;
+    if(!options.error)
+    {
+        dataOptions.value = options.data as unknown as Options;
     }
+    console.log(dataOptions.value);
 };
 
-
+const setData = async (): Promise<void> => {
+    const result: any = await api.get(`student/${props.studentId}`, false) as any;
+    selectGender.value = result.data.gender as string
+    if(!result.error)
+    {
+        let timeout: NodeJS.Timeout = setTimeout((): void => {
+            const form: HTMLFormElement = document.forms.namedItem('student') as HTMLFormElement;
+            context.setDataWithFile(form, result.data as Items);
+            console.log(result.data)
+            clearTimeout(timeout);
+        },0);
+    }
+ }
 /**
  * End::Fetch data section
  */
+
 onMounted(async (): Promise<void> => {
     await fetchOption();
+    if(props.studentId)
+    {
+        await setData();
+    }
 })
 </script>
